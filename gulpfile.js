@@ -1,10 +1,12 @@
 var gulp = require('gulp');
 gulp.paths = {
   lib: {
-    src: ['./**/*.{js,json}', '!./package.json', '!./node_modules/**',
-      '!js/main.js'
+    src: [
+    	'./sources/*.{js,json}',
+    	'./sources/**/*.{js,json}',
+    	'./sources/**/**/*.{js,json}'
     ],
-    dest: '.',
+    dest: './dist',
     jshintrc: './.jshintrc',
     jsbeautifyrc: './.jsbeautifyrc',
   }

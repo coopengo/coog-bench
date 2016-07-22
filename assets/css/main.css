@@ -1,0 +1,136 @@
+body #title {
+    font-size: 36px;
+    color: #46423D;
+}
+
+#title p {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#title .company-img {
+    height: 3em;
+    vertical-align: middle;
+}
+
+.home-right-title {
+    float: right;
+    color: #46423D;
+    margin: 0;
+
+}
+
+.blue {
+    color: #0094D2;
+}
+
+
+/* Bench Selector */
+
+#benchmarks-selector {
+    text-align: center;
+    margin-top: 1em;
+    margin-bottom: 3em;
+}
+
+.benchmark-selector-btn {
+    border-radius: 8px;
+}
+
+.bench-selector-ok {
+    background: #d3eda3;
+    color: #72962e;
+}
+
+.bench-selector-ko {
+    background: #f5ab9e;
+    color: #8c3a2b;
+}
+
+/* Nootifications */
+
+.notification {
+    padding: 0.1em;
+    width: 100%;
+}
+
+.notification {
+    margin-top: 0.5em;
+    border: 0px solid;
+    border-radius: 16px;
+}
+
+.notification p{
+    text-align: center;
+    color: white;
+}
+
+.notification-info {
+    background-color: cornflowerblue;
+}
+.notification-warning {
+    background-color: goldenrod;
+}
+.notification-error {
+    background-color: brown;
+}
+
+/* Bench view */
+
+.bench {
+    margin-top: 1em;
+}
+
+.bench-body {
+    background-color: aquamarine;
+}
+
+.custom-body {
+    background-color: aquamarine;
+}
+
+.bench-single-panel {
+    text-align: center;
+}
+
+.bench-title-elem {
+    background-color: cadetblue;
+}
+
+.bench-title {
+    font-weight: bold;
+    padding-left: 3em;
+    color: #d9d9d9;
+}
+
+.bench-state {
+    float: right;
+    padding-right: 3em;
+    color: #d9d9d9;
+}
+
+.bench-iter {
+    float: right;
+    padding-right: 3em;
+    color: #d9d9d9;
+}
+
+.bench-left-panel {
+    padding-left: 6em;
+}
+
+.bench-right-panel {
+    padding-right: 6em;
+}
+
+.float-right {
+    float: right;
+}
+
+.loading-img {
+    height: 2em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+}
