@@ -1,28 +1,41 @@
 {
   "name": "coog-bench",
-  "version": "0.0.1",
   "description": "Coog bench web app",
-  "main": "js",
-  "author": "Coopengo <dev@coopengo.com>",
+  "version": "0.0.1",
   "license": "GPL-3.0+",
+  "author": "Coopengo <dev@coopengo.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coopengo/coog-bench.git"
+  },
+  "browser": "src/index.js",
+  "browserify": {
+    "transform": [
+      "browserify-shim",
+      "jstify"
+    ]
+  },
+  "browserify-shim": {
+    "underscore": "global:_",
+    "moment": "global:moment",
+    "tryton-session": "global:Session"
+  },
+  "scripts": {
+    "beautify": "js-beautify --config .jsbeautifyrc -r src/*.js src/**/*.js",
+    "lint": "jshint -c .jshintrc src/*.js src/**/*.js",
+    "assets": "wget -O assets/js/underscore.js http://underscorejs.org/underscore.js && wget -O assets/js/moment.js https://raw.githubusercontent.com/moment/moment/master/moment.js && wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/master/dist/tryton-session.js && wget -O assets/css/pure.css http://yui.yahooapis.com/pure/0.6.0/pure.css && wget -O assets/css/grids-responsive-min.css http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css",
+    "build": "browserify --standalone Session -o dist/js/coog-bench.js ."
+  },
   "dependencies": {
     "backbone": "^1.3.3",
     "backbone.localstorage": "^1.1.16",
-    "browserify": "^13.0.1",
     "co": "^4.6.0",
-    "jquery": "^3.1.0",
-    "underscore": "^1.8.3"
+    "jquery": "^3.1.0"
   },
   "devDependencies": {
-    "del": "^2.2.0",
-    "gulp": "^3.9.1",
-    "gulp-changed": "^1.3.0",
-    "gulp-jsbeautifier": "^2.0.3",
-    "gulp-jshint": "^2.0.1",
-    "gulp-util": "^3.0.7",
-    "jshint": "^2.9.2",
-    "jshint-stylish": "^2.2.0",
-    "jstify": "^0.14.0",
-    "require-dir": "^0.3.0"
+    "browserify": "^13.1.0",
+    "browserify-shim": "^3.8.12",
+    "http-server": "^0.9.0",
+    "jstify": "^0.14.0"
   }
 }

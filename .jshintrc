@@ -8,5 +8,6 @@
   "quotmark": true,
   "undef": true,
   "unused": true,
+  "browser": true,
   "node": true
 }

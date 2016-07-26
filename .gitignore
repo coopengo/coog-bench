@@ -1,6 +1,1 @@
 node_modules
-gulp/.check
-dist/*
-!dist/js/
-dist/js/*
-!dist/js/.placeholder
