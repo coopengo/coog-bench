@@ -8,7 +8,7 @@
 
             <!-- LOGO -->
             <div class="pure-u-1 img-container">
-                  <img class="company-img" src="assets/images/coopengo.png" alt="Coopengo">
+                  <img class="company-img" src="dist/img/coopengo.png" alt="Coopengo">
             </div>
             <!-- spacer (logo margin)-->
 
@@ -24,7 +24,7 @@
 
         </div>
 
-        
+
     </div>
     <div class="pure-u-1-5"></div>
     <div class="pure-u-1-5"></div>

@@ -5,9 +5,9 @@
       <div class="pure-g">
         <div class="pure-u-1">
            <div id="title">
-              <img class="company-img" src="assets/images/coopengo.png" alt="Coopengo">
+              <img class="company-img" src="dist/img/coopengo.png" alt="Coopengo">
               <p>C<span class="blue">oo</span>g Benchmark</p>
-           </div> 
+           </div>
         </div>
         <div class="pure-u-1">
           <p class="home-right-title">Powered by Co<span class="blue">open</span>go</p>

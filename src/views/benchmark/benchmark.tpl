@@ -35,7 +35,7 @@
     <div class="pure-u-1 bench-loading"> <div class="pure-g">
         <div class="pure-u-1-3"></div>
         <div class="pure-u-1-3">
-            <img class="loading-img" src="assets/images/loading.gif" alt="Loading...">
+            <img class="loading-img" src="dist/img/loading.gif" alt="Loading...">
         </div>
         <div class="pure-u-1-3"></div>
     </div> </div>
