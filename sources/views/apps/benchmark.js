@@ -80,7 +80,6 @@ module.exports = Backbone.View.extend({
 
     this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_list', [], {})
     .then((ret) => {
-      console.log(ret);
       ret.methods.forEach(new_bench);
     });
   },

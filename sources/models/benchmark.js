@@ -74,15 +74,10 @@ module.exports = Backbone.Model.extend({
     lst.forEach((str) => {
         newlst.push(remove_char(str, ' '));
     });
-    // iterations
     ret.iter = newlst[0].split(' ')[0];
-    // avg
     ret.avg = newlst[1].split(' : ')[1];
-    // min
     ret.min = remove_char(newlst[2].split(' ')[2], '(', ')');
-    // max
     ret.max = remove_char(newlst[3].split(' ')[1], '(', ')');
-
     return ret;
   },
 });

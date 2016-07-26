@@ -1,7 +1,6 @@
 var $           = require('jquery'),
   Backbone      = require('backbone'),
   Session       = require('tryton-session');
-
 Backbone.$ = $;
 
 var BenchAppView  = require('./views/apps/benchmark.js'),
@@ -20,11 +19,9 @@ var AppView = Backbone.View.extend({
 
   on_connection: function(session) {
     this.session = session;
-    console.log('CONNECTED');
     // save session
     this.session.pack().then((pack) => {
       sessionStorage.pack = pack;
-      console.log(sessionStorage.pack);
     });
     // close login
     if (this.log) {
@@ -39,7 +36,6 @@ var AppView = Backbone.View.extend({
 
   on_logout: function() {
     this.session = null;
-    console.log('LOGOUT');
     // close bench
 
     // start LoginAppView
@@ -50,14 +46,10 @@ var AppView = Backbone.View.extend({
   },
 
   is_logged: function() {
-    if (typeof(Storage) === 'undefined') {
-        console.log('Sorry! No Web Storage support..');
-        return;
+    if (typeof(Storage) !== 'undefined' && sessionStorage.pack) {
+      return Session.unpack(sessionStorage.pack);
     }
-    if (!sessionStorage.pack){
-      return $.Deferred.reject();
-    }
-    return Session.unpack(sessionStorage.pack);
+    return $.Deferred.reject();
   }
 
 });

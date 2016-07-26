@@ -101,13 +101,9 @@ module.exports = Backbone.View.extend({
 
   connect: function() {
     if (!this.collection.empty()) {
-      this.login().then((session) => {
-        // sucess
-        this.trigger('logged', session);
-      }, () => {
-        // fail
-        console.log('CONNECTION FAILED');
-      });
+      this.login().then(
+        (session) => this.trigger('logged', session), 
+        () => console.log('Fail to connect'));
     }
   },
 
