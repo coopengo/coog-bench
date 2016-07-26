@@ -47,7 +47,13 @@ var AppView = Backbone.View.extend({
 
   is_logged: function() {
     if (typeof(Storage) !== 'undefined' && sessionStorage.pack) {
-      return Session.unpack(sessionStorage.pack);
+      return Session.unpack(sessionStorage.pack).then(
+        (session) => {
+          return session.rpc('model.res.user.get_preferences', [], {}).then(
+            () => { return session; },
+            () => { return $.Deferred.reject(); });
+        },
+        () => { return $.Deferred.reject(); });
     }
     return $.Deferred.reject();
   }
