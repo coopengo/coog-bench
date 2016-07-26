@@ -40,15 +40,21 @@ var AppView = Backbone.View.extend({
     this.log.on('logged', this.on_connection, this);
     this.log.render();
   },
-  is_logged: function() {
-    if (typeof(Storage) !== 'undefined' && sessionStorage.pack) {
-      return Session.unpack(sessionStorage.pack).then(
-        (session) => {
-          return session.rpc('model.res.user.get_preferences', [], {}).then(
-            () => { return session; },
-            () => { return Promise.reject(); });
-        },
-        () => { return Promise.reject(); });
+  is_logged: function () {
+    if (typeof (Storage) !== 'undefined' && sessionStorage.pack) {
+      return Session.unpack(sessionStorage.pack)
+        .then(
+          (session) => {
+            return session.rpc('model.res.user.get_preferences', [], {})
+              .then(
+                () => {
+                  return session; 
+                }, () => {
+                  return Promise.reject();
+                });
+          }, () => {
+            return Promise.reject();
+          });
     }
     return Promise.reject();
   }

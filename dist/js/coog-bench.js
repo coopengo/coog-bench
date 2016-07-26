@@ -14049,278 +14049,275 @@ return jQuery;
 
 },{}],6:[function(require,module,exports){
 // [Collection] BenchList
-
-var $           = require('jquery'),
-  Backbone      = require('backbone'),
-  Bench         = require('../models/benchmark');
+var $ = require('jquery'),
+  Backbone = require('backbone'),
+  Bench = require('../models/benchmark');
 Backbone.$ = $;
 require('backbone.localstorage');
-
 var BENCH_MODEL = 'utils.benchmark_class';
 var Notificator = require('./notification');
-
 module.exports = Backbone.Collection.extend({
   model: Bench,
   localStorage: new Backbone.LocalStorage('benchs-backbone'),
-
-  initialize: function(session) {
+  initialize: function (session) {
     this.session = session;
   },
-
-  enable: function() {
-    return this.where({enable: true});
+  enable: function () {
+    return this.where({
+      enable: true
+    });
   },
-
-  use_db: function() {
-    return this.where({use_db: true, enable: true});
+  use_db: function () {
+    return this.where({
+      use_db: true,
+      enable: true
+    });
   },
-
-  next_order: function() {
-    if (!this.length) {return 1;}
-    return this.last().get('order') + 1;
+  next_order: function () {
+    if (!this.length) {
+      return 1;
+    }
+    return this.last()
+      .get('order') + 1;
   },
-
-  start_bench: function() {
+  start_bench: function () {
     var prm = $.when();
     var setup_db = false;
     var to_bench = this.enable();
-
-    if (!to_bench.length){
+    if (!to_bench.length) {
       Notificator.new_notif('Nothing to bench', 'warning');
       return prm;
     }
-
-    if (!this.session){
+    if (!this.session) {
       Notificator.new_notif('Invalid session', 'error', 8);
       return prm;
     }
-
     // check if database must be prepared
-    if (this.use_db().length){
+    if (this.use_db()
+      .length) {
       setup_db = true;
     }
-
     // prepare database
-    if (setup_db){
-      prm = this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_setup', [], {})
-      .then(
-        () => Notificator.new_notif('Database prepared', 'warning', 2),
-        (err) => {
-          console.log(err);
-          Notificator.new_notif('Database already prepared', 'warning', 2);
-        });
+    if (setup_db) {
+      prm = this.session.rpc('model.' + BENCH_MODEL + '.' +
+          '_benchmark_setup', [], {})
+        .then(
+          () => Notificator.new_notif('Database prepared', 'warning', 2),
+          (err) => {
+            console.log(err);
+            Notificator.new_notif('Database already prepared', 'warning',
+              2);
+          });
     }
-
     // call benchs
     to_bench.forEach((bench) => {
       prm = prm.then(
-        () => bench.call_bench(),
-        (err) => {
+        () => bench.call_bench(), (err) => {
           console.log(err);
-          Notificator.new_notif('Error while benchmarking', 'error', 6);
+          Notificator.new_notif('Error while benchmarking', 'error',
+            6);
         });
     });
-
     // clean database if prepared
-    if (setup_db){
+    if (setup_db) {
       prm = prm.then(() => {
-        this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_teardown', [], {})
-        .then(
-          () => Notificator.new_notif('Database cleaned up', 'warning', 2),
-          (err) => {
-            console.log(err);
-            Notificator.new_notif('Can\'t close database', 'error', 6);
-        });
+        this.session.rpc('model.' + BENCH_MODEL + '.' +
+            '_benchmark_teardown', [], {})
+          .then(
+            () => Notificator.new_notif('Database cleaned up',
+              'warning', 2), (err) => {
+              console.log(err);
+              Notificator.new_notif('Can\'t close database', 'error',
+                6);
+            });
       });
     }
-
     return prm;
   },
-
-  clean_db: function() {
-    return this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_teardown', [], {})
-    .then(
-      () => Notificator.new_notif('Database cleaned up'),
-      (err) => {
-        console.log(err);
-        Notificator.new_notif('Can\'t close database', 'error', 6);
-    });
+  clean_db: function () {
+    return this.session.rpc('model.' + BENCH_MODEL + '.' +
+        '_benchmark_teardown', [], {})
+      .then(
+        () => Notificator.new_notif('Database cleaned up'), (err) => {
+          console.log(err);
+          Notificator.new_notif('Can\'t close database', 'error', 6);
+        });
   },
-
   comparator: 'order'
 });
+
 },{"../models/benchmark":10,"./notification":8,"backbone":2,"backbone.localstorage":1,"jquery":4}],7:[function(require,module,exports){
 //[Collection]  LoginLst
-
-var $           = require('jquery'),
-  Backbone      = require('backbone');
+var $ = require('jquery'),
+  Backbone = require('backbone');
 Backbone.$ = $;
-
-var LoginModel  = require('../models/login.js');
+var LoginModel = require('../models/login.js');
 require('backbone.localstorage');
-
 module.exports = Backbone.Collection.extend({
   model: LoginModel,
   localStorage: new Backbone.LocalStorage('logins-backbone'),
-
-  next_order: function() {
-    if (!this.length) { return 1; }
-    return this.last().get('order') + 1;
+  next_order: function () {
+    if (!this.length) {
+      return 1;
+    }
+    return this.last()
+      .get('order') + 1;
   },
-
-  empty: function() {
+  empty: function () {
     var ret = false;
     this.models.forEach((model) => {
-      if (model.attributes.value.length <= 0){
+      if (model.attributes.value.length <= 0) {
         ret = true;
       }
     });
     return ret;
   },
-
   comparator: 'order'
 });
 
 },{"../models/login.js":11,"backbone":2,"backbone.localstorage":1,"jquery":4}],8:[function(require,module,exports){
-var $               = require('jquery'),
-  Backbone          = require('backbone'),
-  NotificationView  = require('../views/notification/notification'),
-  Notification      = require('../models/notification');
+var $ = require('jquery'),
+  Backbone = require('backbone'),
+  NotificationView = require('../views/notification/notification'),
+  Notification = require('../models/notification');
 require('backbone.localstorage');
 Backbone.$ = $;
-
 var Notificator = null;
 var NotificationList = Backbone.Collection.extend({
   model: Notification,
   localStorage: new Backbone.LocalStorage('notifications-backbone'),
-
-  initialize: function() {
+  initialize: function () {
     this.listenTo(this, 'add', this.add_one);
   },
-
-  next_order: function() {
-    if (!this.length) {return 1;}
-    return this.last().get('order') + 1;
+  next_order: function () {
+    if (!this.length) {
+      return 1;
+    }
+    return this.last()
+      .get('order') + 1;
   },
-
-  new_notif: function(value, mode, time) {
-    if (value === undefined) { return; }
+  new_notif: function (value, mode, time) {
+    if (value === undefined) {
+      return;
+    }
     var attributes = {};
     attributes.mode = mode || 'info';
     attributes.value = value;
     attributes.order = this.next_order();
-    if (time !== undefined){
+    if (time !== undefined) {
       attributes.timeout = time;
     }
     this.create(attributes);
   },
-
-  add_one: function(model) {
-    var view = new NotificationView({model: model});
-    $('#notification-area').append(view.render().el);
+  add_one: function (model) {
+    var view = new NotificationView({
+      model: model
+    });
+    $('#notification-area')
+      .append(view.render()
+        .el);
   },
-
   comparator: 'order'
 });
-
 if (Notificator) {
   module.exports = Notificator;
-} else {
+}
+else {
   Notificator = new NotificationList();
   module.exports = Notificator;
 }
 
 },{"../models/notification":12,"../views/notification/notification":23,"backbone":2,"backbone.localstorage":1,"jquery":4}],9:[function(require,module,exports){
 // [Model]  BenchLatency
-
-var $       = require('jquery'),
-  co        = require('co'),
-  Backbone  = require('backbone'),
-  Bench     = require('./benchmark.js');
-Backbone.$  = $;
-
+var $ = require('jquery'),
+  co = require('co'),
+  Backbone = require('backbone'),
+  Bench = require('./benchmark.js');
+Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
 var Notificator = require('../collections/notification');
-
 module.exports = Bench.extend({
-  call_bench: function() {
-    Notificator.new_notif(this.attributes.title + ' benchmarking started..');
-    this.save({status: 'loading'});
-
+  call_bench: function () {
+    Notificator.new_notif(this.attributes.title +
+      ' benchmarking started..');
+    this.save({
+      status: 'loading'
+    });
     var d = new Date();
     var n = d.getTime();
-
     var fn = co.wrap(function* (model) {
       for (var i = 100; i > 0; i--) {
         yield model.rpc(model.session, BENCH_MODEL, model.attributes.method);
       }
       return ($.when());
     });
-
-    return fn(this).then(() => {
-      d = new Date();
-      var res = d.getTime();
-      res = (res - n);
-      res = res / 100;
-      this.save({
-        status: 'done',
-        iter: '100',
-        score: res
+    return fn(this)
+      .then(() => {
+        d = new Date();
+        var res = d.getTime();
+        res = (res - n);
+        res = res / 100;
+        this.save({
+          status: 'done',
+          iter: '100',
+          score: res
+        });
       });
-    });
   },
 });
 
 },{"../collections/notification":8,"./benchmark.js":10,"backbone":2,"co":3,"jquery":4}],10:[function(require,module,exports){
 // [Model]  Bench
-
-var $       = require('jquery'),
-  Backbone  = require('backbone');
-Backbone.$  = $;
-
+var $ = require('jquery'),
+  Backbone = require('backbone');
+Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
 var Notificator = require('../collections/notification');
-
 module.exports = Backbone.Model.extend({
-  defaults: function() {
+  defaults: function () {
     // status : created, started, loading, done
     return {
-      title     : 'no title',
-      method    : 'no method',
-      enable    : true,
-      use_db    : true,
-      custom    : false,
-      score     : '',
-      status    : 'created',
-      iter      : '',
-      avg       : '',
-      min       : '',
-      max       : ''
+      title: 'no title',
+      method: 'no method',
+      enable: true,
+      use_db: true,
+      custom: false,
+      score: '',
+      status: 'created',
+      iter: '',
+      avg: '',
+      min: '',
+      max: ''
     };
   },
-  toggle: function() {
-    this.save({enable: !this.get('enable')});
+  toggle: function () {
+    this.save({
+      enable: !this.get('enable')
+    });
   },
-  set_session: function(session) {
+  set_session: function (session) {
     this.session = session;
   },
-  call_bench: function() {
-    Notificator.new_notif(this.attributes.title + ' benchmarking started..');
-    this.save({status: 'loading'});
-
+  call_bench: function () {
+    Notificator.new_notif(this.attributes.title +
+      ' benchmarking started..');
+    this.save({
+      status: 'loading'
+    });
     return this.rpc(this.session, BENCH_MODEL, this.attributes.method)
       .then((result) => {
         var attr = this.read_result(result);
         if (attr) {
-            this.save(attr);
-            this.save({status: 'done'});
+          this.save(attr);
+          this.save({
+            status: 'done'
+          });
         }
       });
-
   },
   rpc: function (session, model_name, method_name, args, context) {
-    if (!session){
-    Notificator.new_notif('no session setted in Bench Model', 'error');
+    if (!session) {
+      Notificator.new_notif('no session setted in Bench Model', 'error');
       return;
     }
     if (args === undefined) {
@@ -14329,93 +14326,89 @@ module.exports = Backbone.Model.extend({
     if (context === undefined) {
       context = {};
     }
-    return session.rpc('model.' + model_name + '.' + method_name, args, context);
+    return session.rpc('model.' + model_name + '.' + method_name, args,
+      context);
   },
-
-  read_result: function(value) {
+  read_result: function (value) {
     var newlst = [];
     var ret = {};
     var lst = value.split(',');
-    if (lst.length != 4){ return; }
-
-    var remove_char = function(str, start, stop) {
-        if (!stop) {stop = start;}
-        if (str.startsWith(start)) { str = str.substr(1, str.length -1);}
-        if (str.endsWith(stop)) { str = str.substr(0, str.length -1);}
-        return str;
+    if (lst.length != 4) {
+      return;
+    }
+    var remove_char = function (str, start, stop) {
+      if (!stop) {
+        stop = start;
+      }
+      if (str.startsWith(start)) {
+        str = str.substr(1, str.length - 1);
+      }
+      if (str.endsWith(stop)) {
+        str = str.substr(0, str.length - 1);
+      }
+      return str;
     };
-
     lst.forEach((str) => {
-        newlst.push(remove_char(str, ' '));
+      newlst.push(remove_char(str, ' '));
     });
-    // iterations
     ret.iter = newlst[0].split(' ')[0];
-    // avg
     ret.avg = newlst[1].split(' : ')[1];
-    // min
     ret.min = remove_char(newlst[2].split(' ')[2], '(', ')');
-    // max
     ret.max = remove_char(newlst[3].split(' ')[1], '(', ')');
-
     return ret;
   },
 });
 
 },{"../collections/notification":8,"backbone":2,"jquery":4}],11:[function(require,module,exports){
 //[Model]   LoginModel
-
-var $           = require('jquery'),
-  Backbone      = require('backbone');
+var $ = require('jquery'),
+  Backbone = require('backbone');
 Backbone.$ = $;
-
 module.exports = Backbone.Model.extend({
-    defaults: function() {
-        return {
-            name    : '',
-            value   : '',
-            valid   : true,
-            type    : 'text',
-            filled  : false,
-        };
-    },
+  defaults: function () {
+    return {
+      name: '',
+      value: '',
+      valid: true,
+      type: 'text',
+      filled: false,
+    };
+  },
 });
-},{"backbone":2,"jquery":4}],12:[function(require,module,exports){
-var $           = require('jquery'),
-  Backbone      = require('backbone');
-Backbone.$ = $;
 
+},{"backbone":2,"jquery":4}],12:[function(require,module,exports){
+var $ = require('jquery'),
+  Backbone = require('backbone');
+Backbone.$ = $;
 module.exports = Backbone.Model.extend({
-  initialize: function(Notifications) {
+  initialize: function (Notifications) {
     this.Notifications = Notifications;
     this.lock = false;
     this.time_lock = false;
     this.mouse_hover = false;
-    if (this.attributes.auto_remove){
+    if (this.attributes.auto_remove) {
       this.start_timeout();
     }
   },
-
-  defaults: function() {
+  defaults: function () {
     // modes: info, error, warning
     return {
-      value:      'none',
-      mode:       'no method',
-      auto_remove:true,
-      show:       true,
-      timeout:    4
+      value: 'none',
+      mode: 'no method',
+      auto_remove: true,
+      show: true,
+      timeout: 4
     };
   },
-
-  toggle: function() {
+  toggle: function () {
     this.mouse_hover = false;
     this.to_destroy();
   },
-
-  start_timeout: function(time) {
-    if (this.time_lock){
+  start_timeout: function (time) {
+    if (this.time_lock) {
       return;
     }
-    if (!time){
+    if (!time) {
       time = this.attributes.timeout * 1000;
     }
     this.time_lock = true;
@@ -14424,14 +14417,14 @@ module.exports = Backbone.Model.extend({
       this.to_destroy();
     }, time);
   },
-
-  to_destroy: function() {
-    if (this.mouse_hover || this.lock){
+  to_destroy: function () {
+    if (this.mouse_hover || this.lock) {
       return;
     }
     if (this.time_lock) {
       this.set('show', false);
-    } else {
+    }
+    else {
       this.destroy();
     }
   }
@@ -14520,7 +14513,6 @@ module.exports = Backbone.View.extend({
 
     this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_list', [], {})
     .then((ret) => {
-      console.log(ret);
       ret.methods.forEach(new_bench);
     });
   },
@@ -14672,13 +14664,9 @@ module.exports = Backbone.View.extend({
 
   connect: function() {
     if (!this.collection.empty()) {
-      this.login().then((session) => {
-        // sucess
-        this.trigger('logged', session);
-      }, () => {
-        // fail
-        console.log('CONNECTION FAILED');
-      });
+      this.login().then(
+        (session) => this.trigger('logged', session), 
+        () => console.log('Fail to connect'));
     }
   },
 
@@ -14948,34 +14936,29 @@ return __p;
 
 },{"underscore":5}],25:[function(require,module,exports){
 (function (global){
-var $           = require('jquery'),
-  Backbone      = require('backbone'),
-  Session       = (typeof window !== "undefined" ? window['Session'] : typeof global !== "undefined" ? global['Session'] : null);
-
+var $ = require('jquery'),
+  Backbone = require('backbone'),
+  Session = (typeof window !== "undefined" ? window['Session'] : typeof global !== "undefined" ? global['Session'] : null);
 Backbone.$ = $;
-
-var BenchAppView  = require('./views/apps/benchmark.js'),
-  LoginAppView    =  require('./views/apps/login.js');
-
+var BenchAppView = require('./views/apps/benchmark.js'),
+  LoginAppView = require('./views/apps/login.js');
 var AppView = Backbone.View.extend({
-  initialize: function() {
-    this.is_logged().then(
-      (session) => this.on_connection(session),
-      () => {
-        this.log = new LoginAppView();
-        this.log.on('logged', this.on_connection, this);
-        this.log.render();
-      });
+  initialize: function () {
+    this.is_logged()
+      .then(
+        (session) => this.on_connection(session), () => {
+          this.log = new LoginAppView();
+          this.log.on('logged', this.on_connection, this);
+          this.log.render();
+        });
   },
-
-  on_connection: function(session) {
+  on_connection: function (session) {
     this.session = session;
-    console.log('CONNECTED');
     // save session
-    this.session.pack().then((pack) => {
-      sessionStorage.pack = pack;
-      console.log(sessionStorage.pack);
-    });
+    this.session.pack()
+      .then((pack) => {
+        sessionStorage.pack = pack;
+      });
     // close login
     if (this.log) {
       this.log.close();
@@ -14986,32 +14969,34 @@ var AppView = Backbone.View.extend({
     this.bench = new BenchAppView(session);
     // listen to logout
   },
-
-  on_logout: function() {
+  on_logout: function () {
     this.session = null;
-    console.log('LOGOUT');
     // close bench
-
     // start LoginAppView
     this.log = new LoginAppView();
     // listen to logged
     this.log.on('logged', this.on_connection, this);
     this.log.render();
   },
-
-  is_logged: function() {
-    if (typeof(Storage) === 'undefined') {
-        console.log('Sorry! No Web Storage support..');
-        return;
+  is_logged: function () {
+    if (typeof (Storage) !== 'undefined' && sessionStorage.pack) {
+      return Session.unpack(sessionStorage.pack)
+        .then(
+          (session) => {
+            return session.rpc('model.res.user.get_preferences', [], {})
+              .then(
+                () => {
+                  return session; 
+                }, () => {
+                  return Promise.reject();
+                });
+          }, () => {
+            return Promise.reject();
+          });
     }
-    if (!sessionStorage.pack){
-      return Promise.reject();
-    }
-    return Session.unpack(sessionStorage.pack);
+    return Promise.reject();
   }
-
 });
-
 $(() => {
   new AppView();
 });
