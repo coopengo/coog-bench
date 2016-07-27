@@ -1,7 +1,6 @@
-// [View]       BenchView
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  template = require('./benchmark.tpl');
+  Backbone = require('backbone');
+var template = require('./benchmark.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'div',

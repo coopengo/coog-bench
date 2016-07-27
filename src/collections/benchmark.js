@@ -1,12 +1,11 @@
-// [Collection] BenchList
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  Bench = require('../models/benchmark');
+  Backbone = require('backbone');
+var Notificator = require('./notification.js'),
+  BenchModel = require('../models/benchmark.js');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-var Notificator = require('./notification');
 module.exports = Backbone.Collection.extend({
-  model: Bench,
+  model: BenchModel,
   set_session: function (session) {
     this.session = session;
   },

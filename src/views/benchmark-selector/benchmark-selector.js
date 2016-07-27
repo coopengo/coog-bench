@@ -1,7 +1,6 @@
-// [View]       BenchSelectorView
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  template = require('./benchmark-selector.tpl');
+  Backbone = require('backbone');
+var template = require('./benchmark-selector.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'button',

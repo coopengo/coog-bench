@@ -1,12 +1,11 @@
-// [Model]  BenchLatency
 var $ = require('jquery'),
   co = require('co'),
-  Backbone = require('backbone'),
-  Bench = require('./benchmark.js');
+  Backbone = require('backbone');
+var BenchModel = require('./benchmark.js'),
+  Notificator = require('../collections/notification');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-var Notificator = require('../collections/notification');
-module.exports = Bench.extend({
+module.exports = BenchModel.extend({
   call_bench: function () {
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');

@@ -2,8 +2,7 @@ var $ = require('jquery'),
   Backbone = require('backbone');
 Backbone.$ = $;
 module.exports = Backbone.Model.extend({
-  initialize: function (Notifications) {
-    this.Notifications = Notifications;
+  initialize: function () {
     this.lock = false;
     this.time_lock = false;
     this.mouse_hover = false;

@@ -1,13 +1,12 @@
-// [View] LoginAppView
 var $ = require('jquery'),
   co = require('co'),
   Session = require('tryton-session'),
   Backbone = require('backbone');
-Backbone.$ = $;
 var template = require('./login.tpl'),
   LoginView = require('../login/login.js'),
   LoginModel = require('../../models/login.js'),
   LoginLst = require('../../collections/login.js');
+Backbone.$ = $;
 var TRYTON_SERVER = 'http://localhost:7999';
 var TRYTON_DATABASE = '4.0';
 var TRYTON_LOGIN = 'admin';

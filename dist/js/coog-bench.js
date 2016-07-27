@@ -13788,15 +13788,14 @@ return jQuery;
 }.call(this));
 
 },{}],5:[function(require,module,exports){
-// [Collection] BenchList
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  Bench = require('../models/benchmark');
+  Backbone = require('backbone');
+var Notificator = require('./notification.js'),
+  BenchModel = require('../models/benchmark.js');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-var Notificator = require('./notification');
 module.exports = Backbone.Collection.extend({
-  model: Bench,
+  model: BenchModel,
   set_session: function (session) {
     this.session = session;
   },
@@ -13884,12 +13883,11 @@ module.exports = Backbone.Collection.extend({
   comparator: 'order'
 });
 
-},{"../models/benchmark":9,"./notification":7,"backbone":1,"jquery":3}],6:[function(require,module,exports){
-//[Collection]  LoginLst
+},{"../models/benchmark.js":9,"./notification.js":7,"backbone":1,"jquery":3}],6:[function(require,module,exports){
 var $ = require('jquery'),
   Backbone = require('backbone');
-Backbone.$ = $;
 var LoginModel = require('../models/login.js');
+Backbone.$ = $;
 module.exports = Backbone.Collection.extend({
   model: LoginModel,
   next_order: function () {
@@ -13912,15 +13910,14 @@ module.exports = Backbone.Collection.extend({
 });
 
 },{"../models/login.js":10,"backbone":1,"jquery":3}],7:[function(require,module,exports){
-// [Collection] Notification
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  NotificationView = require('../views/notification/notification'),
-  Notification = require('../models/notification');
+  Backbone = require('backbone');
+var NotificationView = require('../views/notification/notification.js'),
+  NotificationModel = require('../models/notification.js');
 Backbone.$ = $;
 var Notificator = null;
 var NotificationList = Backbone.Collection.extend({
-  model: Notification,
+  model: NotificationModel,
   initialize: function () {
     this.listenTo(this, 'add', this.add_one);
   },
@@ -13942,7 +13939,7 @@ var NotificationList = Backbone.Collection.extend({
     if (time !== undefined) {
       attributes.timeout = time;
     }
-    var notif = new Notification(attributes);
+    var notif = new NotificationModel(attributes);
     this.add(notif);
   },
   add_one: function (model) {
@@ -13963,16 +13960,15 @@ else {
   module.exports = Notificator;
 }
 
-},{"../models/notification":11,"../views/notification/notification":22,"backbone":1,"jquery":3}],8:[function(require,module,exports){
-// [Model]  BenchLatency
+},{"../models/notification.js":11,"../views/notification/notification.js":22,"backbone":1,"jquery":3}],8:[function(require,module,exports){
 var $ = require('jquery'),
   co = require('co'),
-  Backbone = require('backbone'),
-  Bench = require('./benchmark.js');
+  Backbone = require('backbone');
+var BenchModel = require('./benchmark.js'),
+  Notificator = require('../collections/notification');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-var Notificator = require('../collections/notification');
-module.exports = Bench.extend({
+module.exports = BenchModel.extend({
   call_bench: function () {
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
@@ -14003,12 +13999,11 @@ module.exports = Bench.extend({
 });
 
 },{"../collections/notification":7,"./benchmark.js":9,"backbone":1,"co":2,"jquery":3}],9:[function(require,module,exports){
-// [Model]  Bench
 var $ = require('jquery'),
   Backbone = require('backbone');
+var Notificator = require('../collections/notification');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-var Notificator = require('../collections/notification');
 module.exports = Backbone.Model.extend({
   defaults: function () {
     // status : created, started, loading, done
@@ -14096,7 +14091,6 @@ module.exports = Backbone.Model.extend({
 });
 
 },{"../collections/notification":7,"backbone":1,"jquery":3}],10:[function(require,module,exports){
-//[Model]   LoginModel
 var $ = require('jquery'),
   Backbone = require('backbone');
 Backbone.$ = $;
@@ -14117,8 +14111,7 @@ var $ = require('jquery'),
   Backbone = require('backbone');
 Backbone.$ = $;
 module.exports = Backbone.Model.extend({
-  initialize: function (Notifications) {
-    this.Notifications = Notifications;
+  initialize: function () {
     this.lock = false;
     this.time_lock = false;
     this.mouse_hover = false;
@@ -14167,7 +14160,6 @@ module.exports = Backbone.Model.extend({
 });
 
 },{"backbone":1,"jquery":3}],12:[function(require,module,exports){
-// [View] BenchAppView
 var $ = require('jquery'),
   Backbone = require('backbone');
 var template = require('./benchmark.tpl'),
@@ -14175,7 +14167,7 @@ var template = require('./benchmark.tpl'),
   BenchSelector = require('../benchmark-selector/benchmark-selector.js'),
   Notificator = require('../../collections/notification'),
   BenchLatency = require('../../models/bench-latency.js'),
-  Bench = require('../../models/benchmark.js'),
+  BenchModel = require('../../models/benchmark.js'),
   BenchList = require('../../collections/benchmark.js');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
@@ -14188,11 +14180,11 @@ module.exports = Backbone.View.extend({
   },
   initialize: function (session) {
     this.session = session;
-    this.Benchs = new BenchList();
-    this.Benchs.set_session(session);
+    this.collection = new BenchList();
+    this.collection.set_session(session);
     this.initial_render();
     this.bench_running = false;
-    this.listenTo(this.Benchs, 'add', this.add_one);
+    this.listenTo(this.collection, 'add', this.add_one);
     this.inti_benchs();
   },
   initial_render: function () {
@@ -14221,26 +14213,26 @@ module.exports = Backbone.View.extend({
       if (!desc[1].server_side) {
         return new_client_side_bench(desc);
       }
-      var bench = new Bench({
+      var bench = new BenchModel({
         title: desc[1].name,
-        order: this.Benchs.next_order(),
+        order: this.collection.next_order(),
         method: desc[0],
         use_db: desc[1].requires_setup,
       });
       bench.set_session(this.session);
-      this.Benchs.add(bench);
+      this.collection.add(bench);
     };
     var new_client_side_bench = (desc) => {
       // create and save a custom Model inheriting from Benchmark model
       var bench = new BenchLatency({
         title: desc[1].name,
-        order: this.Benchs.next_order(),
+        order: this.collection.next_order(),
         method: desc[0],
         use_db: desc[1].requires_setup,
         custom: true
       });
       bench.set_session(this.session);
-      this.Benchs.add(bench);
+      this.collection.add(bench);
     };
     this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_list', [], {})
       .then((ret) => {
@@ -14249,13 +14241,13 @@ module.exports = Backbone.View.extend({
   },
   start_benchmark: function () {
     if (!this.bench_running) {
-      this.Benchs.each(function (bench) {
+      this.collection.each(function (bench) {
         bench.set({
           'status': 'started'
         });
       });
       this.bench_running = true;
-      this.Benchs.start_bench()
+      this.collection.start_bench()
         .then(() => {
           this.bench_running = false;
         });
@@ -14278,16 +14270,15 @@ return __p;
 
 },{"underscore":4}],14:[function(require,module,exports){
 (function (global){
-// [View] LoginAppView
 var $ = require('jquery'),
   co = require('co'),
   Session = (typeof window !== "undefined" ? window['Session'] : typeof global !== "undefined" ? global['Session'] : null),
   Backbone = require('backbone');
-Backbone.$ = $;
 var template = require('./login.tpl'),
   LoginView = require('../login/login.js'),
   LoginModel = require('../../models/login.js'),
   LoginLst = require('../../collections/login.js');
+Backbone.$ = $;
 var TRYTON_SERVER = 'http://localhost:7999';
 var TRYTON_DATABASE = '4.0';
 var TRYTON_LOGIN = 'admin';
@@ -14395,10 +14386,9 @@ return __p;
 };
 
 },{"underscore":4}],16:[function(require,module,exports){
-// [View]       BenchSelectorView
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  template = require('./benchmark-selector.tpl');
+  Backbone = require('backbone');
+var template = require('./benchmark-selector.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'button',
@@ -14435,10 +14425,9 @@ return __p;
 };
 
 },{"underscore":4}],18:[function(require,module,exports){
-// [View]       BenchView
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  template = require('./benchmark.tpl');
+  Backbone = require('backbone');
+var template = require('./benchmark.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'div',
@@ -14522,11 +14511,10 @@ return __p;
 };
 
 },{"underscore":4}],20:[function(require,module,exports){
-// [View]   LoginView
 var $ = require('jquery'),
   Backbone = require('backbone');
-Backbone.$ = $;
 var template = require('../login/login_elem.tpl');
+Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'div',
   template: template,
@@ -14572,8 +14560,8 @@ return __p;
 
 },{"underscore":4}],22:[function(require,module,exports){
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  template = require('./notification.tpl');
+  Backbone = require('backbone');
+var template = require('./notification.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'aside',

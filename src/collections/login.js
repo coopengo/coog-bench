@@ -1,8 +1,7 @@
-//[Collection]  LoginLst
 var $ = require('jquery'),
   Backbone = require('backbone');
-Backbone.$ = $;
 var LoginModel = require('../models/login.js');
+Backbone.$ = $;
 module.exports = Backbone.Collection.extend({
   model: LoginModel,
   next_order: function () {

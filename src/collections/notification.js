@@ -1,12 +1,11 @@
-// [Collection] Notification
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  NotificationView = require('../views/notification/notification'),
-  Notification = require('../models/notification');
+  Backbone = require('backbone');
+var NotificationView = require('../views/notification/notification.js'),
+  NotificationModel = require('../models/notification.js');
 Backbone.$ = $;
 var Notificator = null;
 var NotificationList = Backbone.Collection.extend({
-  model: Notification,
+  model: NotificationModel,
   initialize: function () {
     this.listenTo(this, 'add', this.add_one);
   },
@@ -28,7 +27,7 @@ var NotificationList = Backbone.Collection.extend({
     if (time !== undefined) {
       attributes.timeout = time;
     }
-    var notif = new Notification(attributes);
+    var notif = new NotificationModel(attributes);
     this.add(notif);
   },
   add_one: function (model) {

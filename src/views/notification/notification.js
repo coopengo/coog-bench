@@ -1,6 +1,6 @@
 var $ = require('jquery'),
-  Backbone = require('backbone'),
-  template = require('./notification.tpl');
+  Backbone = require('backbone');
+var template = require('./notification.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
   tagName: 'aside',

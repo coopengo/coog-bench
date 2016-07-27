@@ -1,9 +1,8 @@
-// [Model]  Bench
 var $ = require('jquery'),
   Backbone = require('backbone');
+var Notificator = require('../collections/notification');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-var Notificator = require('../collections/notification');
 module.exports = Backbone.Model.extend({
   defaults: function () {
     // status : created, started, loading, done
