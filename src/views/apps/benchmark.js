@@ -26,7 +26,9 @@ module.exports = Backbone.View.extend({
 
   initialize: function(session) {
     this.session = session;
-    this.Benchs = new BenchList(session);
+    this.Benchs = new BenchList();
+    this.Benchs.set_session(session);
+
     this.initial_render();
     this.bench_running = false;
 

@@ -14059,7 +14059,7 @@ var Notificator = require('./notification');
 module.exports = Backbone.Collection.extend({
   model: Bench,
   localStorage: new Backbone.LocalStorage('benchs-backbone'),
-  initialize: function (session) {
+  set_session: function (session) {
     this.session = session;
   },
   enable: function () {
@@ -14459,7 +14459,9 @@ module.exports = Backbone.View.extend({
 
   initialize: function(session) {
     this.session = session;
-    this.Benchs = new BenchList(session);
+    this.Benchs = new BenchList();
+    this.Benchs.set_session(session);
+
     this.initial_render();
     this.bench_running = false;
 

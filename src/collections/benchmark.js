@@ -9,7 +9,7 @@ var Notificator = require('./notification');
 module.exports = Backbone.Collection.extend({
   model: Bench,
   localStorage: new Backbone.LocalStorage('benchs-backbone'),
-  initialize: function (session) {
+  set_session: function (session) {
     this.session = session;
   },
   enable: function () {
