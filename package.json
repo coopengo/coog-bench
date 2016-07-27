@@ -21,8 +21,8 @@
     "tryton-session": "global:Session"
   },
   "scripts": {
-    "beautify": "js-beautify --config .jsbeautifyrc -r src/*.js src/**/*.js",
-    "lint": "jshint -c .jshintrc src/*.js src/**/*.js",
+    "beautify": "js-beautify --config .jsbeautifyrc -r src/*.js src/**/*.js src/**/**/*.js",
+    "lint": "jshint -c .jshintrc src/*.js src/**/*.js src/**/**/*.js",
     "assets": "wget -O assets/js/underscore.js http://underscorejs.org/underscore.js && wget -O assets/js/moment.js https://raw.githubusercontent.com/moment/moment/master/moment.js && wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/master/dist/tryton-session.js && wget -O assets/css/pure.css http://yui.yahooapis.com/pure/0.6.0/pure.css && wget -O assets/css/grids-responsive-min.css http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css",
     "build": "browserify --standalone Session -o dist/js/coog-bench.js ."
   },
