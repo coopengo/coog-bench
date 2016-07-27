@@ -16,8 +16,6 @@
 
        <div id="benchmarks-selector"></div>
        <button class="pure-button" id="start_btn">Start Bench</button>
-       <button class="pure-button" id="clean_btn">Clean DB</button>
-       <button class="pure-button" id="clean_collect_btn">Clean Collection</button>
        <div id="notification-area"></div>
        <div id="bench-container"></div>
     </div>

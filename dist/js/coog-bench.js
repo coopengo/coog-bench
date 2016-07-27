@@ -14184,8 +14184,7 @@ module.exports = Backbone.View.extend({
   className: 'bench-app',
   template: template,
   events: {
-    'click #start_btn': 'start_benchmark',
-    'click #clean_btn': 'clean_db'
+    'click #start_btn': 'start_benchmark'
   },
   initialize: function (session) {
     this.session = session;
@@ -14265,18 +14264,6 @@ module.exports = Backbone.View.extend({
       Notificator.new_notif('Benchmark already in progress', 'error');
     }
   },
-  clean_db: function () {
-    if (!this.bench_running) {
-      this.bench_running = true;
-      this.Benchs.clean_db()
-        .then(() => {
-          this.bench_running = false;
-        });
-    }
-    else {
-      Notificator.new_notif('Benchmark already in progress', 'error');
-    }
-  }
 });
 
 },{"../../collections/benchmark.js":5,"../../collections/notification":7,"../../models/bench-latency.js":8,"../../models/benchmark.js":9,"../benchmark-selector/benchmark-selector.js":16,"../benchmark/benchmark.js":18,"./benchmark.tpl":13,"backbone":1,"jquery":3}],13:[function(require,module,exports){
@@ -14284,7 +14271,7 @@ var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<div class="pure-g"> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> <div class="pure-u-1 pure-u-md-2-3 pure-u-lg-1-2"> <div class="pure-g"> <div class="pure-u-1"> <div id="title"> <img class="company-img" src="dist/img/coopengo.png" alt="Coopengo"> <p>C<span class="blue">oo</span>g Benchmark</p> </div> </div> <div class="pure-u-1"> <p class="home-right-title">Powered by Co<span class="blue">open</span>go</p> </div> </div> <div id="benchmarks-selector"></div> <button class="pure-button" id="start_btn">Start Bench</button> <button class="pure-button" id="clean_btn">Clean DB</button> <button class="pure-button" id="clean_collect_btn">Clean Collection</button> <div id="notification-area"></div> <div id="bench-container"></div> </div> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> </div>';
+__p+='<div class="pure-g"> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> <div class="pure-u-1 pure-u-md-2-3 pure-u-lg-1-2"> <div class="pure-g"> <div class="pure-u-1"> <div id="title"> <img class="company-img" src="dist/img/coopengo.png" alt="Coopengo"> <p>C<span class="blue">oo</span>g Benchmark</p> </div> </div> <div class="pure-u-1"> <p class="home-right-title">Powered by Co<span class="blue">open</span>go</p> </div> </div> <div id="benchmarks-selector"></div> <button class="pure-button" id="start_btn">Start Bench</button> <div id="notification-area"></div> <div id="bench-container"></div> </div> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> </div>';
 }
 return __p;
 };

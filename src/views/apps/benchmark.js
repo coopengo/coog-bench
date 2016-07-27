@@ -15,8 +15,7 @@ module.exports = Backbone.View.extend({
   className: 'bench-app',
   template: template,
   events: {
-    'click #start_btn': 'start_benchmark',
-    'click #clean_btn': 'clean_db'
+    'click #start_btn': 'start_benchmark'
   },
   initialize: function (session) {
     this.session = session;
@@ -96,16 +95,4 @@ module.exports = Backbone.View.extend({
       Notificator.new_notif('Benchmark already in progress', 'error');
     }
   },
-  clean_db: function () {
-    if (!this.bench_running) {
-      this.bench_running = true;
-      this.Benchs.clean_db()
-        .then(() => {
-          this.bench_running = false;
-        });
-    }
-    else {
-      Notificator.new_notif('Benchmark already in progress', 'error');
-    }
-  }
 });
