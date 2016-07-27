@@ -3,10 +3,8 @@ var $ = require('jquery'),
   Backbone = require('backbone');
 Backbone.$ = $;
 var LoginModel = require('../models/login.js');
-require('backbone.localstorage');
 module.exports = Backbone.Collection.extend({
   model: LoginModel,
-  localStorage: new Backbone.LocalStorage('logins-backbone'),
   next_order: function () {
     if (!this.length) {
       return 1;

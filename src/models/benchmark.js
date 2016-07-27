@@ -22,7 +22,7 @@ module.exports = Backbone.Model.extend({
     };
   },
   toggle: function () {
-    this.save({
+    this.set({
       enable: !this.get('enable')
     });
   },
@@ -32,15 +32,15 @@ module.exports = Backbone.Model.extend({
   call_bench: function () {
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
-    this.save({
+    this.set({
       status: 'loading'
     });
     return this.rpc(this.session, BENCH_MODEL, this.attributes.method)
       .then((result) => {
         var attr = this.read_result(result);
         if (attr) {
-          this.save(attr);
-          this.save({
+          this.set(attr);
+          this.set({
             status: 'done'
           });
         }

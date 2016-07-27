@@ -10,7 +10,7 @@ module.exports = Bench.extend({
   call_bench: function () {
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
-    this.save({
+    this.set({
       status: 'loading'
     });
     var d = new Date();
@@ -27,7 +27,7 @@ module.exports = Bench.extend({
         var res = d.getTime();
         res = (res - n);
         res = res / 100;
-        this.save({
+        this.set({
           status: 'done',
           iter: '100',
           score: res

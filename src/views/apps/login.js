@@ -1,4 +1,4 @@
-// [View]   LoginAppView
+// [View] LoginAppView
 var $ = require('jquery'),
   co = require('co'),
   Session = require('tryton-session'),
@@ -6,6 +6,7 @@ var $ = require('jquery'),
 Backbone.$ = $;
 var template = require('./login.tpl'),
   LoginView = require('../login/login.js'),
+  LoginModel = require('../../models/login.js'),
   LoginLst = require('../../collections/login.js');
 var TRYTON_SERVER = 'http://localhost:7999';
 var TRYTON_DATABASE = '4.0';
@@ -32,14 +33,6 @@ module.exports = Backbone.View.extend({
       .append(this.$el);
     this.$el.html(this.template);
   },
-  clean_collection: function () {
-    while (this.collection.length) {
-      this.collection.models.forEach((model) => {
-        model.destroy();
-      });
-    }
-    return $.when();
-  },
   add_one: function (model) {
     var view = new LoginView({
       model: model
@@ -47,29 +40,24 @@ module.exports = Backbone.View.extend({
     this.container.append(view.render()
       .el);
   },
+  new_model: function (name, value, type) {
+    if (type === undefined) {
+      type = 'text';
+    }
+    var model = new LoginModel({
+      name: name,
+      type: type,
+      value: value,
+      order: this.collection.next_order(),
+    });
+    this.collection.add(model);
+  },
   inti_models: function () {
     // init all the models here
-    this.collection.create({
-      name: 'server',
-      value: TRYTON_SERVER,
-      order: this.collection.next_order(),
-    });
-    this.collection.create({
-      name: 'db',
-      value: TRYTON_DATABASE,
-      order: this.collection.next_order(),
-    });
-    this.collection.create({
-      name: 'login',
-      value: TRYTON_LOGIN,
-      order: this.collection.next_order(),
-    });
-    this.collection.create({
-      name: 'password',
-      type: 'password',
-      value: TRYTON_PASSWORD,
-      order: this.collection.next_order(),
-    });
+    this.new_model('server', TRYTON_SERVER);
+    this.new_model('db', TRYTON_DATABASE);
+    this.new_model('login', TRYTON_LOGIN);
+    this.new_model('password', TRYTON_PASSWORD, 'password');
   },
   login: function () {
     var func = co.wrap(function* (credentials) {

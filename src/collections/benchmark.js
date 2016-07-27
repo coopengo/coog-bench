@@ -3,12 +3,10 @@ var $ = require('jquery'),
   Backbone = require('backbone'),
   Bench = require('../models/benchmark');
 Backbone.$ = $;
-require('backbone.localstorage');
 var BENCH_MODEL = 'utils.benchmark_class';
 var Notificator = require('./notification');
 module.exports = Backbone.Collection.extend({
   model: Bench,
-  localStorage: new Backbone.LocalStorage('benchs-backbone'),
   set_session: function (session) {
     this.session = session;
   },

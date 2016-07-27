@@ -1,264 +1,4 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Session = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/**
- * Backbone localStorage Adapter
- * Version 1.1.16
- *
- * https://github.com/jeromegn/Backbone.localStorage
- */
-(function (root, factory) {
-  if (typeof exports === 'object' && typeof require === 'function') {
-    module.exports = factory(require("backbone"));
-  } else if (typeof define === "function" && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(["backbone"], function(Backbone) {
-      // Use global variables if the locals are undefined.
-      return factory(Backbone || root.Backbone);
-    });
-  } else {
-    factory(Backbone);
-  }
-}(this, function(Backbone) {
-// A simple module to replace `Backbone.sync` with *localStorage*-based
-// persistence. Models are given GUIDS, and saved into a JSON object. Simple
-// as that.
-
-// Generate four random hex digits.
-function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-};
-
-// Generate a pseudo-GUID by concatenating random hexadecimal.
-function guid() {
-   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-};
-
-function isObject(item) {
-  return item === Object(item);
-}
-
-function contains(array, item) {
-  var i = array.length;
-  while (i--) if (array[i] === item) return true;
-  return false;
-}
-
-function extend(obj, props) {
-  for (var key in props) obj[key] = props[key]
-  return obj;
-}
-
-function result(object, property) {
-    if (object == null) return void 0;
-    var value = object[property];
-    return (typeof value === 'function') ? object[property]() : value;
-}
-
-// Our Store is represented by a single JS object in *localStorage*. Create it
-// with a meaningful name, like the name you'd give a table.
-// window.Store is deprectated, use Backbone.LocalStorage instead
-Backbone.LocalStorage = window.Store = function(name, serializer) {
-  if( !this.localStorage ) {
-    throw "Backbone.localStorage: Environment does not support localStorage."
-  }
-  this.name = name;
-  this.serializer = serializer || {
-    serialize: function(item) {
-      return isObject(item) ? JSON.stringify(item) : item;
-    },
-    // fix for "illegal access" error on Android when JSON.parse is passed null
-    deserialize: function (data) {
-      return data && JSON.parse(data);
-    }
-  };
-  var store = this.localStorage().getItem(this.name);
-  this.records = (store && store.split(",")) || [];
-};
-
-extend(Backbone.LocalStorage.prototype, {
-
-  // Save the current state of the **Store** to *localStorage*.
-  save: function() {
-    this.localStorage().setItem(this.name, this.records.join(","));
-  },
-
-  // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
-  // have an id of it's own.
-  create: function(model) {
-    if (!model.id && model.id !== 0) {
-      model.id = guid();
-      model.set(model.idAttribute, model.id);
-    }
-    this.localStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
-    this.records.push(model.id.toString());
-    this.save();
-    return this.find(model);
-  },
-
-  // Update a model by replacing its copy in `this.data`.
-  update: function(model) {
-    this.localStorage().setItem(this._itemName(model.id), this.serializer.serialize(model));
-    var modelId = model.id.toString();
-    if (!contains(this.records, modelId)) {
-      this.records.push(modelId);
-      this.save();
-    }
-    return this.find(model);
-  },
-
-  // Retrieve a model from `this.data` by id.
-  find: function(model) {
-    return this.serializer.deserialize(this.localStorage().getItem(this._itemName(model.id)));
-  },
-
-  // Return the array of all models currently in storage.
-  findAll: function() {
-    var result = [];
-    for (var i = 0, id, data; i < this.records.length; i++) {
-      id = this.records[i];
-      data = this.serializer.deserialize(this.localStorage().getItem(this._itemName(id)));
-      if (data != null) result.push(data);
-    }
-    return result;
-  },
-
-  // Delete a model from `this.data`, returning it.
-  destroy: function(model) {
-    this.localStorage().removeItem(this._itemName(model.id));
-    var modelId = model.id.toString();
-    for (var i = 0, id; i < this.records.length; i++) {
-      if (this.records[i] === modelId) {
-        this.records.splice(i, 1);
-      }
-    }
-    this.save();
-    return model;
-  },
-
-  localStorage: function() {
-    return localStorage;
-  },
-
-  // Clear localStorage for specific collection.
-  _clear: function() {
-    var local = this.localStorage(),
-      itemRe = new RegExp("^" + this.name + "-");
-
-    // Remove id-tracking item (e.g., "foo").
-    local.removeItem(this.name);
-
-    // Match all data items (e.g., "foo-ID") and remove.
-    for (var k in local) {
-      if (itemRe.test(k)) {
-        local.removeItem(k);
-      }
-    }
-
-    this.records.length = 0;
-  },
-
-  // Size of localStorage.
-  _storageSize: function() {
-    return this.localStorage().length;
-  },
-
-  _itemName: function(id) {
-    return this.name+"-"+id;
-  }
-
-});
-
-// localSync delegate to the model or collection's
-// *localStorage* property, which should be an instance of `Store`.
-// window.Store.sync and Backbone.localSync is deprecated, use Backbone.LocalStorage.sync instead
-Backbone.LocalStorage.sync = window.Store.sync = Backbone.localSync = function(method, model, options) {
-  var store = result(model, 'localStorage') || result(model.collection, 'localStorage');
-
-  var resp, errorMessage;
-  //If $ is having Deferred - use it.
-  var syncDfd = Backbone.$ ?
-    (Backbone.$.Deferred && Backbone.$.Deferred()) :
-    (Backbone.Deferred && Backbone.Deferred());
-
-  try {
-
-    switch (method) {
-      case "read":
-        resp = model.id != undefined ? store.find(model) : store.findAll();
-        break;
-      case "create":
-        resp = store.create(model);
-        break;
-      case "update":
-        resp = store.update(model);
-        break;
-      case "delete":
-        resp = store.destroy(model);
-        break;
-    }
-
-  } catch(error) {
-    if (error.code === 22 && store._storageSize() === 0)
-      errorMessage = "Private browsing is unsupported";
-    else
-      errorMessage = error.message;
-  }
-
-  if (resp) {
-    if (options && options.success) {
-      if (Backbone.VERSION === "0.9.10") {
-        options.success(model, resp, options);
-      } else {
-        options.success(resp);
-      }
-    }
-    if (syncDfd) {
-      syncDfd.resolve(resp);
-    }
-
-  } else {
-    errorMessage = errorMessage ? errorMessage
-                                : "Record Not Found";
-
-    if (options && options.error)
-      if (Backbone.VERSION === "0.9.10") {
-        options.error(model, errorMessage, options);
-      } else {
-        options.error(errorMessage);
-      }
-
-    if (syncDfd)
-      syncDfd.reject(errorMessage);
-  }
-
-  // add compatibility with $.ajax
-  // always execute callback for success and error
-  if (options && options.complete) options.complete(resp);
-
-  return syncDfd && syncDfd.promise();
-};
-
-Backbone.ajaxSync = Backbone.sync;
-
-Backbone.getSyncMethod = function(model, options) {
-  var forceAjaxSync = options && options.ajaxSync;
-
-  if(!forceAjaxSync && (result(model, 'localStorage') || result(model.collection, 'localStorage'))) {
-    return Backbone.localSync;
-  }
-
-  return Backbone.ajaxSync;
-};
-
-// Override 'Backbone.sync' to default to localSync,
-// the original 'Backbone.sync' is still available in 'Backbone.ajaxSync'
-Backbone.sync = function(method, model, options) {
-  return Backbone.getSyncMethod(model, options).apply(this, [method, model, options]);
-};
-
-return Backbone.LocalStorage;
-}));
-
-},{"backbone":2}],2:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -2182,7 +1922,7 @@ return Backbone.LocalStorage;
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":4,"underscore":5}],3:[function(require,module,exports){
+},{"jquery":3,"underscore":4}],2:[function(require,module,exports){
 
 /**
  * slice() reference.
@@ -2421,7 +2161,7 @@ function isObject(val) {
   return Object == val.constructor;
 }
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /*eslint-disable no-unused-vars*/
 /*!
  * jQuery JavaScript Library v3.1.0
@@ -12497,7 +12237,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -14047,18 +13787,16 @@ return jQuery;
   }
 }.call(this));
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // [Collection] BenchList
 var $ = require('jquery'),
   Backbone = require('backbone'),
   Bench = require('../models/benchmark');
 Backbone.$ = $;
-require('backbone.localstorage');
 var BENCH_MODEL = 'utils.benchmark_class';
 var Notificator = require('./notification');
 module.exports = Backbone.Collection.extend({
   model: Bench,
-  localStorage: new Backbone.LocalStorage('benchs-backbone'),
   set_session: function (session) {
     this.session = session;
   },
@@ -14146,16 +13884,14 @@ module.exports = Backbone.Collection.extend({
   comparator: 'order'
 });
 
-},{"../models/benchmark":10,"./notification":8,"backbone":2,"backbone.localstorage":1,"jquery":4}],7:[function(require,module,exports){
+},{"../models/benchmark":9,"./notification":7,"backbone":1,"jquery":3}],6:[function(require,module,exports){
 //[Collection]  LoginLst
 var $ = require('jquery'),
   Backbone = require('backbone');
 Backbone.$ = $;
 var LoginModel = require('../models/login.js');
-require('backbone.localstorage');
 module.exports = Backbone.Collection.extend({
   model: LoginModel,
-  localStorage: new Backbone.LocalStorage('logins-backbone'),
   next_order: function () {
     if (!this.length) {
       return 1;
@@ -14175,17 +13911,16 @@ module.exports = Backbone.Collection.extend({
   comparator: 'order'
 });
 
-},{"../models/login.js":11,"backbone":2,"backbone.localstorage":1,"jquery":4}],8:[function(require,module,exports){
+},{"../models/login.js":10,"backbone":1,"jquery":3}],7:[function(require,module,exports){
+// [Collection] Notification
 var $ = require('jquery'),
   Backbone = require('backbone'),
   NotificationView = require('../views/notification/notification'),
   Notification = require('../models/notification');
-require('backbone.localstorage');
 Backbone.$ = $;
 var Notificator = null;
 var NotificationList = Backbone.Collection.extend({
   model: Notification,
-  localStorage: new Backbone.LocalStorage('notifications-backbone'),
   initialize: function () {
     this.listenTo(this, 'add', this.add_one);
   },
@@ -14207,7 +13942,8 @@ var NotificationList = Backbone.Collection.extend({
     if (time !== undefined) {
       attributes.timeout = time;
     }
-    this.create(attributes);
+    var notif = new Notification(attributes);
+    this.add(notif);
   },
   add_one: function (model) {
     var view = new NotificationView({
@@ -14227,7 +13963,7 @@ else {
   module.exports = Notificator;
 }
 
-},{"../models/notification":12,"../views/notification/notification":23,"backbone":2,"backbone.localstorage":1,"jquery":4}],9:[function(require,module,exports){
+},{"../models/notification":11,"../views/notification/notification":22,"backbone":1,"jquery":3}],8:[function(require,module,exports){
 // [Model]  BenchLatency
 var $ = require('jquery'),
   co = require('co'),
@@ -14240,7 +13976,7 @@ module.exports = Bench.extend({
   call_bench: function () {
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
-    this.save({
+    this.set({
       status: 'loading'
     });
     var d = new Date();
@@ -14257,7 +13993,7 @@ module.exports = Bench.extend({
         var res = d.getTime();
         res = (res - n);
         res = res / 100;
-        this.save({
+        this.set({
           status: 'done',
           iter: '100',
           score: res
@@ -14266,7 +14002,7 @@ module.exports = Bench.extend({
   },
 });
 
-},{"../collections/notification":8,"./benchmark.js":10,"backbone":2,"co":3,"jquery":4}],10:[function(require,module,exports){
+},{"../collections/notification":7,"./benchmark.js":9,"backbone":1,"co":2,"jquery":3}],9:[function(require,module,exports){
 // [Model]  Bench
 var $ = require('jquery'),
   Backbone = require('backbone');
@@ -14291,7 +14027,7 @@ module.exports = Backbone.Model.extend({
     };
   },
   toggle: function () {
-    this.save({
+    this.set({
       enable: !this.get('enable')
     });
   },
@@ -14301,15 +14037,15 @@ module.exports = Backbone.Model.extend({
   call_bench: function () {
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
-    this.save({
+    this.set({
       status: 'loading'
     });
     return this.rpc(this.session, BENCH_MODEL, this.attributes.method)
       .then((result) => {
         var attr = this.read_result(result);
         if (attr) {
-          this.save(attr);
-          this.save({
+          this.set(attr);
+          this.set({
             status: 'done'
           });
         }
@@ -14359,7 +14095,7 @@ module.exports = Backbone.Model.extend({
   },
 });
 
-},{"../collections/notification":8,"backbone":2,"jquery":4}],11:[function(require,module,exports){
+},{"../collections/notification":7,"backbone":1,"jquery":3}],10:[function(require,module,exports){
 //[Model]   LoginModel
 var $ = require('jquery'),
   Backbone = require('backbone');
@@ -14376,7 +14112,7 @@ module.exports = Backbone.Model.extend({
   },
 });
 
-},{"backbone":2,"jquery":4}],12:[function(require,module,exports){
+},{"backbone":1,"jquery":3}],11:[function(require,module,exports){
 var $ = require('jquery'),
   Backbone = require('backbone');
 Backbone.$ = $;
@@ -14430,75 +14166,71 @@ module.exports = Backbone.Model.extend({
   }
 });
 
-},{"backbone":2,"jquery":4}],13:[function(require,module,exports){
-// [View]     BenchAppView
-
-var $           = require('jquery'),
-  Backbone      = require('backbone');
-
-var template    = require('./benchmark.tpl'),
-  BenchView     = require('../benchmark/benchmark.js'),
+},{"backbone":1,"jquery":3}],12:[function(require,module,exports){
+// [View] BenchAppView
+var $ = require('jquery'),
+  Backbone = require('backbone');
+var template = require('./benchmark.tpl'),
+  BenchView = require('../benchmark/benchmark.js'),
   BenchSelector = require('../benchmark-selector/benchmark-selector.js'),
-  Notificator   = require('../../collections/notification'),
-  BenchLatency  = require('../../models/bench-latency.js'),
-  BenchList     = require('../../collections/benchmark.js');
-
+  Notificator = require('../../collections/notification'),
+  BenchLatency = require('../../models/bench-latency.js'),
+  Bench = require('../../models/benchmark.js'),
+  BenchList = require('../../collections/benchmark.js');
 Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
-
 module.exports = Backbone.View.extend({
   tagName: 'div',
   className: 'bench-app',
   template: template,
-
-  events:{
+  events: {
     'click #start_btn': 'start_benchmark',
-    'click #clean_collect_btn': 'clean_collection',
     'click #clean_btn': 'clean_db'
   },
-
-  initialize: function(session) {
+  initialize: function (session) {
     this.session = session;
     this.Benchs = new BenchList();
     this.Benchs.set_session(session);
-
     this.initial_render();
     this.bench_running = false;
-
     this.listenTo(this.Benchs, 'add', this.add_one);
-    this.Benchs.fetch()
-    .then(() => this.clean_collection())
-    .then(() => this.inti_benchs());
+    this.inti_benchs();
   },
-
-  initial_render: function() {
-    // this.$el.html(this.template);
-
-    $('body').empty();
-    $('body').append(this.$el);
+  initial_render: function () {
+    $('body')
+      .empty();
+    $('body')
+      .append(this.$el);
     this.$el.html(this.template);
   },
-
-  add_one: function(bench) {
-    var view_bench = new BenchView({model: bench});
-    var view_select = new BenchSelector({model: bench});
-    this.$('#bench-container').append(view_bench.render().el);
-    this.$('#benchmarks-selector').append(view_select.render().el);
+  add_one: function (bench) {
+    var view_bench = new BenchView({
+      model: bench
+    });
+    var view_select = new BenchSelector({
+      model: bench
+    });
+    this.$('#bench-container')
+      .append(view_bench.render()
+        .el);
+    this.$('#benchmarks-selector')
+      .append(view_select.render()
+        .el);
   },
-
-  inti_benchs: function() {
+  inti_benchs: function () {
     var new_bench = (desc) => {
-      if (!desc[1].server_side){
+      if (!desc[1].server_side) {
         return new_client_side_bench(desc);
       }
-      this.Benchs.create({
+      var bench = new Bench({
         title: desc[1].name,
         order: this.Benchs.next_order(),
         method: desc[0],
         use_db: desc[1].requires_setup,
-      }).set_session(this.session);
+      });
+      bench.set_session(this.session);
+      this.Benchs.add(bench);
     };
-
     var new_client_side_bench = (desc) => {
       // create and save a custom Model inheriting from Benchmark model
       var bench = new BenchLatency({
@@ -14510,48 +14242,44 @@ module.exports = Backbone.View.extend({
       });
       bench.set_session(this.session);
       this.Benchs.add(bench);
-      bench.save();
     };
-
     this.session.rpc('model.' + BENCH_MODEL + '.' + '_benchmark_list', [], {})
-    .then((ret) => {
-      ret.methods.forEach(new_bench);
-    });
-  },
-
-  start_benchmark: function() {
-    if (!this.bench_running) {
-      this.Benchs.each(function (bench) { bench.save({'status': 'started'}); });
-      this.bench_running = true;
-      this.Benchs.start_bench().then(()=>{
-        this.bench_running = false;
+      .then((ret) => {
+        ret.methods.forEach(new_bench);
       });
-    } else {
+  },
+  start_benchmark: function () {
+    if (!this.bench_running) {
+      this.Benchs.each(function (bench) {
+        bench.set({
+          'status': 'started'
+        });
+      });
+      this.bench_running = true;
+      this.Benchs.start_bench()
+        .then(() => {
+          this.bench_running = false;
+        });
+    }
+    else {
       Notificator.new_notif('Benchmark already in progress', 'error');
     }
   },
-
-  clean_db: function() {
+  clean_db: function () {
     if (!this.bench_running) {
       this.bench_running = true;
-      this.Benchs.clean_db().then(()=>{
-        this.bench_running = false;
-      });
-    } else {
+      this.Benchs.clean_db()
+        .then(() => {
+          this.bench_running = false;
+        });
+    }
+    else {
       Notificator.new_notif('Benchmark already in progress', 'error');
     }
-  },
-
-  clean_collection: function() {
-    while (this.Benchs.length){
-      this.Benchs.models.forEach((model) => {
-        model.destroy();
-      });
-    }
-    return $.when();
   }
 });
-},{"../../collections/benchmark.js":6,"../../collections/notification":8,"../../models/bench-latency.js":9,"../benchmark-selector/benchmark-selector.js":17,"../benchmark/benchmark.js":19,"./benchmark.tpl":14,"backbone":2,"jquery":4}],14:[function(require,module,exports){
+
+},{"../../collections/benchmark.js":5,"../../collections/notification":7,"../../models/bench-latency.js":8,"../../models/benchmark.js":9,"../benchmark-selector/benchmark-selector.js":16,"../benchmark/benchmark.js":18,"./benchmark.tpl":13,"backbone":1,"jquery":3}],13:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14561,25 +14289,22 @@ __p+='<div class="pure-g"> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></d
 return __p;
 };
 
-},{"underscore":5}],15:[function(require,module,exports){
+},{"underscore":4}],14:[function(require,module,exports){
 (function (global){
-// [View]   LoginAppView
-
-var $           = require('jquery'),
-  co            = require('co'),
-  Session       = (typeof window !== "undefined" ? window['Session'] : typeof global !== "undefined" ? global['Session'] : null),
-  Backbone      = require('backbone');
+// [View] LoginAppView
+var $ = require('jquery'),
+  co = require('co'),
+  Session = (typeof window !== "undefined" ? window['Session'] : typeof global !== "undefined" ? global['Session'] : null),
+  Backbone = require('backbone');
 Backbone.$ = $;
-
-var template    = require('./login.tpl'),
-    LoginView   = require('../login/login.js'),
-    LoginLst    = require('../../collections/login.js');
-
+var template = require('./login.tpl'),
+  LoginView = require('../login/login.js'),
+  LoginModel = require('../../models/login.js'),
+  LoginLst = require('../../collections/login.js');
 var TRYTON_SERVER = 'http://localhost:7999';
 var TRYTON_DATABASE = '4.0';
 var TRYTON_LOGIN = 'admin';
 var TRYTON_PASSWORD = 'admin';
-
 module.exports = Backbone.View.extend({
   tagName: 'div',
   className: 'login-app',
@@ -14587,92 +14312,81 @@ module.exports = Backbone.View.extend({
   events: {
     'click #connect': 'connect',
   },
-
-  initialize: function() {
+  initialize: function () {
     this.initial_render();
-
     this.collection = new LoginLst();
     this.container = this.$el.find('#login-container');
-
     this.listenTo(this.collection, 'add', this.add_one);
     this.inti_models();
   },
-
-  initial_render: function() {
-    $('body').empty();
-    $('body').append(this.$el);
+  initial_render: function () {
+    $('body')
+      .empty();
+    $('body')
+      .append(this.$el);
     this.$el.html(this.template);
   },
-
-  clean_collection: function() {
-    while (this.collection.length){
-      this.collection.models.forEach((model) => {
-        model.destroy();
-      });
+  add_one: function (model) {
+    var view = new LoginView({
+      model: model
+    });
+    this.container.append(view.render()
+      .el);
+  },
+  new_model: function (name, value, type) {
+    if (type === undefined) {
+      type = 'text';
     }
-    return $.when();
+    var model = new LoginModel({
+      name: name,
+      type: type,
+      value: value,
+      order: this.collection.next_order(),
+    });
+    this.collection.add(model);
   },
-
-  add_one: function(model) {
-    var view = new LoginView({model: model});
-    this.container.append(view.render().el);
-  },
-
-  inti_models: function() {
+  inti_models: function () {
     // init all the models here
-
-    this.collection.create({
-      name: 'server',
-      value: TRYTON_SERVER,
-      order: this.collection.next_order(),
-    });
-
-    this.collection.create({
-      name: 'db',
-      value: TRYTON_DATABASE,
-      order: this.collection.next_order(),
-    });
-
-    this.collection.create({
-      name: 'login',
-      value: TRYTON_LOGIN,
-      order: this.collection.next_order(),
-    });
-
-    this.collection.create({
-      name: 'password',
-      type: 'password',
-      value: TRYTON_PASSWORD,
-      order: this.collection.next_order(),
-    });
+    this.new_model('server', TRYTON_SERVER);
+    this.new_model('db', TRYTON_DATABASE);
+    this.new_model('login', TRYTON_LOGIN);
+    this.new_model('password', TRYTON_PASSWORD, 'password');
   },
-
-  login: function() {
+  login: function () {
     var func = co.wrap(function* (credentials) {
       var session = new Session(credentials.server, credentials.db);
       yield session.start(credentials.login, credentials.password);
       return session;
     });
-
     var credentials = {
-      'server'  : this.collection.findWhere({name: 'server'}).attributes.value,
-      'db'      : this.collection.findWhere({name: 'db'}).attributes.value,
-      'login'   : this.collection.findWhere({name: 'login'}).attributes.value,
-      'password': this.collection.findWhere({name: 'password'}).attributes.value
+      'server': this.collection.findWhere({
+          name: 'server'
+        })
+        .attributes.value,
+      'db': this.collection.findWhere({
+          name: 'db'
+        })
+        .attributes.value,
+      'login': this.collection.findWhere({
+          name: 'login'
+        })
+        .attributes.value,
+      'password': this.collection.findWhere({
+          name: 'password'
+        })
+        .attributes.value
     };
-
     return func(credentials);
   },
-
-  connect: function() {
+  connect: function () {
     if (!this.collection.empty()) {
-      this.login().then(
-        (session) => this.trigger('logged', session), 
-        () => console.log('Fail to connect'));
+      this.login()
+        .then(
+          (session) => this.trigger('logged', session), () => console.log(
+            'Fail to connect'));
     }
   },
-
-  close: function() {
+  close: function () {
     // remove all views from DOM
     // remove this from DOM
     // unbind events
@@ -14683,7 +14397,7 @@ module.exports = Backbone.View.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../collections/login.js":7,"../login/login.js":21,"./login.tpl":16,"backbone":2,"co":3,"jquery":4}],16:[function(require,module,exports){
+},{"../../collections/login.js":6,"../../models/login.js":10,"../login/login.js":20,"./login.tpl":15,"backbone":1,"co":2,"jquery":3}],15:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14693,14 +14407,12 @@ __p+='<div class="pure-g"> <div class="pure-u-1-5"></div> <div class="pure-u-1-5
 return __p;
 };
 
-},{"underscore":5}],17:[function(require,module,exports){
+},{"underscore":4}],16:[function(require,module,exports){
 // [View]       BenchSelectorView
-
-var $           = require('jquery'),
-  Backbone      = require('backbone'),
-  template      = require('./benchmark-selector.tpl');
+var $ = require('jquery'),
+  Backbone = require('backbone'),
+  template = require('./benchmark-selector.tpl');
 Backbone.$ = $;
-
 module.exports = Backbone.View.extend({
   tagName: 'button',
   template: template,
@@ -14708,23 +14420,22 @@ module.exports = Backbone.View.extend({
   events: {
     'click': 'button_clicked'
   },
-
-  initialize: function() {
+  initialize: function () {
     this.listenTo(this.model, 'destroy', this.remove);
   },
-
-  button_clicked: function() {
+  button_clicked: function () {
     this.$el.toggleClass('bench-selector-ko bench-selector-ok');
     this.model.toggle();
   },
-
-  render: function() {
-    this.$el.html(this.template({title: this.model.attributes.title}));
+  render: function () {
+    this.$el.html(this.template({
+      title: this.model.attributes.title
+    }));
     return this;
   }
-
 });
-},{"./benchmark-selector.tpl":18,"backbone":2,"jquery":4}],18:[function(require,module,exports){
+
+},{"./benchmark-selector.tpl":17,"backbone":1,"jquery":3}],17:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14736,70 +14447,70 @@ __p+='<span>'+
 return __p;
 };
 
-},{"underscore":5}],19:[function(require,module,exports){
+},{"underscore":4}],18:[function(require,module,exports){
 // [View]       BenchView
-
-var $           = require('jquery'),
-  Backbone      = require('backbone'),
-  template      = require('./benchmark.tpl');
+var $ = require('jquery'),
+  Backbone = require('backbone'),
+  template = require('./benchmark.tpl');
 Backbone.$ = $;
-
 module.exports = Backbone.View.extend({
   tagName: 'div',
   template: template,
   // events handle in initializer
-
-  initialize: function() {
+  initialize: function () {
     this.model.on('change:status', this.render, this);
     this.listenTo(this.model, 'destroy', this.remove);
   },
-
-  render: function() {
+  render: function () {
     var status = this.model.attributes.status;
-
     var hide_elems = () => {
-        this.$el.find('.bench-body').hide();
-        this.$el.find('.bench-loading').hide();
-        this.$el.find('.custom-body').hide();
-
-        this.$el.find('.status').hide();
-        this.$el.find('.iter').hide();
-
-        this.$el.hide();
+      this.$el.find('.bench-body')
+        .hide();
+      this.$el.find('.bench-loading')
+        .hide();
+      this.$el.find('.custom-body')
+        .hide();
+      this.$el.find('.status')
+        .hide();
+      this.$el.find('.iter')
+        .hide();
+      this.$el.hide();
     };
-
     if (status == 'loading') {
-        this.$el.html(this.template(this.model.toJSON()));
-        hide_elems();
-        this.$el.find('.bench-loading').show();
-        this.$el.find('.status').show();
-        this.$el.show();
+      this.$el.html(this.template(this.model.toJSON()));
+      hide_elems();
+      this.$el.find('.bench-loading')
+        .show();
+      this.$el.find('.status')
+        .show();
+      this.$el.show();
     }
-
     else if (status == 'done') {
-        this.$el.html(this.template(this.model.toJSON()));
-        hide_elems();
-        this.$el.find('.bench-body').slideDown();
-        this.$el.find('.iter').show();
-        this.$el.show();
+      this.$el.html(this.template(this.model.toJSON()));
+      hide_elems();
+      this.$el.find('.bench-body')
+        .slideDown();
+      this.$el.find('.iter')
+        .show();
+      this.$el.show();
     }
-
     else {
-        this.$el.html(this.template(this.model.toJSON()));
-        this.$el.hide();
+      this.$el.html(this.template(this.model.toJSON()));
+      this.$el.hide();
     }
-
     if (this.model.attributes.custom && status == 'done') {
-        hide_elems();
-        this.$el.find('.custom-body').show();
-        this.$el.find('.iter').show();
-        this.$el.show();
+      hide_elems();
+      this.$el.find('.custom-body')
+        .show();
+      this.$el.find('.iter')
+        .show();
+      this.$el.show();
     }
     return this;
   }
-
 });
-},{"./benchmark.tpl":20,"backbone":2,"jquery":4}],20:[function(require,module,exports){
+
+},{"./benchmark.tpl":19,"backbone":1,"jquery":3}],19:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14823,15 +14534,12 @@ __p+='<div class="pure-g bench"> <div class="pure-u-1-2 bench-title-elem"><p cla
 return __p;
 };
 
-},{"underscore":5}],21:[function(require,module,exports){
+},{"underscore":4}],20:[function(require,module,exports){
 // [View]   LoginView
-
-var $           = require('jquery'),
-  Backbone      = require('backbone');
+var $ = require('jquery'),
+  Backbone = require('backbone');
 Backbone.$ = $;
-
-var template   = require('../login/login_elem.tpl');
-
+var template = require('../login/login_elem.tpl');
 module.exports = Backbone.View.extend({
   tagName: 'div',
   template: template,
@@ -14840,22 +14548,24 @@ module.exports = Backbone.View.extend({
     'change input': 'value_changed',
     'autocomplete input': 'value_changed',
   },
-
-  render: function() {
+  render: function () {
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   },
-
-  value_changed: function() {
-    var val = this.$el.find('input').val();
-    this.model.set({value: val});
+  value_changed: function () {
+    var val = this.$el.find('input')
+      .val();
+    this.model.set({
+      value: val
+    });
   },
-
-  get_value_from_dom: function() {
-    return this.$el.find('input').val();
+  get_value_from_dom: function () {
+    return this.$el.find('input')
+      .val();
   }
 });
-},{"../login/login_elem.tpl":22,"backbone":2,"jquery":4}],22:[function(require,module,exports){
+
+},{"../login/login_elem.tpl":21,"backbone":1,"jquery":3}],21:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14873,58 +14583,50 @@ __p+='<div class="pure-g"> <div class="pure-u-1-3"> <p style="display: inline-bl
 return __p;
 };
 
-},{"underscore":5}],23:[function(require,module,exports){
-var $           = require('jquery'),
-  Backbone      = require('backbone'),
-  template      = require('./notification.tpl');
+},{"underscore":4}],22:[function(require,module,exports){
+var $ = require('jquery'),
+  Backbone = require('backbone'),
+  template = require('./notification.tpl');
 Backbone.$ = $;
-
 module.exports = Backbone.View.extend({
   tagName: 'aside',
   template: template,
   className: 'notification',
   events: {
-    'dblclick'      : 'clear',
-    'mouseenter'    : 'on_mouse_enter',
-    'mouseleave'    : 'on_mouse_leave'
+    'dblclick': 'clear',
+    'mouseenter': 'on_mouse_enter',
+    'mouseleave': 'on_mouse_leave'
   },
-
-  initialize: function() {
+  initialize: function () {
     this.model.on('change:show', this.show_changed, this);
     this.listenTo(this.model, 'destroy', this.remove);
   },
-
-  show_changed: function(model, value) {
-    if (!value){
-        this.$el.hide();
+  show_changed: function (model, value) {
+    if (!value) {
+      this.$el.hide();
     }
   },
-
-  render: function() {
+  render: function () {
     var model = this.model.attributes.mode;
-    if (model == 'info' || model == 'warning' || model == 'error'){
-        this.$el.addClass('notification-' + model);
+    if (model == 'info' || model == 'warning' || model == 'error') {
+      this.$el.addClass('notification-' + model);
     }
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   },
-
-  clear: function() {
+  clear: function () {
     this.model.toggle();
   },
-
-  on_mouse_enter: function() {
+  on_mouse_enter: function () {
     this.model.mouse_hover = true;
   },
-
-  on_mouse_leave: function() {
+  on_mouse_leave: function () {
     this.model.mouse_hover = false;
     this.model.start_timeout(1000);
   },
-
 });
 
-},{"./notification.tpl":24,"backbone":2,"jquery":4}],24:[function(require,module,exports){
+},{"./notification.tpl":23,"backbone":1,"jquery":3}],23:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14936,7 +14638,7 @@ __p+='<p>'+
 return __p;
 };
 
-},{"underscore":5}],25:[function(require,module,exports){
+},{"underscore":4}],24:[function(require,module,exports){
 (function (global){
 var $ = require('jquery'),
   Backbone = require('backbone'),
@@ -15004,5 +14706,5 @@ $(() => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./views/apps/benchmark.js":13,"./views/apps/login.js":15,"backbone":2,"jquery":4}]},{},[25])(25)
+},{"./views/apps/benchmark.js":12,"./views/apps/login.js":14,"backbone":1,"jquery":3}]},{},[24])(24)
 });
