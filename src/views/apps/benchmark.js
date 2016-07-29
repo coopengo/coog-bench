@@ -2,7 +2,6 @@ var $ = require('jquery'),
   Backbone = require('backbone');
 var template = require('./benchmark.tpl'),
   BenchView = require('../benchmark/benchmark.js'),
-  BenchSelector = require('../benchmark-selector/benchmark-selector.js'),
   Notificator = require('../../collections/notification'),
   BenchLatency = require('../../models/bench-latency.js'),
   BenchModel = require('../../models/benchmark.js'),
@@ -14,15 +13,18 @@ module.exports = Backbone.View.extend({
   className: 'bench-app',
   template: template,
   events: {
-    'click #start_btn': 'start_benchmark'
+    'click #start_btn': 'start_benchmark',
+    'click .bench-all-checkbox': 'toggle_all'
   },
   initialize: function (session) {
     this.session = session;
     this.collection = new BenchList();
+    this.bench_running = false;
     this.collection.set_session(session);
     this.initial_render();
-    this.bench_running = false;
+    this.all_checkbox = this.$('.bench-all-checkbox')[0];
     this.listenTo(this.collection, 'add', this.add_one);
+    this.listenTo(this.collection, 'all', this.render);
     this.inti_benchs();
   },
   initial_render: function () {
@@ -32,18 +34,16 @@ module.exports = Backbone.View.extend({
       .append(this.$el);
     this.$el.html(this.template);
   },
+  render: function () {
+    this.all_checkbox.checked = !this.collection.disable()
+      .length;
+  },
   add_one: function (bench) {
     var view_bench = new BenchView({
       model: bench
     });
-    var view_select = new BenchSelector({
-      model: bench
-    });
     this.$('#bench-container')
       .append(view_bench.render()
-        .el);
-    this.$('#benchmarks-selector')
-      .append(view_select.render()
         .el);
   },
   inti_benchs: function () {
@@ -78,20 +78,29 @@ module.exports = Backbone.View.extend({
       });
   },
   start_benchmark: function () {
-    if (!this.bench_running) {
+    var bench_running = (state) => {
       this.collection.each(function (bench) {
         bench.set({
-          'status': 'started'
+          'started': state
         });
       });
-      this.bench_running = true;
+      this.bench_running = state;
+    };
+    if (!this.bench_running) {
+      bench_running(true);
       this.collection.start_bench()
         .then(() => {
-          this.bench_running = false;
+          bench_running(false);
         });
     }
     else {
       Notificator.new_notif('Benchmark already in progress', 'error');
     }
   },
+  toggle_all: function () {
+    var state = this.all_checkbox.checked;
+    this.collection.each((bench) => {
+      bench.toggle(state);
+    });
+  }
 });

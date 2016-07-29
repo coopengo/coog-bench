@@ -24,17 +24,17 @@ body #title {
     color: #0094D2;
 }
 
+#start_btn {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    float: right;
+}
 
 /* Bench Selector */
 
-#benchmarks-selector {
-    text-align: center;
-    margin-top: 1em;
-    margin-bottom: 3em;
-}
-
 .benchmark-selector-btn {
-    border-radius: 8px;
+    border-radius: 40px;
+    font-size: 70%;
 }
 
 .bench-selector-ok {
@@ -49,9 +49,17 @@ body #title {
 
 /* Nootifications */
 
+#notification-area {
+    height: 8em;
+    width: 100%;
+    overflow: auto;
+    margin-top: 1em;
+}
+
 .notification {
     padding: 0.1em;
-    width: 100%;
+    width: 98%;
+    margin: 0 auto;
 }
 
 .notification {
@@ -82,57 +90,26 @@ body #title {
 }
 
 .bench-body {
+    background-color: #ff9933;
+   -webkit-transition: background 1.0s ease-in-out;
+   -ms-transition:     background 1.0s ease-in-out;
+   transition:         background 1.0s;
+}
+
+.body-ready {
+    background-color: #ff9933;
+}
+
+.body-loaded {
     background-color: aquamarine;
 }
 
-.custom-body {
-    background-color: aquamarine;
-}
-
-.bench-single-panel {
-    text-align: center;
-}
-
-.bench-title-elem {
-    background-color: cadetblue;
-}
-
-.bench-title {
-    font-weight: bold;
-    padding-left: 3em;
-    color: #d9d9d9;
-}
-
-.bench-state {
-    float: right;
-    padding-right: 3em;
-    color: #d9d9d9;
-}
-
-.bench-iter {
-    float: right;
-    padding-right: 3em;
-    color: #d9d9d9;
-}
-
-.bench-left-panel {
-    padding-left: 6em;
-}
-
-.bench-right-panel {
-    padding-right: 6em;
+.bench-disable {
+    background-color: grey;
 }
 
 .float-right {
     float: right;
-}
-
-.loading-img {
-    height: 2em;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 1em;
 }
 
 /* Login */
@@ -162,4 +139,24 @@ body #title {
 .login-connection {
     text-align: center;
     margin-top: 2em;
+}
+
+
+/* Table */
+.pure-table-horizontal td, .pure-table-horizontal th {
+    border-bottom: none;
+    padding: 1.3em 1.3em 1em 1em;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.bench-table {
+    margin-top: 2em;
+}
+
+.bench-all-checkbox, .bench-checkbox {
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
 }

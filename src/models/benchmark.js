@@ -5,24 +5,38 @@ Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
 module.exports = Backbone.Model.extend({
   defaults: function () {
-    // status : created, started, loading, done
+    // status : prepared, started, working, done
     return {
       title: 'no title',
       method: 'no method',
       enable: true,
       use_db: true,
       custom: false,
-      score: '',
-      status: 'created',
-      iter: '',
-      avg: '',
-      min: '',
-      max: ''
+      score: '- -',
+      status: 'prepared',
+      started: false,
+      iter: '-',
+      avg: '--',
+      min: '--',
+      max: '--'
     };
   },
-  toggle: function () {
+  toggle: function (force_value) {
+    if (this.attributes.started) {
+      return;
+    }
     this.set({
-      enable: !this.get('enable')
+      enable: force_value || !this.get('enable')
+    });
+  },
+  will_bench: function () {
+    this.set({
+      status: 'prepared',
+      iter: '-',
+      avg: '--',
+      min: '--',
+      max: '--',
+      score: '- -'
     });
   },
   set_session: function (session) {
@@ -32,7 +46,8 @@ module.exports = Backbone.Model.extend({
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
     this.set({
-      status: 'loading'
+      status: 'working',
+      started: true
     });
     return this.rpc(this.session, BENCH_MODEL, this.attributes.method)
       .then((result) => {

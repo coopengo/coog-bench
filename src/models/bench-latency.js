@@ -10,26 +10,33 @@ module.exports = BenchModel.extend({
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
     this.set({
-      status: 'loading'
+      status: 'working'
     });
-    var d = new Date();
-    var n = d.getTime();
+    var iter = 100;
+    var times = [];
     var fn = co.wrap(function* (model) {
-      for (var i = 100; i > 0; i--) {
+      var start, end;
+      for (var i = iter; i > 0; i--) {
+        start = (new Date())
+          .getTime();
         yield model.rpc(model.session, BENCH_MODEL, model.attributes.method);
+        end = (new Date())
+          .getTime();
+        times.push(((end - start) / 1000));
       }
-      return ($.when());
     });
     return fn(this)
       .then(() => {
-        d = new Date();
-        var res = d.getTime();
-        res = (res - n);
-        res = res / 100;
+        times.sort();
+        var min = times.shift();
+        var max = times.pop();
+        var avg = times.reduce((a, b) => a + b) / times.length;
         this.set({
           status: 'done',
-          iter: '100',
-          score: res
+          iter: iter,
+          avg: avg.toFixed(5),
+          min: min.toFixed(5),
+          max: max.toFixed(5)
         });
       });
   },

@@ -13804,6 +13804,11 @@ module.exports = Backbone.Collection.extend({
       enable: true
     });
   },
+  disable: function () {
+    return this.where({
+      enable: false
+    });
+  },
   use_db: function () {
     return this.where({
       use_db: true,
@@ -13848,6 +13853,7 @@ module.exports = Backbone.Collection.extend({
     }
     // call benchs
     to_bench.forEach((bench) => {
+      bench.will_bench();
       prm = prm.then(
         () => bench.call_bench(), (err) => {
           console.log(err);
@@ -13960,7 +13966,7 @@ else {
   module.exports = Notificator;
 }
 
-},{"../models/notification.js":11,"../views/notification/notification.js":22,"backbone":1,"jquery":3}],8:[function(require,module,exports){
+},{"../models/notification.js":11,"../views/notification/notification.js":20,"backbone":1,"jquery":3}],8:[function(require,module,exports){
 var $ = require('jquery'),
   co = require('co'),
   Backbone = require('backbone');
@@ -13973,26 +13979,33 @@ module.exports = BenchModel.extend({
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
     this.set({
-      status: 'loading'
+      status: 'working'
     });
-    var d = new Date();
-    var n = d.getTime();
+    var iter = 100;
+    var times = [];
     var fn = co.wrap(function* (model) {
-      for (var i = 100; i > 0; i--) {
+      var start, end;
+      for (var i = iter; i > 0; i--) {
+        start = (new Date())
+          .getTime();
         yield model.rpc(model.session, BENCH_MODEL, model.attributes.method);
+        end = (new Date())
+          .getTime();
+        times.push(((end - start) / 1000));
       }
-      return ($.when());
     });
     return fn(this)
       .then(() => {
-        d = new Date();
-        var res = d.getTime();
-        res = (res - n);
-        res = res / 100;
+        times.sort();
+        var min = times.shift();
+        var max = times.pop();
+        var avg = times.reduce((a, b) => a + b) / times.length;
         this.set({
           status: 'done',
-          iter: '100',
-          score: res
+          iter: iter,
+          avg: avg.toFixed(5),
+          min: min.toFixed(5),
+          max: max.toFixed(5)
         });
       });
   },
@@ -14006,24 +14019,38 @@ Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
 module.exports = Backbone.Model.extend({
   defaults: function () {
-    // status : created, started, loading, done
+    // status : prepared, started, working, done
     return {
       title: 'no title',
       method: 'no method',
       enable: true,
       use_db: true,
       custom: false,
-      score: '',
-      status: 'created',
-      iter: '',
-      avg: '',
-      min: '',
-      max: ''
+      score: '- -',
+      status: 'prepared',
+      started: false,
+      iter: '-',
+      avg: '--',
+      min: '--',
+      max: '--'
     };
   },
-  toggle: function () {
+  toggle: function (force_value) {
+    if (this.attributes.started) {
+      return;
+    }
     this.set({
-      enable: !this.get('enable')
+      enable: force_value || !this.get('enable')
+    });
+  },
+  will_bench: function () {
+    this.set({
+      status: 'prepared',
+      iter: '-',
+      avg: '--',
+      min: '--',
+      max: '--',
+      score: '- -'
     });
   },
   set_session: function (session) {
@@ -14033,7 +14060,8 @@ module.exports = Backbone.Model.extend({
     Notificator.new_notif(this.attributes.title +
       ' benchmarking started..');
     this.set({
-      status: 'loading'
+      status: 'working',
+      started: true
     });
     return this.rpc(this.session, BENCH_MODEL, this.attributes.method)
       .then((result) => {
@@ -14164,7 +14192,6 @@ var $ = require('jquery'),
   Backbone = require('backbone');
 var template = require('./benchmark.tpl'),
   BenchView = require('../benchmark/benchmark.js'),
-  BenchSelector = require('../benchmark-selector/benchmark-selector.js'),
   Notificator = require('../../collections/notification'),
   BenchLatency = require('../../models/bench-latency.js'),
   BenchModel = require('../../models/benchmark.js'),
@@ -14176,15 +14203,18 @@ module.exports = Backbone.View.extend({
   className: 'bench-app',
   template: template,
   events: {
-    'click #start_btn': 'start_benchmark'
+    'click #start_btn': 'start_benchmark',
+    'click .bench-all-checkbox': 'toggle_all'
   },
   initialize: function (session) {
     this.session = session;
     this.collection = new BenchList();
+    this.bench_running = false;
     this.collection.set_session(session);
     this.initial_render();
-    this.bench_running = false;
+    this.all_checkbox = this.$('.bench-all-checkbox')[0];
     this.listenTo(this.collection, 'add', this.add_one);
+    this.listenTo(this.collection, 'all', this.render);
     this.inti_benchs();
   },
   initial_render: function () {
@@ -14194,18 +14224,16 @@ module.exports = Backbone.View.extend({
       .append(this.$el);
     this.$el.html(this.template);
   },
+  render: function () {
+    this.all_checkbox.checked = !this.collection.disable()
+      .length;
+  },
   add_one: function (bench) {
     var view_bench = new BenchView({
       model: bench
     });
-    var view_select = new BenchSelector({
-      model: bench
-    });
     this.$('#bench-container')
       .append(view_bench.render()
-        .el);
-    this.$('#benchmarks-selector')
-      .append(view_select.render()
         .el);
   },
   inti_benchs: function () {
@@ -14240,30 +14268,39 @@ module.exports = Backbone.View.extend({
       });
   },
   start_benchmark: function () {
-    if (!this.bench_running) {
+    var bench_running = (state) => {
       this.collection.each(function (bench) {
         bench.set({
-          'status': 'started'
+          'started': state
         });
       });
-      this.bench_running = true;
+      this.bench_running = state;
+    };
+    if (!this.bench_running) {
+      bench_running(true);
       this.collection.start_bench()
         .then(() => {
-          this.bench_running = false;
+          bench_running(false);
         });
     }
     else {
       Notificator.new_notif('Benchmark already in progress', 'error');
     }
   },
+  toggle_all: function () {
+    var state = this.all_checkbox.checked;
+    this.collection.each((bench) => {
+      bench.toggle(state);
+    });
+  }
 });
 
-},{"../../collections/benchmark.js":5,"../../collections/notification":7,"../../models/bench-latency.js":8,"../../models/benchmark.js":9,"../benchmark-selector/benchmark-selector.js":16,"../benchmark/benchmark.js":18,"./benchmark.tpl":13,"backbone":1,"jquery":3}],13:[function(require,module,exports){
+},{"../../collections/benchmark.js":5,"../../collections/notification":7,"../../models/bench-latency.js":8,"../../models/benchmark.js":9,"../benchmark/benchmark.js":16,"./benchmark.tpl":13,"backbone":1,"jquery":3}],13:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<div class="pure-g"> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> <div class="pure-u-1 pure-u-md-2-3 pure-u-lg-1-2"> <div class="pure-g"> <div class="pure-u-1"> <div id="title"> <img class="company-img" src="dist/img/coopengo.png" alt="Coopengo"> <p>C<span class="blue">oo</span>g Benchmark</p> </div> </div> <div class="pure-u-1"> <p class="home-right-title">Powered by Co<span class="blue">open</span>go</p> </div> </div> <div id="benchmarks-selector"></div> <button class="pure-button" id="start_btn">Start Bench</button> <div id="notification-area"></div> <div id="bench-container"></div> </div> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> </div>';
+__p+='<div class="pure-g"> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> <div class="pure-u-1 pure-u-md-2-3 pure-u-lg-1-2"> <div class="pure-g"> <div class="pure-u-1"> <div id="title"> <img class="company-img" src="dist/img/coopengo.png" alt="Coopengo"> <p>C<span class="blue">oo</span>g Benchmark</p> </div> </div> <div class="pure-u-1"> <p class="home-right-title">Powered by Co<span class="blue">open</span>go</p> </div> </div> <div class="pure-g"> <div class="pure-u-1"> <div id="notification-area"></div> </div> <div class="pure-u-1"> <table class="pure-table pure-table-horizontal bench-table" style="width: 100%"> <thead> <tr> <th class="align-center bench-all-checkbox-container"> <input class="bench-all-checkbox" type="checkbox" name="enable"> </th> <th class="align-center"></th> <th class="align-center">Iteration</th> <th class="align-center">Average</th> <th class="align-center">Minimum</th> <th class="align-center">Maximum</th> </tr> </thead> <tbody id="bench-container"></tbody> </table> </div> <div class="pure-u-1"> <button class="pure-button" id="start_btn">Start Bench</button> </div> </div> </div> <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div> </div>';
 }
 return __p;
 };
@@ -14375,7 +14412,7 @@ module.exports = Backbone.View.extend({
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../../collections/login.js":6,"../../models/login.js":10,"../login/login.js":20,"./login.tpl":15,"backbone":1,"co":2,"jquery":3}],15:[function(require,module,exports){
+},{"../../collections/login.js":6,"../../models/login.js":10,"../login/login.js":18,"./login.tpl":15,"backbone":1,"co":2,"jquery":3}],15:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14388,129 +14425,98 @@ return __p;
 },{"underscore":4}],16:[function(require,module,exports){
 var $ = require('jquery'),
   Backbone = require('backbone');
-var template = require('./benchmark-selector.tpl');
+var template = require('./benchmark.tpl');
 Backbone.$ = $;
 module.exports = Backbone.View.extend({
-  tagName: 'button',
+  tagName: 'tr',
+  className: 'bench-body',
   template: template,
-  className: 'pure-button benchmark-selector-btn bench-selector-ok',
   events: {
-    'click': 'button_clicked'
+    'click .benchmark-selector-btn': 'on_btn_clicked',
   },
   initialize: function () {
-    this.listenTo(this.model, 'destroy', this.remove);
+    this.model.on('change:status', this.render, this);
+    this.model.on('change:enable', this.toggle, this);
+    this.model.on('destroy', this.remove, this);
   },
-  button_clicked: function () {
-    this.$el.toggleClass('bench-selector-ko bench-selector-ok');
+  on_btn_clicked: function () {
     this.model.toggle();
   },
+  toggle: function (model, val) {
+    if (val) {
+      this.$el.find('.benchmark-selector-btn')
+        .addClass('bench-selector-ok');
+      this.$el.find('.benchmark-selector-btn')
+        .removeClass('bench-selector-ko');
+      this.$el.removeClass('bench-disable');
+    }
+    else {
+      this.$el.find('.benchmark-selector-btn')
+        .removeClass('bench-selector-ok');
+      this.$el.find('.benchmark-selector-btn')
+        .addClass('bench-selector-ko');
+      this.$el.addClass('bench-disable');
+    }
+  },
+  start_loading: function () {
+    var elem = this.$el;
+    elem.removeClass('body-ready');
+    elem.addClass('body-loaded');
+    this.interval_id = setInterval(() => {
+      if (elem.hasClass('body-ready')) {
+        elem.removeClass('body-ready');
+        elem.addClass('body-loaded');
+      }
+      else {
+        elem.addClass('body-ready');
+        elem.removeClass('body-loaded');
+      }
+    }, 1000);
+  },
+  stop_loading: function () {
+    clearInterval(this.interval_id);
+    this.$el.removeClass('body-ready');
+    this.$el.addClass('body-loaded');
+  },
   render: function () {
-    this.$el.html(this.template({
-      title: this.model.attributes.title
-    }));
+    this.$el.html(this.template(this.model.toJSON()));
+    switch (this.model.attributes.status) {
+    case 'working':
+      this.start_loading();
+      break;
+    case 'done':
+      this.stop_loading();
+      break;
+    case 'prepared':
+      this.$el.addClass('body-ready');
+      this.$el.removeClass('body-loaded');
+      break;
+    }
     return this;
   }
 });
 
-},{"./benchmark-selector.tpl":17,"backbone":1,"jquery":3}],17:[function(require,module,exports){
+},{"./benchmark.tpl":17,"backbone":1,"jquery":3}],17:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<span>'+
+__p+='<td class="bench-checkbox-container align-center"> <button class="pure-button benchmark-selector-btn bench-selector-ok"><span>&nbsp;</span></button> </td> <td class="">'+
 ((__t=( title ))==null?'':_.escape(__t))+
-'</span>';
+'</td> <td class="align-center">'+
+((__t=( iter ))==null?'':_.escape(__t))+
+'</td> <td class="align-center">'+
+((__t=( avg ))==null?'':_.escape(__t))+
+'</td> <td class="align-center">'+
+((__t=( min ))==null?'':_.escape(__t))+
+'</td> <td class="align-center">'+
+((__t=( max ))==null?'':_.escape(__t))+
+'</td>';
 }
 return __p;
 };
 
 },{"underscore":4}],18:[function(require,module,exports){
-var $ = require('jquery'),
-  Backbone = require('backbone');
-var template = require('./benchmark.tpl');
-Backbone.$ = $;
-module.exports = Backbone.View.extend({
-  tagName: 'div',
-  template: template,
-  // events handle in initializer
-  initialize: function () {
-    this.model.on('change:status', this.render, this);
-    this.listenTo(this.model, 'destroy', this.remove);
-  },
-  render: function () {
-    var status = this.model.attributes.status;
-    var hide_elems = () => {
-      this.$el.find('.bench-body')
-        .hide();
-      this.$el.find('.bench-loading')
-        .hide();
-      this.$el.find('.custom-body')
-        .hide();
-      this.$el.find('.status')
-        .hide();
-      this.$el.find('.iter')
-        .hide();
-      this.$el.hide();
-    };
-    if (status == 'loading') {
-      this.$el.html(this.template(this.model.toJSON()));
-      hide_elems();
-      this.$el.find('.bench-loading')
-        .show();
-      this.$el.find('.status')
-        .show();
-      this.$el.show();
-    }
-    else if (status == 'done') {
-      this.$el.html(this.template(this.model.toJSON()));
-      hide_elems();
-      this.$el.find('.bench-body')
-        .slideDown();
-      this.$el.find('.iter')
-        .show();
-      this.$el.show();
-    }
-    else {
-      this.$el.html(this.template(this.model.toJSON()));
-      this.$el.hide();
-    }
-    if (this.model.attributes.custom && status == 'done') {
-      hide_elems();
-      this.$el.find('.custom-body')
-        .show();
-      this.$el.find('.iter')
-        .show();
-      this.$el.show();
-    }
-    return this;
-  }
-});
-
-},{"./benchmark.tpl":19,"backbone":1,"jquery":3}],19:[function(require,module,exports){
-var _ = require('underscore');
-module.exports = function(obj){
-var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
-with(obj||{}){
-__p+='<div class="pure-g bench"> <div class="pure-u-1-2 bench-title-elem"><p class="bench-title">Benchmark '+
-((__t=( title ))==null?'':_.escape(__t))+
-'</p></div> <div class="pure-u-1-2 bench-title-elem status"><p class="bench-state">Status: '+
-((__t=( status ))==null?'':_.escape(__t))+
-'</p></div> <div class="pure-u-1-2 bench-title-elem iter"><p class="bench-iter">'+
-((__t=( iter ))==null?'':_.escape(__t))+
-' Iterations</p></div> <div class="pure-u-1 bench-body"> <div class="pure-g"> <div class="pure-u-1-2"> <div class="pure-g bench-left-panel"> <div class="pure-u-1"><p class="bench-panel-line">Average:</p></div> <div class="pure-u-1"><p class="bench-panel-line">'+
-((__t=( avg ))==null?'':_.escape(__t))+
-'</p></div> </div> </div> <div class="pure-u-1-2"> <div class="pure-g bench-right-panel"> <div class="pure-u-1"><p class="bench-panel-line float-right">Min : '+
-((__t=( min ))==null?'':_.escape(__t))+
-'</p></div> <div class="pure-u-1"><p class="bench-panel-line float-right">Max : '+
-((__t=( max ))==null?'':_.escape(__t))+
-'</p></div> </div> </div> </div> </div> <div class="pure-u-1 custom-body"> <div class="pure-g"> <div class="pure-u-1"> <div class="pure-g bench-single-panel"> <div class="pure-u-1"><p class="bench-panel-line">Score: '+
-((__t=( score ))==null?'':_.escape(__t))+
-'</p></div> </div> </div> </div> </div> <div class="pure-u-1 bench-loading"> <div class="pure-g"> <div class="pure-u-1-3"></div> <div class="pure-u-1-3"> <img class="loading-img" src="dist/img/loading.gif" alt="Loading..."> </div> <div class="pure-u-1-3"></div> </div> </div> </div>';
-}
-return __p;
-};
-
-},{"underscore":4}],20:[function(require,module,exports){
 var $ = require('jquery'),
   Backbone = require('backbone');
 var template = require('../login/login_elem.tpl');
@@ -14540,7 +14546,7 @@ module.exports = Backbone.View.extend({
   }
 });
 
-},{"../login/login_elem.tpl":21,"backbone":1,"jquery":3}],21:[function(require,module,exports){
+},{"../login/login_elem.tpl":19,"backbone":1,"jquery":3}],19:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14558,7 +14564,7 @@ __p+='<div class="pure-g"> <div class="pure-u-1-3"> <p style="display: inline-bl
 return __p;
 };
 
-},{"underscore":4}],22:[function(require,module,exports){
+},{"underscore":4}],20:[function(require,module,exports){
 var $ = require('jquery'),
   Backbone = require('backbone');
 var template = require('./notification.tpl');
@@ -14601,7 +14607,7 @@ module.exports = Backbone.View.extend({
   },
 });
 
-},{"./notification.tpl":23,"backbone":1,"jquery":3}],23:[function(require,module,exports){
+},{"./notification.tpl":21,"backbone":1,"jquery":3}],21:[function(require,module,exports){
 var _ = require('underscore');
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
@@ -14613,7 +14619,7 @@ __p+='<p>'+
 return __p;
 };
 
-},{"underscore":4}],24:[function(require,module,exports){
+},{"underscore":4}],22:[function(require,module,exports){
 (function (global){
 var $ = require('jquery'),
   Backbone = require('backbone'),
@@ -14681,5 +14687,5 @@ $(() => {
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./views/apps/benchmark.js":12,"./views/apps/login.js":14,"backbone":1,"jquery":3}]},{},[24])(24)
+},{"./views/apps/benchmark.js":12,"./views/apps/login.js":14,"backbone":1,"jquery":3}]},{},[22])(22)
 });

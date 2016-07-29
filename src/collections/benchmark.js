@@ -14,6 +14,11 @@ module.exports = Backbone.Collection.extend({
       enable: true
     });
   },
+  disable: function () {
+    return this.where({
+      enable: false
+    });
+  },
   use_db: function () {
     return this.where({
       use_db: true,
@@ -58,6 +63,7 @@ module.exports = Backbone.Collection.extend({
     }
     // call benchs
     to_bench.forEach((bench) => {
+      bench.will_bench();
       prm = prm.then(
         () => bench.call_bench(), (err) => {
           console.log(err);
