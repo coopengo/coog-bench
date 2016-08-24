@@ -1,8 +1,7 @@
-var $ = require('jquery'),
-  Backbone = require('backbone');
-var NotificationView = require('../views/notification/notification.js'),
-  NotificationModel = require('../models/notification.js');
-Backbone.$ = $;
+var Backbone = require('backbone');
+var NotificationModel = require('../models/notification.js');
+var NotificationView = require('../views/notification/notification.js');
+//
 var Notificator = null;
 var NotificationList = Backbone.Collection.extend({
   model: NotificationModel,
@@ -34,7 +33,7 @@ var NotificationList = Backbone.Collection.extend({
     var view = new NotificationView({
       model: model
     });
-    $('#notification-area')
+    Backbone.$('#notification-area')
       .append(view.render()
         .el);
   },

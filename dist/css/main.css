@@ -113,14 +113,38 @@ body #title {
 }
 
 /* Login */
-.login-main {
+.login-app {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.login-app > .pure-g {
+    display: table-cell;
     vertical-align: middle;
+}
+
+.login-main {
+    background-color: #eee;
+    border-color: #ddd;
+    border-radius: 2em;
+    box-shadow: 5px 5px 5px #888888;
+    padding: 1em;
+    width: 18em;
+    margin: auto;
+}
+
+#connect {
+    background-color: cadetblue;
+    border-radius: 5px;
 }
 
 .login-input {
     margin-top: 1em;
     margin-bottom: 1em;
     float: right;
+    box-shadow: 2px 1px 1px #888;
+    border: 1px solid #ddd;
 }
 
 .login-title {

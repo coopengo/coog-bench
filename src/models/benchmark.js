@@ -1,7 +1,5 @@
-var $ = require('jquery'),
-  Backbone = require('backbone');
+var Backbone = require('backbone');
 var Notificator = require('../collections/notification');
-Backbone.$ = $;
 var BENCH_MODEL = 'utils.benchmark_class';
 module.exports = Backbone.Model.extend({
   defaults: function () {
@@ -50,15 +48,17 @@ module.exports = Backbone.Model.extend({
       started: true
     });
     return this.rpc(this.session, BENCH_MODEL, this.attributes.method)
-      .then((result) => {
-        var attr = this.read_result(result);
-        if (attr) {
-          this.set(attr);
-          this.set({
-            status: 'done'
-          });
-        }
-      });
+      .then(
+        (result) => {
+          var attr = this.read_result(result);
+          if (attr) {
+            this.set(attr);
+            this.set('status', 'done');
+          }
+        }, (err) => {
+          this.set('status', 'prepared');
+          return Promise.reject(err);
+        });
   },
   rpc: function (session, model_name, method_name, args, context) {
     if (!session) {

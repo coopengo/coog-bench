@@ -21,6 +21,10 @@
         </div>
 
         <div class="pure-u-1">
+           <div id="reconnect-area"></div>
+        </div>
+
+        <div class="pure-u-1">
           <table class="pure-table pure-table-horizontal bench-table" style="width: 100%">
               <thead>
                   <tr>

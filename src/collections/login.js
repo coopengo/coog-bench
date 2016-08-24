@@ -1,7 +1,6 @@
-var $ = require('jquery'),
-  Backbone = require('backbone');
+var Backbone = require('backbone');
 var LoginModel = require('../models/login.js');
-Backbone.$ = $;
+//
 module.exports = Backbone.Collection.extend({
   model: LoginModel,
   next_order: function () {

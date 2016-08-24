@@ -1,7 +1,6 @@
-var $ = require('jquery'),
-  Backbone = require('backbone'),
-  Session = require('tryton-session');
-Backbone.$ = $;
+var Backbone = require('backbone');
+var Session = require('tryton-session');
+//
 var BenchAppView = require('./views/apps/benchmark.js'),
   LoginAppView = require('./views/apps/login.js');
 var AppView = Backbone.View.extend({
@@ -59,6 +58,6 @@ var AppView = Backbone.View.extend({
     return Promise.reject();
   }
 });
-$(() => {
+Backbone.$(() => {
   new AppView();
 });

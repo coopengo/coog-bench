@@ -1,16 +1,16 @@
-var $ = require('jquery'),
-  co = require('co'),
-  Session = require('tryton-session'),
-  Backbone = require('backbone');
-var template = require('./login.tpl'),
-  LoginView = require('../login/login.js'),
-  LoginModel = require('../../models/login.js'),
-  LoginLst = require('../../collections/login.js');
-Backbone.$ = $;
+var co = require('co');
+var Session = require('tryton-session');
+var Backbone = require('backbone');
+var template = require('./login.tpl');
+var LoginView = require('../login/login.js');
+var LoginModel = require('../../models/login.js');
+var LoginLst = require('../../collections/login.js');
+//
 var TRYTON_SERVER = 'http://localhost:7999';
 var TRYTON_DATABASE = '4.0';
 var TRYTON_LOGIN = 'admin';
 var TRYTON_PASSWORD = 'admin';
+//
 module.exports = Backbone.View.extend({
   tagName: 'div',
   className: 'login-app',
@@ -26,9 +26,9 @@ module.exports = Backbone.View.extend({
     this.inti_models();
   },
   initial_render: function () {
-    $('body')
+    Backbone.$('body')
       .empty();
-    $('body')
+    Backbone.$('body')
       .append(this.$el);
     this.$el.html(this.template);
   },

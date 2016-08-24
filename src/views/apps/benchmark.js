@@ -1,13 +1,14 @@
-var $ = require('jquery'),
-  Backbone = require('backbone');
-var template = require('./benchmark.tpl'),
-  BenchView = require('../benchmark/benchmark.js'),
-  Notificator = require('../../collections/notification'),
-  BenchLatency = require('../../models/bench-latency.js'),
-  BenchModel = require('../../models/benchmark.js'),
-  BenchList = require('../../collections/benchmark.js');
-Backbone.$ = $;
+var Backbone = require('backbone');
+var template = require('./benchmark.tpl');
+var BenchView = require('../benchmark/benchmark.js');
+var ReconnectView = require('../login/reconnect.js');
+var Notificator = require('../../collections/notification');
+var BenchLatency = require('../../models/bench-latency.js');
+var BenchModel = require('../../models/benchmark.js');
+var BenchList = require('../../collections/benchmark.js');
+//
 var BENCH_MODEL = 'utils.benchmark_class';
+//
 module.exports = Backbone.View.extend({
   tagName: 'div',
   className: 'bench-app',
@@ -20,17 +21,19 @@ module.exports = Backbone.View.extend({
     this.session = session;
     this.collection = new BenchList();
     this.bench_running = false;
+    this.timedout = false;
     this.collection.set_session(session);
     this.initial_render();
     this.all_checkbox = this.$('.bench-all-checkbox')[0];
     this.listenTo(this.collection, 'add', this.add_one);
     this.listenTo(this.collection, 'all', this.render);
+    this.listenTo(this.collection, 'timedout', this.session_timedout);
     this.inti_benchs();
   },
   initial_render: function () {
-    $('body')
+    Backbone.$('body')
       .empty();
-    $('body')
+    Backbone.$('body')
       .append(this.$el);
     this.$el.html(this.template);
   },
@@ -80,21 +83,22 @@ module.exports = Backbone.View.extend({
   start_benchmark: function () {
     var bench_running = (state) => {
       this.collection.each(function (bench) {
-        bench.set({
-          'started': state
-        });
+        bench.set('started', state);
       });
       this.bench_running = state;
     };
-    if (!this.bench_running) {
+    if (!this.bench_running && !this.timedout) {
       bench_running(true);
       this.collection.start_bench()
-        .then(() => {
-          bench_running(false);
-        });
+        .then(
+          () => {
+            bench_running(false);
+          }, () => {
+            bench_running(false);
+          });
     }
     else {
-      Notificator.new_notif('Benchmark already in progress', 'error');
+      Notificator.new_notif('Can\'t launch benchmarks now', 'error');
     }
   },
   toggle_all: function () {
@@ -102,5 +106,26 @@ module.exports = Backbone.View.extend({
     this.collection.each((bench) => {
       bench.toggle(state);
     });
+  },
+  session_timedout: function () {
+    Notificator.new_notif('Session timed out', 'error');
+    var view = new ReconnectView();
+    view.set_session(this.session);
+    this.listenTo(view, 'on_login', this.on_login);
+    this.timedout = true;
+    this.$('#reconnect-area')
+      .append(view.render()
+        .el);
+  },
+  on_login: function (val, view) {
+    if (val) {
+      this.stopListening(view);
+      view.remove();
+      this.timedout = false;
+      Notificator.new_notif('You are logged');
+    }
+    else {
+      Notificator.new_notif('Bad password', 'error');
+    }
   }
 });

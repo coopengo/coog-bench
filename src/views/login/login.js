@@ -1,7 +1,6 @@
-var $ = require('jquery'),
-  Backbone = require('backbone');
+var Backbone = require('backbone');
 var template = require('../login/login_elem.tpl');
-Backbone.$ = $;
+//
 module.exports = Backbone.View.extend({
   tagName: 'div',
   template: template,

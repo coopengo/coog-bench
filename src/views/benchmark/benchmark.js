@@ -1,7 +1,6 @@
-var $ = require('jquery'),
-  Backbone = require('backbone');
+var Backbone = require('backbone');
 var template = require('./benchmark.tpl');
-Backbone.$ = $;
+//
 module.exports = Backbone.View.extend({
   tagName: 'tr',
   className: 'bench-body',
@@ -63,6 +62,7 @@ module.exports = Backbone.View.extend({
       this.stop_loading();
       break;
     case 'prepared':
+      clearInterval(this.interval_id);
       this.$el.addClass('body-ready');
       this.$el.removeClass('body-loaded');
       break;

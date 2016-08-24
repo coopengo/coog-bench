@@ -1,41 +1,24 @@
 {
   "name": "coog-bench",
   "description": "Coog bench web app",
-  "version": "0.0.1",
+  "version": "4.0.0",
   "license": "GPL-3.0+",
   "author": "Coopengo <dev@coopengo.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/coopengo/coog-bench.git"
   },
-  "browser": "src/index.js",
-  "browserify": {
-    "transform": [
-      "browserify-shim",
-      "jstify"
-    ]
-  },
-  "browserify-shim": {
-    "underscore": "global:_",
-    "moment": "global:moment",
-    "tryton-session": "global:Session"
-  },
   "scripts": {
-    "beautify": "js-beautify --config .jsbeautifyrc -r src/*.js src/**/*.js src/**/**/*.js",
-    "lint": "jshint -c .jshintrc src/*.js src/**/*.js src/**/**/*.js",
-    "assets": "wget -O assets/js/underscore.js http://underscorejs.org/underscore.js && wget -O assets/js/moment.js https://raw.githubusercontent.com/moment/moment/master/moment.js && wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/master/dist/tryton-session.js && wget -O assets/css/pure.css http://yui.yahooapis.com/pure/0.6.0/pure.css && wget -O assets/css/grids-responsive-min.css http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css",
-    "build": "browserify --standalone Session -o dist/js/coog-bench.js ."
+    "beautify": "js-beautify --config .jsbeautifyrc -r *.js src/*.js src/**/*.js src/**/**/*.js",
+    "lint": "jshint -c .jshintrc *.js src/*.js src/**/*.js src/**/**/*.js",
+    "assets": "wget -O assets/js/jquery.js http://code.jquery.com/jquery-latest.js && wget -O assets/js/underscore.js http://underscorejs.org/underscore.js && wget -O assets/js/backbone.js http://backbonejs.org/backbone.js && wget -O assets/js/moment.js https://raw.githubusercontent.com/moment/moment/master/moment.js && wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/master/dist/tryton-session.js && wget -O assets/css/pure.css http://yui.yahooapis.com/pure/0.6.0/pure.css && wget -O assets/css/grids-responsive-min.css http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css",
+    "build": "webpack"
   },
   "dependencies": {
-    "backbone": "^1.3.3",
-    "backbone.localstorage": "^1.1.16",
-    "co": "^4.6.0",
-    "jquery": "^3.1.0"
+    "co": "^4.6.0"
   },
   "devDependencies": {
-    "browserify": "^13.1.0",
-    "browserify-shim": "^3.8.12",
-    "http-server": "^0.9.0",
-    "jstify": "^0.14.0"
+    "ejs-loader": "^0.3.0",
+    "webpack": "^1.13.2"
   }
 }
