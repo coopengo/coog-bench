@@ -1,0 +1,72 @@
+.pure-table-horizontal td,
+.pure-table-horizontal th {
+  border-bottom: none;
+  padding: 1.3em 1.3em 1em 1em;
+}
+
+.bench-table {
+  width: 100%;
+  margin-top: 2em;
+}
+
+#start-btn {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  float: right;
+}
+
+.bench-all-checkbox,
+.bench-checkbox {
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+}
+.align-center {
+  text-align: center;
+}
+
+
+/* Bench Selector */
+
+.benchmark-selector-btn {
+  border-radius: 40px;
+  font-size: 70%;
+}
+
+.bench-selector-ok {
+  background: #d3eda3;
+  color: #72962e;
+}
+
+.bench-selector-ko {
+  background: #f5ab9e;
+  color: #8c3a2b;
+}
+
+
+/* bench-body */
+
+.bench-body {
+  background-color: #ff9933;
+  -webkit-transition: background 1.0s ease-in-out;
+  -ms-transition: background 1.0s ease-in-out;
+  transition: background 1.0s;
+}
+
+.body-ready {
+  background-color: #ff9933;
+}
+
+.body-loading {
+  background-color: brown;
+}
+
+.body-loaded {
+  background-color: cadetblue;
+}
+
+.bench-disable {
+  background-color: grey;
+}
+.bench-field-error [data-error] {
+  color: red;
+}

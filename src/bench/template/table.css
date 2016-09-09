@@ -1,0 +1,22 @@
+.pure-table-horizontal td,
+.pure-table-horizontal th {
+  border-bottom: none;
+  padding: 1.3em 1.3em 1em 1em;
+}
+
+.bench-table {
+  width: 100%;
+  margin-top: 2em;
+}
+
+#start-btn {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  float: right;
+}
+
+.bench-all-checkbox,
+.bench-checkbox {
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+}
