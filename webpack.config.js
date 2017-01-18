@@ -1,14 +1,6 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   entry: './src/app.js',
-  externals: {
-    'jquery': '$',
-    'moment': 'moment',
-    'underscore': '_',
-    'backbone': 'Backbone',
-    'backbone.marionette': 'Backbone.Marionette',
-    'tryton-session': 'Session'
-  },
   module: {
     loaders: [{
       test: /\.tpl$/,
@@ -19,11 +11,11 @@ module.exports = {
     }, ]
   },
   output: {
-    path: './dist',
-    filename: 'js/coog-bench.js'
+    path: './public',
+    filename: 'coog-bench.js'
   },
   plugins: [
-    new ExtractTextPlugin('css/coog-bench.css', {
+    new ExtractTextPlugin('coog-bench.css', {
       allChunks: true
     })
   ]

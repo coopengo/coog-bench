@@ -1,58 +1,46 @@
 var Backbone = require('backbone');
+require('backbone.syphon');
 var Marionette = require('backbone.marionette');
-var login = require('./login');
-var bench = require('./bench');
-var form = require('./forms');
-var api = require('./api.js');
+var route = require('./route');
+require('purecss');
+//
+// app class
 //
 var App = Marionette.Application.extend({
-  region: '#bench-root',
+  region: '#app',
   initialize: function () {
-    this.router = new Marionette.AppRouter();
-    this.router.processAppRoutes(this, {
-      'login': 'showLogin',
-      '': 'showBench'
-    });
+    this._connected = false;
+    this._promise = Promise.resolve();
+    route(this);
   },
-  onStart: function (app, options) {
-    form.setTemplates();
-    this.session = options.session;
+  isConnected: function () {
+    return this._connected;
+  },
+  connect: function () {
+    if (!this._connected) {
+      this._connected = true;
+      this.trigger('connect', true);
+    }
+  },
+  disconnect: function () {
+    if (this._connected) {
+      this._connected = false;
+      this.trigger('connect', false);
+    }
+  },
+  then: function (fn) {
+    this._promise = this._promise.then(fn);
+  },
+  ready: function (ok, ko) {
+    this._promise.then(ok, ko);
+  },
+  onStart: function () {
     Backbone.history.start();
-  },
-  onConnect: function (session) {
-    this.session = session;
-    api.session.save(session);
-    this.router.navigate('', {
-      trigger: true
-    });
-  },
-  showLogin: function () {
-    var model = new login.Model();
-    this.listenTo(model, 'connect:ok', (session) => {
-      this.triggerMethod('connect', session);
-    });
-    this.showView(new login.View({
-      model: model
-    }));
-  },
-  showBench: function () {
-    if (this.session) {
-      this.showView(new bench.View({
-        session: this.session
-      }));
-    }
-    else {
-      this.router.navigate('login', {
-        trigger: true,
-      });
-    }
   }
 });
 //
-var app = new App();
+// app instance
 //
-api.session.retrieve()
-  .then((session) => app.start({
-    session: session
-  }));
-module.exports = app;
+var app = new App();
+app.ready(() => app.start(), (error) => window.alert('app not started: ' +
+  error));

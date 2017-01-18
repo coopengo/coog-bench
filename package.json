@@ -1,7 +1,7 @@
 {
   "name": "coog-bench",
   "description": "Coog bench web app",
-  "version": "4.0.0",
+  "version": "1.11.0",
   "license": "GPL-3.0+",
   "author": "Coopengo <dev@coopengo.com>",
   "repository": {
@@ -9,32 +9,28 @@
     "url": "git://github.com/coopengo/coog-bench.git"
   },
   "scripts": {
-    "jsbt": "js-beautify --config .jsbeautifyrc -r *.js $(find src -name '*.js')",
-    "tplbt": "html-beautify --config .jsbeautifyrc -r index.html $(find src -name '*.tpl')",
-    "cssbt": "css-beautify --config .jsbeautifyrc -r $(find src -name '*.css')",
-    "beautify": "npm run jsbt && npm run tplbt && npm run cssbt",
+    "beautify": "js-beautify --config .jsbeautifyrc -r *.js $(find src -name '*.js') && css-beautify --config .jsbeautifyrc -r $(find src -name '*.css')",
     "lint": "jshint -c .jshintrc *.js $(find src -name '*.js')",
-    "dljq": "wget -O assets/js/jquery.js http://code.jquery.com/jquery-latest.js",
-    "dlmm": "wget -O assets/js/moment.js https://raw.githubusercontent.com/moment/moment/master/moment.js",
-    "dl_": "wget -O assets/js/underscore.js http://underscorejs.org/underscore.js",
-    "dlb": "wget -O assets/js/backbone.js http://backbonejs.org/backbone.js",
-    "dlbf": "wget -O assets/js/backbone-forms.js https://raw.githubusercontent.com/powmedia/backbone-forms/master/distribution/backbone-forms.js",
-    "dlbr": "wget -O assets/js/backbone.radio.js https://raw.githubusercontent.com/marionettejs/backbone.radio/master/build/backbone.radio.js",
-    "dlbm": "wget -O assets/js/backbone.marionette.js http://marionettejs.com/downloads/backbone.marionette.js",
-    "dlts": "wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/master/dist/tryton-session.js",
-    "dlpr": "wget -O assets/css/pure.css http://yui.yahooapis.com/pure/0.6.0/pure.css",
-    "dlprr": "wget -O assets/css/grids-responsive-min.css http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css",
-    "dl": "npm run dljq && npm run dlmm && npm run dl_ && npm run dlb && npm run dlbf && npm run dlbr && npm run dlbm && npm run dlts && npm run dlpr && npm run dlprr",
     "build": "webpack",
-    "prestart": "webpack --watch &",
-    "start": "browser-sync start -f index.html,assets,dist -s"
+    "watch": "webpack --watch",
+    "start": "browser-sync start -c bs-config.js"
+  },
+  "dependencies": {
+    "ajv": "^5.0.1-beta",
+    "backbone": "^1",
+    "backbone.marionette": "^3",
+    "backbone.syphon": "^0",
+    "jquery": "^3",
+    "purecss": "^0",
+    "tryton-session": "~4.2",
+    "underscore": "^1"
   },
   "devDependencies": {
-    "browser-sync": "^2.14.0",
-    "css-loader": "^0.24.0",
-    "ejs-loader": "^0.3.0",
-    "extract-text-webpack-plugin": "^1.0.1",
-    "style-loader": "^0.13.1",
-    "webpack": "^1.13.2"
+    "browser-sync": "^2",
+    "css-loader": "^0",
+    "ejs-loader": "^0",
+    "extract-text-webpack-plugin": "^1",
+    "style-loader": "^0",
+    "webpack": "^1"
   }
 }

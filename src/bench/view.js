@@ -1,12 +1,11 @@
 var Marionette = require('backbone.marionette');
-var benchCollection = require('./collection.js');
-var tableTpl = require('./template/table.tpl');
 var rowTpl = require('./template/row.tpl');
+var tableTpl = require('./template/table.tpl');
 var mainTpl = require('./template/index.tpl');
-require('./template/table.css');
 require('./template/row.css');
+require('./template/table.css');
 //
-var row = Marionette.View.extend({
+var Row = Marionette.View.extend({
   tagName: 'tr',
   className: 'bench-body',
   template: rowTpl,
@@ -58,15 +57,14 @@ var row = Marionette.View.extend({
     return this;
   }
 });
-exports.row = row;
 //
 var TableBody = Marionette.CollectionView.extend({
   tagName: 'tbody',
-  childView: row,
+  childView: Row,
   childViewEventPrefix: 'bench',
 });
 //
-var table = Marionette.View.extend({
+var Table = Marionette.View.extend({
   tagName: 'div',
   className: 'pure-g',
   template: tableTpl,
@@ -114,19 +112,14 @@ var table = Marionette.View.extend({
     this.collection.preBench();
   },
 });
-exports.table = table;
 //
-exports.main = Marionette.View.extend({
+module.exports = Marionette.View.extend({
   template: mainTpl,
   regions: {
     'lst': '#benchList'
   },
-  initialize: function (options) {
-    this.collection = new benchCollection(null, {
-      session: options.session
-    });
-    this.collection.initBenchs();
-    this.tableView = new table({
+  initialize: function () {
+    this.tableView = new Table({
       collection: this.collection
     });
   },
