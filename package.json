@@ -21,7 +21,7 @@
     "dlbf": "wget -O assets/js/backbone-forms.js https://raw.githubusercontent.com/powmedia/backbone-forms/master/distribution/backbone-forms.js",
     "dlbr": "wget -O assets/js/backbone.radio.js https://raw.githubusercontent.com/marionettejs/backbone.radio/master/build/backbone.radio.js",
     "dlbm": "wget -O assets/js/backbone.marionette.js http://marionettejs.com/downloads/backbone.marionette.js",
-    "dlts": "wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/master/dist/tryton-session.js",
+    "dlts": "wget -O assets/js/tryton-session.js https://raw.githubusercontent.com/coopengo/tryton-session/4.0/dist/tryton-session.js",
     "dlpr": "wget -O assets/css/pure.css http://yui.yahooapis.com/pure/0.6.0/pure.css",
     "dlprr": "wget -O assets/css/grids-responsive-min.css http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css",
     "dl": "npm run dljq && npm run dlmm && npm run dl_ && npm run dlb && npm run dlbf && npm run dlbr && npm run dlbm && npm run dlts && npm run dlpr && npm run dlprr",
