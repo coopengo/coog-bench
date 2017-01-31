@@ -10,6 +10,7 @@ module.exports = {
       loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
     }, ]
   },
+  devtool: 'sourcemap',
   output: {
     path: './public',
     filename: 'coog-bench.js'
