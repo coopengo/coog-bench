@@ -34,7 +34,7 @@ var App = Marionette.Application.extend({
   ready: function (ok, ko) {
     this._promise.then(ok, ko);
   },
-  onStart: function () {
+  onStart: function () { // JAMAIS APPELE
     Backbone.history.start();
   }
 });

@@ -1,4 +1,4 @@
-var BENCH_MODEL = 'utils.benchmark_class';
+var BENCH_MODEL = 'bench';
 
 function parseBenchRes(value) {
   var newlst = [];
@@ -17,6 +17,9 @@ function parseBenchRes(value) {
     if (str.endsWith(stop)) {
       str = str.substr(0, str.length - 1);
     }
+    console.log('LES 4 INFOS :' + str);
+    document.getElementById("error-container")
+      .innerHTML = 'Les 4 infos : ' + str;
     return str;
   };
   lst.forEach((str) => {
@@ -28,14 +31,11 @@ function parseBenchRes(value) {
   ret.max = removeChar(newlst[3].split(' ')[1], '(', ')');
   return ret;
 }
-exports.setup = function (session) {
-  return session.rpc('model.' + BENCH_MODEL + '._benchmark_setup');
-};
-exports.teardown = function (session) {
-  return session.rpc('model.' + BENCH_MODEL + '._benchmark_teardown');
+exports.call = function (session, func) {
+  return session.rpc('model.' + BENCH_MODEL + '.' + func);
 };
 exports.list = function (session) {
-  return session.rpc('model.' + BENCH_MODEL + '._benchmark_list');
+  return session.rpc('model.' + BENCH_MODEL + '.list');
 };
 exports.execute = function (session, method, conserveData) {
   return session.rpc('model.' + BENCH_MODEL + '.' + method)

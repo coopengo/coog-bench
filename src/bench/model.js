@@ -18,16 +18,17 @@ var Bench = Backbone.Model.extend({
   reset: function () {
     this.set({
       status: 'prepared',
-      score: '- -',
       iter: '-',
-      avg: '--',
-      min: '--',
-      max: '--'
+      avg: '-',
+      min: '-',
+      max: '-'
     });
   },
   toggle: function () {
     if (this.collection.benchRunning) {
       console.log('bench is running');
+      document.getElementById("error-container")
+      .innerHTML = 'Bench is running';
     }
     else {
       this.set({
@@ -38,6 +39,8 @@ var Bench = Backbone.Model.extend({
   enable: function (val) {
     if (this.collection.benchRunning) {
       console.log('bench is running');
+      document.getElementById("error-container")
+      .innerHTML = 'Bench is running';
     }
     else {
       this.set('enable', val);
@@ -59,7 +62,7 @@ var Bench = Backbone.Model.extend({
   },
 });
 //
-var CustomBench = Bench.extend({
+var CustomBench = Bench.extend({ //1ère ligne du tableau
   callBench: function () {
     var prm = Promise.resolve();
     var iter = 100;
@@ -86,14 +89,16 @@ var CustomBench = Bench.extend({
     return prm.then(() => {
       times.sort();
       var min = times.shift();
+      console.log('min : ' + min);
       var max = times.pop();
+      console.log('max : ' + max);
       var avg = times.reduce((a, b) => a + b) / times.length;
       this.set({
         status: 'done',
         iter: iter,
-        avg: avg.toFixed(5),
-        min: min.toFixed(5),
-        max: max.toFixed(5)
+        avg: avg.toFixed(3),
+        min: min.toFixed(3),
+        max: max.toFixed(3)
       });
     });
   }
@@ -102,7 +107,7 @@ module.exports = Backbone.Collection.extend({
   model: Bench,
   initialize: function (attrs, options) {
     this.session = options.session;
-    this.benchRunning = false;
+    //this.benchRunning = false;
   },
   getModulesDisabled: function () {
     return this.where({
@@ -134,21 +139,29 @@ module.exports = Backbone.Collection.extend({
     };
     api.list(this.session)
       .then((ret) => {
-        ret.methods.forEach(newBench);
+        ret.methods.forEach(newBench);;
+        this.setup = ret.setup;
+        this.teardown = ret.teardown;
       });
   },
   preBench: function () {
     var benchLst = this.getModulesEnabled();
     if (!benchLst) {
       console.log('Nothing to bench');
+      document.getElementById("error-container")
+      .innerHTML = 'Nothing to bench';
       return Promise.resolve;
     }
     if (!this.session) {
       console.log('Invalid session');
+      document.getElementById("error-container")
+      .innerHTML = 'Invalid session';
       return Promise.resolve;
     }
     if (this.benchRunning) {
       console.log('Bench already started');
+      document.getElementById("error-container")
+      .innerHTML = 'Bench already started';
       return Promise.resolve;
     }
     this.benchRunning = true;
@@ -156,9 +169,13 @@ module.exports = Backbone.Collection.extend({
       .then(() => {
         this.benchRunning = false;
       }, (err) => {
-        console.log('bench failed');
+        console.log('Bench failed');
+        document.getElementById("error-container")
+      .innerHTML = 'Bench failed';
         if (err) {
           console.log(err);
+        document.getElementById("error-container")
+      .innerHTML = err;
         }
       });
   },
@@ -184,7 +201,7 @@ module.exports = Backbone.Collection.extend({
     if (this.getModulesUsingDB()
       .length) {
       setupDB = true;
-      prm = api.setup(this.session)
+      prm = api.call(this.session, this.setup)
         .then(null, this.handleError);
     }
     // start benching
@@ -200,7 +217,7 @@ module.exports = Backbone.Collection.extend({
     if (setupDB) {
       prm = prm.then(
         () => {
-          return api.teardown(this.session);
+          return api.call(this.session, this.teardown);
         }, () => {
           return Promise.reject();
         });

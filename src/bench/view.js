@@ -70,7 +70,8 @@ var Table = Marionette.View.extend({
   template: tableTpl,
   ui: {
     checkbox: '.bench-all-checkbox',
-    button: '#start-btn'
+    button: '#start-btn',
+    button2: '#error-btn',
   },
   regions: {
     body: {
@@ -80,7 +81,8 @@ var Table = Marionette.View.extend({
   },
   events: {
     'click @ui.checkbox': 'handleCheckboxClick',
-    'click @ui.button': 'handleButtonClick'
+    'click @ui.button': 'handleButtonClick',
+    'click @ui.button2': 'handleErrorButtonClick',
   },
   childViewEvents: {
     'bench:clicked': 'updateCheckbox'
@@ -110,6 +112,10 @@ var Table = Marionette.View.extend({
   },
   handleButtonClick: function () {
     this.collection.preBench();
+  },
+  handleErrorButtonClick: function () {
+    document.getElementById('error-container')
+      .innerHTML = 'toutes les erreurs, ici';
   },
 });
 //

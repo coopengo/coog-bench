@@ -31,7 +31,7 @@
 }
 
 .body-ready {
-  background-color: #ff9933;
+  background-color: #ff9900;
 }
 
 .body-loading {
@@ -39,7 +39,7 @@
 }
 
 .body-loaded {
-  background-color: cadetblue;
+  background-color: limegreen;
 }
 
 .bench-disable {
@@ -47,25 +47,50 @@
 }
 .pure-table-horizontal td,
 .pure-table-horizontal th {
-  border-bottom: none;
-  padding: 1.3em 1.3em 1em 1em;
+  border-bottom: 1em;
+  padding: 1em 1em 1em 1em;
 }
 
 .bench-table {
   width: 100%;
-  margin-top: 2em;
 }
 
 #start-btn {
   margin-top: 1em;
   margin-bottom: 1em;
-  float: right;
+  margin-right: 4em;
+  margin-left: 4em;
+}
+
+#error-btn {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 4em;
+  margin-right: 4em;
 }
 
 .bench-all-checkbox,
 .bench-checkbox {
   transform: scale(1.2);
   -webkit-transform: scale(1.2);
+}
+
+.l-box {
+  padding: 2em;
+}
+
+.splash {
+  /* absolute center .splash within .splash-container */
+  width: 80%;
+  height: 50%;
+  margin: auto;
+  position: absolute;
+  text-align: center;
+}
+
+.error-table {
+  padding: 2em;
+  margin:8em;
 }
 /*!
 Pure v0.6.2

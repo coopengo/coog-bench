@@ -80,7 +80,7 @@
 	  ready: function (ok, ko) {
 	    this._promise.then(ok, ko);
 	  },
-	  onStart: function () {
+	  onStart: function () { // JAMAIS APPELE
 	    Backbone.history.start();
 	  }
 	});
@@ -18089,7 +18089,7 @@
 	var login = __webpack_require__(150);
 	//
 	module.exports = function (app) {
-	  app.then(() => storage.getSession()
+	  app.then(() => storage.getSession() //NE PASSE JAMAIS PAR LA 
 	    .then((session) => {
 	      if (session) {
 	        app.session = session;
@@ -18105,7 +18105,7 @@
 	          app.connect();
 	        }
 	      });
-	      app.showView(new login.View({
+	      app.showView(new login.View({ //NI PAR LA
 	        model: m
 	      }));
 	    }
@@ -18119,13 +18119,13 @@
 
 	var Session = __webpack_require__(10);
 	//
-	exports.setSession = function (session) {
+	exports.setSession = function (session) { // ZERO PASSAGE ICI NON PLUS
 	  return session.pack()
 	    .then((data) => {
 	      localStorage.setItem('session', data);
 	    });
 	};
-	exports.getSession = function () {
+	exports.getSession = function () { // ZERO PASSAGE ICI
 	  var data = localStorage.getItem('session');
 	  if (data) {
 	    return Session.unpack(data)
@@ -58167,7 +58167,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58307,7 +58307,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58385,7 +58385,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58468,7 +58468,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58544,7 +58544,7 @@
 	module.exports = function generate_allOf(it, $keyword) {
 	  var out = ' ';
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $it = it.util.copy(it);
@@ -58591,7 +58591,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58659,7 +58659,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58717,7 +58717,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -58801,11 +58801,12 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
 	  var $data = 'data' + ($dataLvl || '');
+	  var $valid = 'valid' + $lvl;
 	  var $errs = 'errs__' + $lvl;
 	  var $isData = it.opts.$data && $schema && $schema.$data,
 	    $schemaValue;
@@ -58841,9 +58842,16 @@
 	  if (!($inline || $macro)) {
 	    out += '' + ($ruleErrs) + ' = null;';
 	  }
-	  out += 'var ' + ($errs) + ' = errors;var valid' + ($lvl) + ';';
-	  if ($inline && $rDef.statements) {
-	    out += ' ' + ($ruleValidate.validate);
+	  out += 'var ' + ($errs) + ' = errors;var ' + ($valid) + ';';
+	  if ($validateSchema) {
+	    out += ' ' + ($valid) + ' = ' + ($definition) + '.validateSchema(' + ($schemaValue) + '); if (' + ($valid) + ') {';
+	  }
+	  if ($inline) {
+	    if ($rDef.statements) {
+	      out += ' ' + ($ruleValidate.validate) + ' ';
+	    } else {
+	      out += ' ' + ($valid) + ' = ' + ($ruleValidate.validate) + '; ';
+	    }
 	  } else if ($macro) {
 	    var $it = it.util.copy(it);
 	    $it.level++;
@@ -58855,7 +58863,7 @@
 	    var $code = it.validate($it).replace(/validate\.schema/g, $validateCode);
 	    it.compositeRule = $it.compositeRule = $wasComposite;
 	    out += ' ' + ($code);
-	  } else if (!$inline) {
+	  } else {
 	    var $$outStack = $$outStack || [];
 	    $$outStack.push(out);
 	    out = '';
@@ -58874,102 +58882,56 @@
 	    if (it.errorPath != '""') {
 	      out += ' + ' + (it.errorPath);
 	    }
-	    if ($dataLvl) {
-	      out += ' , data' + (($dataLvl - 1) || '') + ' , ' + (it.dataPathArr[$dataLvl]) + ' ';
-	    } else {
-	      out += ' , parentData , parentDataProperty ';
-	    }
-	    out += ' , rootData )  ';
+	    var $parentData = $dataLvl ? 'data' + (($dataLvl - 1) || '') : 'parentData',
+	      $parentDataProperty = $dataLvl ? it.dataPathArr[$dataLvl] : 'parentDataProperty';
+	    out += ' , ' + ($parentData) + ' , ' + ($parentDataProperty) + ' , rootData )  ';
 	    var def_callRuleValidate = out;
 	    out = $$outStack.pop();
-	    if ($rDef.errors !== false) {
+	    if ($rDef.errors === false) {
+	      out += ' ' + ($valid) + ' = ';
+	      if ($asyncKeyword) {
+	        out += '' + (it.yieldAwait);
+	      }
+	      out += '' + (def_callRuleValidate) + '; ';
+	    } else {
 	      if ($asyncKeyword) {
 	        $ruleErrs = 'customErrors' + $lvl;
-	        out += ' var ' + ($ruleErrs) + ' = null; try { valid' + ($lvl) + ' = ' + (it.yieldAwait) + (def_callRuleValidate) + '; } catch (e) { valid' + ($lvl) + ' = false; if (e instanceof ValidationError) ' + ($ruleErrs) + ' = e.errors; else throw e; } ';
+	        out += ' var ' + ($ruleErrs) + ' = null; try { ' + ($valid) + ' = ' + (it.yieldAwait) + (def_callRuleValidate) + '; } catch (e) { ' + ($valid) + ' = false; if (e instanceof ValidationError) ' + ($ruleErrs) + ' = e.errors; else throw e; } ';
 	      } else {
-	        out += ' ' + ($validateCode) + '.errors = null; ';
+	        out += ' ' + ($ruleErrs) + ' = null; ' + ($valid) + ' = ' + (def_callRuleValidate) + '; ';
 	      }
 	    }
 	  }
-	  out += 'if (';
+	  if ($rDef.modifying) {
+	    out += ' ' + ($data) + ' = ' + ($parentData) + '[' + ($parentDataProperty) + '];';
+	  }
 	  if ($validateSchema) {
-	    out += ' !' + ($definition) + '.validateSchema(' + ($schemaValue) + ') || ';
+	    out += ' }';
 	  }
-	  out += ' ! ';
-	  if ($inline) {
-	    if ($rDef.statements) {
-	      out += ' valid' + ($lvl) + ' ';
-	    } else {
-	      out += ' (' + ($ruleValidate.validate) + ') ';
+	  if ($rDef.valid) {
+	    if ($breakOnError) {
+	      out += ' if (true) { ';
 	    }
-	  } else if ($macro) {
-	    out += ' ' + ($nextValid) + ' ';
 	  } else {
-	    if ($asyncKeyword) {
-	      if ($rDef.errors === false) {
-	        out += ' (' + (it.yieldAwait) + (def_callRuleValidate) + ') ';
+	    out += ' if ( ';
+	    if ($rDef.valid === undefined) {
+	      out += ' !';
+	      if ($macro) {
+	        out += '' + ($nextValid);
 	      } else {
-	        out += ' valid' + ($lvl) + ' ';
+	        out += '' + ($valid);
 	      }
 	    } else {
-	      out += ' ' + (def_callRuleValidate) + ' ';
+	      out += ' ' + (!$rDef.valid) + ' ';
 	    }
-	  }
-	  out += ') { ';
-	  $errorKeyword = $rule.keyword;
-	  var $$outStack = $$outStack || [];
-	  $$outStack.push(out);
-	  out = '';
-	  var $$outStack = $$outStack || [];
-	  $$outStack.push(out);
-	  out = ''; /* istanbul ignore else */
-	  if (it.createErrors !== false) {
-	    out += ' { keyword: \'' + ($errorKeyword || 'custom') + '\' , dataPath: (dataPath || \'\') + ' + (it.errorPath) + ' , schemaPath: ' + (it.util.toQuotedString($errSchemaPath)) + ' , params: { keyword: \'' + ($rule.keyword) + '\' } ';
-	    if (it.opts.messages !== false) {
-	      out += ' , message: \'should pass "' + ($rule.keyword) + '" keyword validation\' ';
-	    }
-	    if (it.opts.verbose) {
-	      out += ' , schema: validate.schema' + ($schemaPath) + ' , parentSchema: validate.schema' + (it.schemaPath) + ' , data: ' + ($data) + ' ';
-	    }
-	    out += ' } ';
-	  } else {
-	    out += ' {} ';
-	  }
-	  var __err = out;
-	  out = $$outStack.pop();
-	  if (!it.compositeRule && $breakOnError) { /* istanbul ignore if */
-	    if (it.async) {
-	      out += ' throw new ValidationError([' + (__err) + ']); ';
-	    } else {
-	      out += ' validate.errors = [' + (__err) + ']; return false; ';
-	    }
-	  } else {
-	    out += ' var err = ' + (__err) + ';  if (vErrors === null) vErrors = [err]; else vErrors.push(err); errors++; ';
-	  }
-	  var def_customError = out;
-	  out = $$outStack.pop();
-	  if ($inline) {
-	    if ($rDef.errors) {
-	      if ($rDef.errors != 'full') {
-	        out += '  for (var ' + ($i) + '=' + ($errs) + '; ' + ($i) + '<errors; ' + ($i) + '++) { var ' + ($ruleErr) + ' = vErrors[' + ($i) + ']; if (' + ($ruleErr) + '.dataPath === undefined) { ' + ($ruleErr) + '.dataPath = (dataPath || \'\') + ' + (it.errorPath) + '; } if (' + ($ruleErr) + '.schemaPath === undefined) { ' + ($ruleErr) + '.schemaPath = "' + ($errSchemaPath) + '"; } ';
-	        if (it.opts.verbose) {
-	          out += ' ' + ($ruleErr) + '.schema = ' + ($schemaValue) + '; ' + ($ruleErr) + '.data = ' + ($data) + '; ';
-	        }
-	        out += ' } ';
-	      }
-	    } else {
-	      if ($rDef.errors === false) {
-	        out += ' ' + (def_customError) + ' ';
-	      } else {
-	        out += ' if (' + ($errs) + ' == errors) { ' + (def_customError) + ' } else {  for (var ' + ($i) + '=' + ($errs) + '; ' + ($i) + '<errors; ' + ($i) + '++) { var ' + ($ruleErr) + ' = vErrors[' + ($i) + ']; if (' + ($ruleErr) + '.dataPath === undefined) { ' + ($ruleErr) + '.dataPath = (dataPath || \'\') + ' + (it.errorPath) + '; } if (' + ($ruleErr) + '.schemaPath === undefined) { ' + ($ruleErr) + '.schemaPath = "' + ($errSchemaPath) + '"; } ';
-	        if (it.opts.verbose) {
-	          out += ' ' + ($ruleErr) + '.schema = ' + ($schemaValue) + '; ' + ($ruleErr) + '.data = ' + ($data) + '; ';
-	        }
-	        out += ' } } ';
-	      }
-	    }
-	  } else if ($macro) {
-	    out += '   var err =   '; /* istanbul ignore else */
+	    out += ') { ';
+	    $errorKeyword = $rule.keyword;
+	    var $$outStack = $$outStack || [];
+	    $$outStack.push(out);
+	    out = '';
+	    var $$outStack = $$outStack || [];
+	    $$outStack.push(out);
+	    out = ''; /* istanbul ignore else */
 	    if (it.createErrors !== false) {
 	      out += ' { keyword: \'' + ($errorKeyword || 'custom') + '\' , dataPath: (dataPath || \'\') + ' + (it.errorPath) + ' , schemaPath: ' + (it.util.toQuotedString($errSchemaPath)) + ' , params: { keyword: \'' + ($rule.keyword) + '\' } ';
 	      if (it.opts.messages !== false) {
@@ -58982,28 +58944,76 @@
 	    } else {
 	      out += ' {} ';
 	    }
-	    out += ';  if (vErrors === null) vErrors = [err]; else vErrors.push(err); errors++; ';
+	    var __err = out;
+	    out = $$outStack.pop();
 	    if (!it.compositeRule && $breakOnError) { /* istanbul ignore if */
 	      if (it.async) {
-	        out += ' throw new ValidationError(vErrors); ';
+	        out += ' throw new ValidationError([' + (__err) + ']); ';
 	      } else {
-	        out += ' validate.errors = vErrors; return false; ';
+	        out += ' validate.errors = [' + (__err) + ']; return false; ';
 	      }
-	    }
-	  } else {
-	    if ($rDef.errors === false) {
-	      out += ' ' + (def_customError) + ' ';
 	    } else {
-	      out += ' if (Array.isArray(' + ($ruleErrs) + ')) { if (vErrors === null) vErrors = ' + ($ruleErrs) + '; else vErrors = vErrors.concat(' + ($ruleErrs) + '); errors = vErrors.length;  for (var ' + ($i) + '=' + ($errs) + '; ' + ($i) + '<errors; ' + ($i) + '++) { var ' + ($ruleErr) + ' = vErrors[' + ($i) + '];  ' + ($ruleErr) + '.dataPath = (dataPath || \'\') + ' + (it.errorPath) + ';   ' + ($ruleErr) + '.schemaPath = "' + ($errSchemaPath) + '";  ';
-	      if (it.opts.verbose) {
-	        out += ' ' + ($ruleErr) + '.schema = ' + ($schemaValue) + '; ' + ($ruleErr) + '.data = ' + ($data) + '; ';
-	      }
-	      out += ' } } else { ' + (def_customError) + ' } ';
+	      out += ' var err = ' + (__err) + ';  if (vErrors === null) vErrors = [err]; else vErrors.push(err); errors++; ';
 	    }
-	  }
-	  out += ' } ';
-	  if ($breakOnError) {
-	    out += ' else { ';
+	    var def_customError = out;
+	    out = $$outStack.pop();
+	    if ($inline) {
+	      if ($rDef.errors) {
+	        if ($rDef.errors != 'full') {
+	          out += '  for (var ' + ($i) + '=' + ($errs) + '; ' + ($i) + '<errors; ' + ($i) + '++) { var ' + ($ruleErr) + ' = vErrors[' + ($i) + ']; if (' + ($ruleErr) + '.dataPath === undefined) { ' + ($ruleErr) + '.dataPath = (dataPath || \'\') + ' + (it.errorPath) + '; } if (' + ($ruleErr) + '.schemaPath === undefined) { ' + ($ruleErr) + '.schemaPath = "' + ($errSchemaPath) + '"; } ';
+	          if (it.opts.verbose) {
+	            out += ' ' + ($ruleErr) + '.schema = ' + ($schemaValue) + '; ' + ($ruleErr) + '.data = ' + ($data) + '; ';
+	          }
+	          out += ' } ';
+	        }
+	      } else {
+	        if ($rDef.errors === false) {
+	          out += ' ' + (def_customError) + ' ';
+	        } else {
+	          out += ' if (' + ($errs) + ' == errors) { ' + (def_customError) + ' } else {  for (var ' + ($i) + '=' + ($errs) + '; ' + ($i) + '<errors; ' + ($i) + '++) { var ' + ($ruleErr) + ' = vErrors[' + ($i) + ']; if (' + ($ruleErr) + '.dataPath === undefined) { ' + ($ruleErr) + '.dataPath = (dataPath || \'\') + ' + (it.errorPath) + '; } if (' + ($ruleErr) + '.schemaPath === undefined) { ' + ($ruleErr) + '.schemaPath = "' + ($errSchemaPath) + '"; } ';
+	          if (it.opts.verbose) {
+	            out += ' ' + ($ruleErr) + '.schema = ' + ($schemaValue) + '; ' + ($ruleErr) + '.data = ' + ($data) + '; ';
+	          }
+	          out += ' } } ';
+	        }
+	      }
+	    } else if ($macro) {
+	      out += '   var err =   '; /* istanbul ignore else */
+	      if (it.createErrors !== false) {
+	        out += ' { keyword: \'' + ($errorKeyword || 'custom') + '\' , dataPath: (dataPath || \'\') + ' + (it.errorPath) + ' , schemaPath: ' + (it.util.toQuotedString($errSchemaPath)) + ' , params: { keyword: \'' + ($rule.keyword) + '\' } ';
+	        if (it.opts.messages !== false) {
+	          out += ' , message: \'should pass "' + ($rule.keyword) + '" keyword validation\' ';
+	        }
+	        if (it.opts.verbose) {
+	          out += ' , schema: validate.schema' + ($schemaPath) + ' , parentSchema: validate.schema' + (it.schemaPath) + ' , data: ' + ($data) + ' ';
+	        }
+	        out += ' } ';
+	      } else {
+	        out += ' {} ';
+	      }
+	      out += ';  if (vErrors === null) vErrors = [err]; else vErrors.push(err); errors++; ';
+	      if (!it.compositeRule && $breakOnError) { /* istanbul ignore if */
+	        if (it.async) {
+	          out += ' throw new ValidationError(vErrors); ';
+	        } else {
+	          out += ' validate.errors = vErrors; return false; ';
+	        }
+	      }
+	    } else {
+	      if ($rDef.errors === false) {
+	        out += ' ' + (def_customError) + ' ';
+	      } else {
+	        out += ' if (Array.isArray(' + ($ruleErrs) + ')) { if (vErrors === null) vErrors = ' + ($ruleErrs) + '; else vErrors = vErrors.concat(' + ($ruleErrs) + '); errors = vErrors.length;  for (var ' + ($i) + '=' + ($errs) + '; ' + ($i) + '<errors; ' + ($i) + '++) { var ' + ($ruleErr) + ' = vErrors[' + ($i) + '];  ' + ($ruleErr) + '.dataPath = (dataPath || \'\') + ' + (it.errorPath) + ';   ' + ($ruleErr) + '.schemaPath = "' + ($errSchemaPath) + '";  ';
+	        if (it.opts.verbose) {
+	          out += ' ' + ($ruleErr) + '.schema = ' + ($schemaValue) + '; ' + ($ruleErr) + '.data = ' + ($data) + '; ';
+	        }
+	        out += ' } } else { ' + (def_customError) + ' } ';
+	      }
+	    }
+	    out += ' } ';
+	    if ($breakOnError) {
+	      out += ' else { ';
+	    }
 	  }
 	  return out;
 	}
@@ -59015,7 +59025,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59167,7 +59177,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59235,7 +59245,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59378,7 +59388,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59521,7 +59531,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59600,7 +59610,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59686,7 +59696,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59765,7 +59775,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -59842,7 +59852,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -60292,7 +60302,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -60456,12 +60466,9 @@
 	    if (it.errorPath != '""') {
 	      out += ' + ' + (it.errorPath);
 	    }
-	    if ($dataLvl) {
-	      out += ' , data' + (($dataLvl - 1) || '') + ' , ' + (it.dataPathArr[$dataLvl]) + ' ';
-	    } else {
-	      out += ' , parentData , parentDataProperty ';
-	    }
-	    out += ', rootData)  ';
+	    var $parentData = $dataLvl ? 'data' + (($dataLvl - 1) || '') : 'parentData',
+	      $parentDataProperty = $dataLvl ? it.dataPathArr[$dataLvl] : 'parentDataProperty';
+	    out += ' , ' + ($parentData) + ' , ' + ($parentDataProperty) + ', rootData)  ';
 	    var __callValidate = out;
 	    out = $$outStack.pop();
 	    if ($async) {
@@ -60498,7 +60505,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -60750,7 +60757,7 @@
 	  var $lvl = it.level;
 	  var $dataLvl = it.dataLevel;
 	  var $schema = it.schema[$keyword];
-	  var $schemaPath = it.schemaPath + '.' + $keyword;
+	  var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	  var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	  var $breakOnError = !it.opts.allErrors;
 	  var $errorKeyword;
@@ -60842,14 +60849,17 @@
 	    } else {
 	      out += ' (function ';
 	    }
-	    out += ' (data, dataPath, parentData, parentDataProperty, rootData) { \'use strict\';';
+	    out += ' (data, dataPath, parentData, parentDataProperty, rootData) { \'use strict\'; ';
+	    if (it.schema.id && (it.opts.sourceCode || it.opts.processCode)) {
+	      out += ' ' + ('/\*# sourceURL=' + it.schema.id + ' */') + ' ';
+	    }
 	  }
 	  if (typeof it.schema == 'boolean' || !($refKeywords || it.schema.$ref)) {
 	    var $keyword = 'false schema';
 	    var $lvl = it.level;
 	    var $dataLvl = it.dataLevel;
 	    var $schema = it.schema[$keyword];
-	    var $schemaPath = it.schemaPath + '.' + $keyword;
+	    var $schemaPath = it.schemaPath + it.util.getProperty($keyword);
 	    var $errSchemaPath = it.errSchemaPath + '/' + $keyword;
 	    var $breakOnError = !it.opts.allErrors;
 	    var $errorKeyword;
@@ -61014,15 +61024,14 @@
 	      } else {
 	        out += ' var err = ' + (__err) + ';  if (vErrors === null) vErrors = [err]; else vErrors.push(err); errors++; ';
 	      }
-	      out += ' } else { ';
-	      if ($dataLvl) {
-	        var $parentData = 'data' + (($dataLvl - 1) || ''),
-	          $dataProperty = it.dataPathArr[$dataLvl];
-	        out += ' ' + ($data) + ' = ' + ($parentData) + '[' + ($dataProperty) + '] = ' + ($coerced) + '; ';
-	      } else {
-	        out += ' data = ' + ($coerced) + '; if (parentData !== undefined) parentData[parentDataProperty] = ' + ($coerced) + '; ';
+	      out += ' } else {  ';
+	      var $parentData = $dataLvl ? 'data' + (($dataLvl - 1) || '') : 'parentData',
+	        $parentDataProperty = $dataLvl ? it.dataPathArr[$dataLvl] : 'parentDataProperty';
+	      out += ' ' + ($data) + ' = ' + ($coerced) + '; ';
+	      if (!$dataLvl) {
+	        out += 'if (' + ($parentData) + ' !== undefined)';
 	      }
-	      out += ' } } ';
+	      out += ' ' + ($parentData) + '[' + ($parentDataProperty) + '] = ' + ($coerced) + '; } } ';
 	    }
 	  }
 	  if (it.schema.$ref && $refKeywords) {
@@ -61272,7 +61281,7 @@
 	},{}],37:[function(require,module,exports){
 	'use strict';
 	
-	var IDENTIFIER = /^[a-z_$][a-z0-9_$]*$/i;
+	var IDENTIFIER = /^[a-z_$][a-z0-9_$\-]*$/i;
 	var customRuleCode = require('./dotjs/custom');
 	
 	module.exports = {
@@ -61284,7 +61293,7 @@
 	/**
 	 * Define custom keyword
 	 * @this  Ajv
-	 * @param {String} keyword custom keyword, should be a valid identifier, should be different from all standard, custom and macro keywords.
+	 * @param {String} keyword custom keyword, should be unique (including different from all standard, custom and macro keywords).
 	 * @param {Object} definition keyword definition object with properties `type` (type(s) which the keyword applies to), `validate` or `compile`.
 	 */
 	function addKeyword(keyword, definition) {
@@ -61299,6 +61308,9 @@
 	    throw new Error('Keyword ' + keyword + ' is not a valid identifier');
 	
 	  if (definition) {
+	    if (definition.macro && definition.valid !== undefined)
+	      throw new Error('"valid" option cannot be used with macro keywords');
+	
 	    var dataType = definition.type;
 	    if (Array.isArray(dataType)) {
 	      var i, len = dataType.length;
@@ -64290,7 +64302,7 @@
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {
-	__p += '<div class="pure-u-1-3">\n</div>\n<div class="pure-u-1-3">\n  <form class="pure-form pure-form-aligned">\n    <fieldset>\n      <div class="pure-control-group">\n        <label for="database">Database</label>\n        <input id="database" name="database" type="text" placeholder="Database"/>\n      </div>\n      <div class="pure-control-group">\n        <label for="username">Username</label>\n        <input id="username" name="username" type="text" placeholder="Username"/>\n      </div>\n      <div class="pure-control-group">\n        <label for="password">Password</label>\n        <input id="password" name="password" type="password" placeholder="Password"/>\n      </div>\n      <div class="pure-controls">\n        <button type="submit" class="pure-button pure-button-primary">Submit</button>\n      </div>\n    </fieldset>\n  </form>\n  <div id="error">\n  </div>\n</div>\n<div class="pure-u-1-3">\n</div>\n';
+	__p += '<div class="pure-u-1-3">\n</div>\n<div class="pure-u-1-3">\n  <form class="pure-form pure-form-aligned">\n    <fieldset>\n      <div class="pure-control-group">\n        <label for="database">Database</label>\n        <input id="database" name="database" type="text" placeholder="Database"/>\n      </div>\n      <div class="pure-control-group">\n        <label for="username">Username</label>\n        <input id="username" name="username" type="text" placeholder="Username"/>\n      </div>\n      <div class="pure-control-group">\n        <label for="password">Password</label>\n        <input id="password" name="password" type="password" placeholder="Password"/>\n      </div>\n      <div class="pure-controls">\n        <button type="submit" class="pure-button pure-button-primary">Submit</button>\n      </div>\n    </fieldset>\n  </form>\n  <div id="error">\n  </div>\n</div>\n';
 	
 	}
 	return __p
@@ -64342,16 +64354,17 @@
 	  reset: function () {
 	    this.set({
 	      status: 'prepared',
-	      score: '- -',
 	      iter: '-',
-	      avg: '--',
-	      min: '--',
-	      max: '--'
+	      avg: '-',
+	      min: '-',
+	      max: '-'
 	    });
 	  },
 	  toggle: function () {
 	    if (this.collection.benchRunning) {
 	      console.log('bench is running');
+	      document.getElementById("error-container")
+	      .innerHTML = 'Bench is running';
 	    }
 	    else {
 	      this.set({
@@ -64362,6 +64375,8 @@
 	  enable: function (val) {
 	    if (this.collection.benchRunning) {
 	      console.log('bench is running');
+	      document.getElementById("error-container")
+	      .innerHTML = 'Bench is running';
 	    }
 	    else {
 	      this.set('enable', val);
@@ -64383,7 +64398,7 @@
 	  },
 	});
 	//
-	var CustomBench = Bench.extend({
+	var CustomBench = Bench.extend({ //1ère ligne du tableau
 	  callBench: function () {
 	    var prm = Promise.resolve();
 	    var iter = 100;
@@ -64410,14 +64425,16 @@
 	    return prm.then(() => {
 	      times.sort();
 	      var min = times.shift();
+	      console.log('min : ' + min);
 	      var max = times.pop();
+	      console.log('max : ' + max);
 	      var avg = times.reduce((a, b) => a + b) / times.length;
 	      this.set({
 	        status: 'done',
 	        iter: iter,
-	        avg: avg.toFixed(5),
-	        min: min.toFixed(5),
-	        max: max.toFixed(5)
+	        avg: avg.toFixed(3),
+	        min: min.toFixed(3),
+	        max: max.toFixed(3)
 	      });
 	    });
 	  }
@@ -64426,7 +64443,7 @@
 	  model: Bench,
 	  initialize: function (attrs, options) {
 	    this.session = options.session;
-	    this.benchRunning = false;
+	    //this.benchRunning = false;
 	  },
 	  getModulesDisabled: function () {
 	    return this.where({
@@ -64458,21 +64475,29 @@
 	    };
 	    api.list(this.session)
 	      .then((ret) => {
-	        ret.methods.forEach(newBench);
+	        ret.methods.forEach(newBench);;
+	        this.setup = ret.setup;
+	        this.teardown = ret.teardown;
 	      });
 	  },
 	  preBench: function () {
 	    var benchLst = this.getModulesEnabled();
 	    if (!benchLst) {
 	      console.log('Nothing to bench');
+	      document.getElementById("error-container")
+	      .innerHTML = 'Nothing to bench';
 	      return Promise.resolve;
 	    }
 	    if (!this.session) {
 	      console.log('Invalid session');
+	      document.getElementById("error-container")
+	      .innerHTML = 'Invalid session';
 	      return Promise.resolve;
 	    }
 	    if (this.benchRunning) {
 	      console.log('Bench already started');
+	      document.getElementById("error-container")
+	      .innerHTML = 'Bench already started';
 	      return Promise.resolve;
 	    }
 	    this.benchRunning = true;
@@ -64480,9 +64505,13 @@
 	      .then(() => {
 	        this.benchRunning = false;
 	      }, (err) => {
-	        console.log('bench failed');
+	        console.log('Bench failed');
+	        document.getElementById("error-container")
+	      .innerHTML = 'Bench failed';
 	        if (err) {
 	          console.log(err);
+	        document.getElementById("error-c")
+	      .innerHTML = err;
 	        }
 	      });
 	  },
@@ -64508,7 +64537,7 @@
 	    if (this.getModulesUsingDB()
 	      .length) {
 	      setupDB = true;
-	      prm = api.setup(this.session)
+	      prm = api.call(this.session, this.setup)
 	        .then(null, this.handleError);
 	    }
 	    // start benching
@@ -64524,7 +64553,7 @@
 	    if (setupDB) {
 	      prm = prm.then(
 	        () => {
-	          return api.teardown(this.session);
+	          return api.call(this.session, this.teardown);
 	        }, () => {
 	          return Promise.reject();
 	        });
@@ -64538,7 +64567,7 @@
 /* 155 */
 /***/ function(module, exports) {
 
-	var BENCH_MODEL = 'utils.benchmark_class';
+	var BENCH_MODEL = 'bench';
 	
 	function parseBenchRes(value) {
 	  var newlst = [];
@@ -64557,6 +64586,9 @@
 	    if (str.endsWith(stop)) {
 	      str = str.substr(0, str.length - 1);
 	    }
+	    console.log('LES 4 INFOS :' + str);
+	    document.getElementById("error-container")
+	      .innerHTML = 'Les 4 infos : ' + str;
 	    return str;
 	  };
 	  lst.forEach((str) => {
@@ -64568,14 +64600,11 @@
 	  ret.max = removeChar(newlst[3].split(' ')[1], '(', ')');
 	  return ret;
 	}
-	exports.setup = function (session) {
-	  return session.rpc('model.' + BENCH_MODEL + '._benchmark_setup');
-	};
-	exports.teardown = function (session) {
-	  return session.rpc('model.' + BENCH_MODEL + '._benchmark_teardown');
+	exports.call = function (session, func) {
+	  return session.rpc('model.' + BENCH_MODEL + '.' + func);
 	};
 	exports.list = function (session) {
-	  return session.rpc('model.' + BENCH_MODEL + '._benchmark_list');
+	  return session.rpc('model.' + BENCH_MODEL + '.list');
 	};
 	exports.execute = function (session, method, conserveData) {
 	  return session.rpc('model.' + BENCH_MODEL + '.' + method)
@@ -64663,7 +64692,8 @@
 	  template: tableTpl,
 	  ui: {
 	    checkbox: '.bench-all-checkbox',
-	    button: '#start-btn'
+	    button: '#start-btn',
+	    button2: '#error-btn',
 	  },
 	  regions: {
 	    body: {
@@ -64673,7 +64703,8 @@
 	  },
 	  events: {
 	    'click @ui.checkbox': 'handleCheckboxClick',
-	    'click @ui.button': 'handleButtonClick'
+	    'click @ui.button': 'handleButtonClick',
+	    'click @ui.button2': 'handleErrorButtonClick',
 	  },
 	  childViewEvents: {
 	    'bench:clicked': 'updateCheckbox'
@@ -64704,6 +64735,10 @@
 	  handleButtonClick: function () {
 	    this.collection.preBench();
 	  },
+	  handleErrorButtonClick: function () {
+	    document.getElementById('error-container')
+	      .innerHTML = 'toutes les erreurs, ici';
+	  },
 	});
 	//
 	module.exports = Marionette.View.extend({
@@ -64732,10 +64767,10 @@
 	function print() { __p += __j.call(arguments, '') }
 	with (obj) {
 	__p += '<td class="bench-checkbox-container align-center">\n  ';
-	 if (enable == false) { ;
-	__p += ' <button class="pure-button benchmark-selector-btn bench-selector-ko"><span>&nbsp;</span></button>\n    ';
+	 if (enable == true) { ;
+	__p += ' <button class="pure-button benchmark-selector-btn bench-selector-ko"><span>&nbsp;Abled</span></button>\n    ';
 	 } else { ;
-	__p += ' <button class="pure-button benchmark-selector-btn bench-selector-ok"><span>&nbsp;</span></button>\n      ';
+	__p += ' <button class="pure-button benchmark-selector-btn bench-selector-ok"><span>&nbsp;Disabled</span></button>\n      ';
 	 } ;
 	__p += '\n</td>\n<td class="">\n  ' +
 	__e( title ) +
@@ -64761,7 +64796,7 @@
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {
-	__p += '<div class="pure-u-1">\n  <table class="pure-table pure-table-horizontal bench-table">\n    <thead>\n      <tr>\n        <th class="align-center bench-all-checkbox-container"> <input class="bench-all-checkbox" id="table-checkbox" type="checkbox" name="enable">          </th>\n        <th class="align-center"></th>\n        <th class="align-center">Iteration</th>\n        <th class="align-center">Average</th>\n        <th class="align-center">Minimum</th>\n        <th class="align-center">Maximum</th>\n        <!-- <th class="align-center" >Score</th> -->\n      </tr>\n    </thead>\n    <tbody id="bench-container"></tbody>\n  </table>\n</div>\n<div class="pure-u-1"> <button class="pure-button" id="start-btn">Start Bench</button> </div>\n';
+	__p += '<div class="pure-g"></div>\n<div class="pure-u-1">\n  <div class="l-box">\n    <table class="pure-table pure-table-horizontal bench-table">\n      <thead>\n        <tr>\n          <th class="align-center bench-all-checkbox-container"> <input class="bench-all-checkbox" id="table-checkbox" type="checkbox" name="enable">          </th>\n          <th class="align-center">Category</th>\n          <th class="align-center">Iteration</th>\n          <th class="align-center">Average</th>\n          <th class="align-center">Minimum</th>\n          <th class="align-center">Maximum</th>\n        </tr>\n      </thead>\n      <tbody id="bench-container"></tbody>\n    </table>\n  <div class="splash-container pure-g">\n    <div class="splash">\n      <button class="pure-button pure-button-active pure-u-1-4" id="start-btn">Start Bench</button>\n      <button class="pure-button pure-button-active pure-u-1-4" id="error-btn">Bouton en plus</button>\n    </div>\n  </div>\n  <div class="pure-g"></div>\n  <div class="pure-u-1">\n   <table class="pure-table pure-table-horizontal error-table">\n      <thead>\n        <tr>\n          <th class="align-center error-table-container">Problems</th>\n        </tr>\n      </thead>\n      <tbody id="error-container">\n      </tbody>\n    </table>\n  </div>  ';
 	
 	}
 	return __p
@@ -64775,7 +64810,7 @@
 	obj || (obj = {});
 	var __t, __p = '';
 	with (obj) {
-	__p += '<div class="pure-g">\n  <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div>\n  <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-2">\n    <div id="benchList"></div>\n  </div>\n  <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div>\n</div>\n';
+	__p += '<div class="pure-g">\n  <div class="pure-u-1">\n    <div id="benchList"></div>\n  </div>\n  <div class="pure-u-1 pure-u-md-1-6 pure-u-lg-1-4"></div>\n</div>\n';
 	
 	}
 	return __p

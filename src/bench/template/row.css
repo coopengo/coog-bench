@@ -31,7 +31,7 @@
 }
 
 .body-ready {
-  background-color: #ff9933;
+  background-color: #ff9900;
 }
 
 .body-loading {
@@ -39,7 +39,7 @@
 }
 
 .body-loaded {
-  background-color: cadetblue;
+  background-color: limegreen;
 }
 
 .bench-disable {
