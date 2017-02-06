@@ -135,6 +135,8 @@ module.exports = Backbone.Collection.extend({
     api.list(this.session)
       .then((ret) => {
         ret.methods.forEach(newBench);
+        this.setup = ret.setup;
+        this.teardown = ret.teardown;
       });
   },
   preBench: function () {
@@ -184,7 +186,7 @@ module.exports = Backbone.Collection.extend({
     if (this.getModulesUsingDB()
       .length) {
       setupDB = true;
-      prm = api.setup(this.session)
+      prm = api.call(this.session, this.setup)
         .then(null, this.handleError);
     }
     // start benching
@@ -200,7 +202,7 @@ module.exports = Backbone.Collection.extend({
     if (setupDB) {
       prm = prm.then(
         () => {
-          return api.teardown(this.session);
+          return api.call(this.session, this.teardown);
         }, () => {
           return Promise.reject();
         });
