@@ -17,9 +17,6 @@ function parseBenchRes(value) {
     if (str.endsWith(stop)) {
       str = str.substr(0, str.length - 1);
     }
-    console.log('LES 4 INFOS :' + str);
-    document.getElementById("error-container")
-      .innerHTML = 'Les 4 infos : ' + str;
     return str;
   };
   lst.forEach((str) => {

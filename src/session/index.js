@@ -2,7 +2,7 @@ var storage = require('./storage');
 var login = require('./login');
 //
 module.exports = function (app) {
-  app.then(() => storage.getSession() //NE PASSE JAMAIS PAR LA 
+  app.then(() => storage.getSession()
     .then((session) => {
       if (session) {
         app.session = session;
@@ -18,7 +18,7 @@ module.exports = function (app) {
           app.connect();
         }
       });
-      app.showView(new login.View({ //NI PAR LA
+      app.showView(new login.View({
         model: m
       }));
     }

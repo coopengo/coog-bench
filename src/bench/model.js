@@ -62,7 +62,7 @@ var Bench = Backbone.Model.extend({
   },
 });
 //
-var CustomBench = Bench.extend({ //1ère ligne du tableau
+var CustomBench = Bench.extend({
   callBench: function () {
     var prm = Promise.resolve();
     var iter = 100;
@@ -107,7 +107,7 @@ module.exports = Backbone.Collection.extend({
   model: Bench,
   initialize: function (attrs, options) {
     this.session = options.session;
-    //this.benchRunning = false;
+    this.benchRunning = false;
   },
   getModulesDisabled: function () {
     return this.where({
