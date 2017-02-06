@@ -16,6 +16,7 @@ module.exports = function (app) {
         if (ok) {
           app.session = info;
           app.connect();
+          storage.setSession(info);
         }
       });
       app.showView(new login.View({
