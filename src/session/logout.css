@@ -1,0 +1,10 @@
+#buttonlgt {
+  background: #F06560;
+  color: #000;
+  float: right;
+  margin-right: 5vh;
+}
+
+.button-small {
+  font-size: 85%;
+}

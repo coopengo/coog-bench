@@ -3,6 +3,7 @@ var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var session = require('./session');
 var bench = require('./bench');
+var error = require('./error');
 //
 // routing utils
 //
@@ -37,6 +38,8 @@ var AuthRouter = AppRouter.extend({
 // create routers
 //
 module.exports = function (app) {
+  error(app);
+  session(app);
   app.on('start', () => {
     app.on('connect', (connected) => {
       if (connected) {
@@ -66,7 +69,7 @@ module.exports = function (app) {
     app: app,
     controller: session(app),
     appRoutes: {
-      'login': 'login'
+      'login': 'login',
     }
   });
   new AuthRouter({

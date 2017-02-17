@@ -20,8 +20,4 @@
       </div>
     </fieldset>
   </form>
-  <div id="error">
-  </div>
-</div>
-<div class="pure-u-1-3">
 </div>

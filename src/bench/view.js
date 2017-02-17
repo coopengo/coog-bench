@@ -36,26 +36,23 @@ var Row = Marionette.View.extend({
     }
     this.render();
   },
-  switchClass: function (cls) {
-    this.$el.removeClass('body-ready');
-    this.$el.removeClass('body-loaded');
-    this.$el.removeClass('body-loading');
-    this.$el.addClass(cls);
+  resetFields: function () {
+    //RESET LES CHAMPS
   },
   onRender: function () {
     switch (this.model.get('status')) {
     case 'working':
-      this.switchClass('body-loading');
+      this.$el.removeClass('body-ready body-loading body-loaded')
+        .addClass('body-loading');
+      this.resetFields();
       break;
     case 'done':
-      this.switchClass('body-loaded');
-      break;
-    case 'prepared':
-      this.switchClass('body-ready');
+      this.$el.removeClass('body-ready body-loaded body-loading')
+        .addClass('body-loaded');
       break;
     }
     return this;
-  }
+  },
 });
 //
 var TableBody = Marionette.CollectionView.extend({
@@ -70,7 +67,7 @@ var Table = Marionette.View.extend({
   template: tableTpl,
   ui: {
     checkbox: '.bench-all-checkbox',
-    button: '#start-btn'
+    button: '#start-btn',
   },
   regions: {
     body: {
@@ -80,17 +77,15 @@ var Table = Marionette.View.extend({
   },
   events: {
     'click @ui.checkbox': 'handleCheckboxClick',
-    'click @ui.button': 'handleButtonClick'
+    'click @ui.button': 'handleButtonClick',
   },
   childViewEvents: {
     'bench:clicked': 'updateCheckbox'
   },
-  initialize: function () {
-    this.benchRunning = false;
-    this.timedout = false;
-  },
   updateCheckbox: function () {
-    var checked = !this.collection.getModulesDisabled()
+    var checked = !this.collection.filter({
+        enable: false
+      })
       .length;
     this.getUI('checkbox')[0].checked = checked;
   },
@@ -98,18 +93,16 @@ var Table = Marionette.View.extend({
     this.showChildView('body', new TableBody({
       collection: this.collection
     }));
-    var checked = !this.collection.getModulesDisabled()
-      .length;
-    this.getUI('checkbox')[0].checked = checked;
+    this.updateCheckbox();
   },
   handleCheckboxClick: function () {
     var state = this.getUI('checkbox')[0].checked;
     this.collection.each((bench) => {
-      bench.enable(state);
+      bench.toggle(state);
     });
   },
   handleButtonClick: function () {
-    this.collection.preBench();
+    this.collection.execute();
   },
 });
 //

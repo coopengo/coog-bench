@@ -1,22 +1,35 @@
 .pure-table-horizontal td,
 .pure-table-horizontal th {
-  border-bottom: none;
-  padding: 1.3em 1.3em 1em 1em;
+  border-bottom: 1em;
+  padding: 1em 1em 1em 1em;
 }
 
 .bench-table {
   width: 100%;
-  margin-top: 2em;
 }
 
 #start-btn {
   margin-top: 1em;
   margin-bottom: 1em;
-  float: right;
+  margin-right: 4em;
+  margin-left: 4em;
 }
 
 .bench-all-checkbox,
 .bench-checkbox {
   transform: scale(1.2);
   -webkit-transform: scale(1.2);
+}
+
+.l-box {
+  padding: 2em;
+}
+
+.splash {
+  /* absolute center .splash within .splash-container */
+  width: 100%;
+  height: 10%;
+  margin: auto;
+  position: right;
+  text-align: center;
 }
