@@ -4,7 +4,7 @@
 			<%= message %>
 		</div>
 		<div class="pure-u-1-5"></div>
-	 	<button class="button-small pure-button pure-u-1-5" id="delete-btn"><i class="material-icons">cancel</i></button>
+		<button class="button-small pure-button pure-u-1-5" id="delete-btn">&times</i></button>
 		</div>
 	</div>
 </li>

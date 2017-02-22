@@ -1,4 +1,5 @@
-<div class="pure-u-1-3"></div> 
+<div class="pure-u-1-3">
+</div>
   <div class="pure-u-1-3">
     <form class="pure-form pure-form-aligned">
       <fieldset>

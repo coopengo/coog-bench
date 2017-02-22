@@ -13,8 +13,8 @@
       </thead>
       <tbody id="bench-container"></tbody>
     </table>
-      <div class="splash">
-        <button class="pure-u-3-24 w3-button w3-ripple" id="start-btn">Start Bench</br><i class="material-icons">keyboard_arrow_right</i></button>
-      </div>
+    <div class="splash">
+      <button class="pure-button pure-button-active pure-u-8-24" id="start-btn">Start Bench</button>
+    </div>
   </div>
 </div>
