@@ -5,12 +5,11 @@ var drop = require('./drop');
 module.exports = function (app) {
   return {
     bench: () => {
-      app.trigger('errors:reset');
       var collection = new Collection();
       collection.app = app;
       collection.init(app.session);
       collection.on('error:reset', () => {
-        app.errors.reset();
+        app.trigger('error:reset');
         app.getView()
           .getRegion('actions')
           .show(new drop.Blank({
@@ -18,9 +17,7 @@ module.exports = function (app) {
           }));
       });
       collection.on('error:add', (error) => {
-        app.errors.add({
-          message: error
-        });
+        app.trigger('error:add', error);
         app.getView()
           .getRegion('actions')
           .show(new drop.Drop({

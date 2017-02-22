@@ -4,7 +4,7 @@ var mainTpl = require('./index.tpl');
 require('./error.css');
 //
 var Row = Marionette.View.extend({
-  tagName: 'li',
+  tagName: 'ul',
   template: errorTpl,
   ui: {
     button: '#delete-btn',
@@ -21,7 +21,7 @@ var Row = Marionette.View.extend({
 });
 //
 var Table = Marionette.CollectionView.extend({
-  tagName: 'ul',
+  tagName: 'pure-g',
   childView: Row,
   template: mainTpl,
 });
