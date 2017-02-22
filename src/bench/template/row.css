@@ -10,16 +10,6 @@
   font-size: 70%;
 }
 
-.bench-selector-ok {
-  background: #d3eda3;
-  color: #72962e;
-}
-
-.bench-selector-ko {
-  background: #f5ab9e;
-  color: #8c3a2b;
-}
-
 
 /* bench-body */
 
@@ -31,15 +21,17 @@
 }
 
 .body-ready {
-  background-color: #ff9933;
+  background-color: #ff9900;
 }
 
 .body-loading {
   background-color: brown;
+  cursor: wait;
 }
 
 .body-loaded {
-  background-color: cadetblue;
+  background-color: limegreen;
+  cursor: auto;
 }
 
 .bench-disable {

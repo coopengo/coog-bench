@@ -2,7 +2,18 @@ var Backbone = require('backbone');
 require('backbone.syphon');
 var Marionette = require('backbone.marionette');
 var route = require('./route');
+var appTpl = require('./app.tpl');
 require('purecss');
+//
+var AppView = Marionette.View.extend({
+  template: appTpl,
+  regions: {
+    'main': '#main',
+    'error': '#error',
+    'menu': '#menu',
+    'actions': '#actions',
+  },
+});
 //
 // app class
 //
@@ -11,6 +22,12 @@ var App = Marionette.Application.extend({
   initialize: function () {
     this._connected = false;
     this._promise = Promise.resolve();
+    this.on('before:start', function () {
+      this.showView(new AppView());
+    });
+    this.on('start', () => {
+      Backbone.history.start();
+    });
     route(this);
   },
   isConnected: function () {
@@ -33,9 +50,6 @@ var App = Marionette.Application.extend({
   },
   ready: function (ok, ko) {
     this._promise.then(ok, ko);
-  },
-  onStart: function () {
-    Backbone.history.start();
   }
 });
 //

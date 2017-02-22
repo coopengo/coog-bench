@@ -1,9 +1,9 @@
-var _ = require('underscore');
 var Backbone = require('backbone');
-var Marionette = require('backbone.marionette');
 var Ajv = require('ajv');
 var Session = require('tryton-session');
+var Marionette = require('backbone.marionette');
 var tpl = require('./login.tpl');
+var storage = require('./storage');
 //
 // models
 //
@@ -49,39 +49,23 @@ var Model = Backbone.Model.extend({
       }, (error) => {
         this.trigger('login', false, error);
       });
-  }
+  },
+  logout: function () {
+    storage.closeSession();
+    location.reload();
+  },
 });
 //
 // views
 //
-var ErrorView = Marionette.View.extend({
-  tagName: 'li'
-});
-var ErrorsView = Marionette.CollectionView.extend({
-  tarName: 'ul',
-  childView: ErrorView
-});
 var View = Marionette.View.extend({
   className: 'pure-g',
   template: tpl,
   ui: {
     submit: 'button'
   },
-  regions: {
-    error: '#error'
-  },
   triggers: {
     'click @ui.submit': 'submit'
-  },
-  initialize: function () {
-    this.listenTo(this.model, 'invalid', (error) => {
-      this.triggerMethod('error', error);
-    });
-    this.listenTo(this.model, 'login', (ok, info) => {
-      if (!ok) {
-        this.triggerMethod('error', info);
-      }
-    });
   },
   onRender: function () {
     Backbone.Syphon.deserialize(this, this.model.toJSON());
@@ -94,15 +78,9 @@ var View = Marionette.View.extend({
       }
     });
   },
-  onError: function (error) {
-    if (_.isString(error)) {
-      error = [error];
-    }
-    this.showChildView('error', new ErrorsView(error));
-  }
 });
 //
 // exports
 //
-exports.Model = Model;
 exports.View = View;
+exports.Model = Model;

@@ -1,0 +1,11 @@
+#buttondrop {
+  background: #fce0df;
+  color: #000;
+  float: right;
+  margin-right: 5vh;
+  margin-top: 2vh;
+}
+
+.button-small {
+  font-size: 85%;
+}

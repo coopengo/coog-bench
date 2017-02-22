@@ -1,0 +1,21 @@
+#mes {
+  background: #F06560;
+  color: #000;
+  display: block;
+  border: 1px #F06560;
+}
+
+ul {
+  list-style-type: none;
+}
+
+ul>li {
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-right: 3vh;
+}
+
+#delete-btn {
+  float: right;
+  font-size: 70%;
+}
