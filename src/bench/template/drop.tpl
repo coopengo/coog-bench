@@ -1,7 +1,6 @@
-<div class="pure-u-1">
- <div class="splash-container">
-    <div class="splash" id="droptable">
-      <button class="button-small pure-button pure-u-1-6" id="buttondrop">Drop Table</button>
-    </div>
-  </div>
+<div class="pure-u-3-4"></div>
+<div class="pure-u-1-4">
+	<div class="w3-button" id="buttondrop">Drop Table</div>
 </div>
+
+

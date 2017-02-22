@@ -2,7 +2,9 @@
   background: #F06560;
   color: #000;
   display: block;
-  border: 1px #F06560;
+  padding-left: 1vh;
+  padding-right: 3vh;
+  margin-top: 1vh;
 }
 
 ul {
@@ -10,12 +12,11 @@ ul {
 }
 
 ul>li {
-  margin-top: 2vh;
-  margin-bottom: 2vh;
   margin-right: 3vh;
 }
 
 #delete-btn {
-  float: right;
-  font-size: 70%;
+  font-size: 85%;
+  background: #F06560;
+  color: #FFF;
 }

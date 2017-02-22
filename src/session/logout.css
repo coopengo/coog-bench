@@ -1,7 +1,8 @@
 #buttonlgt {
-  background: #F06560;
+  background: red;
   color: #000;
   float: right;
+  margin-top: 2vh;
   margin-right: 5vh;
 }
 

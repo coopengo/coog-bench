@@ -29,22 +29,22 @@ var Row = Marionette.View.extend({
   },
   actEnableChange: function (model, val) {
     if (val) {
-      this.$el.removeClass('bench-disable');
+      this.$el.removeClass(
+          'bench-disable body-ready body-loading body-loaded')
+        .addClass('bench-body');
     }
     else {
-      this.$el.addClass('bench-disable');
+      this.$el.removeClass(
+          'bench-disable body-ready body-loading body-loaded')
+        .addClass('bench-disable');
     }
     this.render();
-  },
-  resetFields: function () {
-    //RESET LES CHAMPS
   },
   onRender: function () {
     switch (this.model.get('status')) {
     case 'working':
       this.$el.removeClass('body-ready body-loading body-loaded')
         .addClass('body-loading');
-      this.resetFields();
       break;
     case 'done':
       this.$el.removeClass('body-ready body-loaded body-loading')
