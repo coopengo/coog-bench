@@ -17,6 +17,15 @@ var Bench = Backbone.Model.extend({
       enable: !this.get('enable')
     });
   },
+  reset: function () {
+    this.set({
+      status: 'idle',
+      iterations: '-',
+      average: '-',
+      minimum: '-',
+      maximum: '-',
+    });
+  },
   execute: function () {
     this.set('status', 'working');
     return this.collection.session.rpc('model.bench.' + this.get('method'))
@@ -30,6 +39,39 @@ var Bench = Backbone.Model.extend({
             maximum: res.maximum.toFixed(5),
           });
         });
+  },
+  executeLatency: function () {
+    var prm = Promise.resolve();
+    var times = [];
+    var start, end;
+    var iterations = 100;
+    this.set('status', 'working');
+    var newLatency = () => {
+      start = (new Date())
+        .getTime();
+      return this.collection.session.rpc('model.bench.' + this.get(
+          'method'))
+        .then(() => {
+          end = (new Date())
+            .getTime();
+          times.push(((end - start) / 1000));
+        });
+    };
+    for (var i = iterations; i > 0; i--) {
+      prm = prm.then(newLatency);
+    }
+    return prm.then(() => {
+      var min = times.shift();
+      var max = times.pop();
+      var avg = times.reduce((a, b) => a + b) / times.length;
+      this.set({
+        status: 'done',
+        minimum: min.toFixed(5),
+        maximum: max.toFixed(5),
+        average: avg.toFixed(5),
+        iterations: iterations,
+      });
+    });
   },
 });
 //
@@ -50,6 +92,9 @@ module.exports = Backbone.Collection.extend({
     var enabled = this.filter({
       enable: true
     });
+    var disabled = this.filter({
+      enable: false
+    });
     var setup = _.filter(enabled, (bench) => bench.get('setup'))
       .length;
     if (setup) {
@@ -57,9 +102,18 @@ module.exports = Backbone.Collection.extend({
         return this.session.rpc('model.bench.' + this.setup);
       });
     }
+    _.each(disabled, (bench) => {
+      bench.reset();
+    });
     _.each(enabled, (bench) => {
+      bench.reset();
       promise = promise.then(() => {
-        return bench.execute();
+        if (bench.get('method') == 'test_latency') {
+          return bench.executeLatency();
+        }
+        else {
+          return bench.execute();
+        }
       });
     });
     if (setup) {

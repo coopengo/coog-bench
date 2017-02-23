@@ -13,10 +13,8 @@
       </thead>
       <tbody id="bench-container"></tbody>
     </table>
-  <div class="splash-container">
     <div class="splash">
       <button class="pure-button pure-button-active pure-u-8-24" id="start-btn">Start Bench</button>
     </div>
-  </div>
   </div>
 </div>

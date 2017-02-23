@@ -1,9 +1,3 @@
-.pure-table-horizontal td,
-.pure-table-horizontal th {
-  border-bottom: 1em;
-  padding: 1em 1em 1em 1em;
-}
-
 .bench-table {
   width: 100%;
 }
@@ -13,6 +7,10 @@
   margin-bottom: 1em;
   margin-right: 4em;
   margin-left: 4em;
+  text-transform: uppercase;
+  min-width: 200px;
+  border-width: 0px;
+  background: #fce0df;
 }
 
 .bench-all-checkbox,
@@ -22,7 +20,9 @@
 }
 
 .l-box {
-  padding: 2em;
+  padding-top: 2em;
+  padding-right: 2em;
+  padding-left: 2em;
 }
 
 .splash {

@@ -20,8 +20,6 @@ module.exports = function (app) {
   });
   return {
     login: () => {
-      //app.errors.reset();
-      app.trigger('errors:reset');
       var m = new login.Model();
       var mo = new login.Model();
       m.on('login', (ok, info) => {
@@ -29,6 +27,7 @@ module.exports = function (app) {
           app.session = info;
           app.connect();
           storage.setSession(info);
+          app.trigger('error:reset');
           app.getView()
             .getRegion('menu')
             .show(new logout.Logout({
@@ -36,9 +35,7 @@ module.exports = function (app) {
             }));
         }
         else {
-          app.errors.add({
-            message: 'Error : ' + info.error
-          });
+          app.trigger('error:add', info.error);
         }
       });
       app.getView()

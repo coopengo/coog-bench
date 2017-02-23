@@ -4,7 +4,14 @@ var View = require('./view');
 module.exports = function (app) {
   app.on('before:start', () => {
     var collection = new Collection();
-    app.errors = collection;
+    collection.listenTo(app, 'error:add', function (error) {
+      this.set({
+        message: 'Error : ' + error,
+      });
+    });
+    collection.listenTo(app, 'error:reset', function () {
+      this.reset();
+    });
     app.getView()
       .getRegion('error')
       .show(new View({
