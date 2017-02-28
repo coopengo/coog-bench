@@ -5,7 +5,7 @@ require('./template/drop.css');
 //
 var Drop = Marionette.View.extend({
   template: dropTpl,
-  className: 'pure-g',
+  className: 'container-fluid',
   ui: {
     button: '#buttondrop',
   },
@@ -15,6 +15,7 @@ var Drop = Marionette.View.extend({
   handleClicDropButton: function () {
     this.collection.drop();
     this.$el.addClass('wait');
+    this.destroy();
   }
 });
 var Blank = Marionette.View.extend({

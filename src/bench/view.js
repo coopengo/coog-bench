@@ -63,7 +63,7 @@ var TableBody = Marionette.CollectionView.extend({
 //
 var Table = Marionette.View.extend({
   tagName: 'div',
-  className: 'pure-g',
+  className: 'container-fluid',
   template: tableTpl,
   ui: {
     checkbox: '.bench-all-checkbox',

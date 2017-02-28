@@ -4,6 +4,7 @@ var Session = require('tryton-session');
 var Marionette = require('backbone.marionette');
 var tpl = require('./login.tpl');
 var storage = require('./storage');
+require('./login.css');
 //
 // models
 //
@@ -54,12 +55,21 @@ var Model = Backbone.Model.extend({
     storage.closeSession();
     location.reload();
   },
+  clean: function () {
+    location.reload();
+  },
+  /*message: function () {
+
+  },
+  tasks: function () {
+    window.alert('pas encore utile');
+  },*/
 });
 //
 // views
 //
 var View = Marionette.View.extend({
-  className: 'pure-g',
+  className: 'container-fluid',
   template: tpl,
   ui: {
     submit: 'button'
