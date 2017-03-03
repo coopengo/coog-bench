@@ -18,6 +18,3 @@ exports.getSession = function () {
     return Promise.resolve(null);
   }
 };
-exports.closeSession = function () {
-  return localStorage.clear();
-};

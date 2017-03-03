@@ -2,7 +2,7 @@
   text-align: center;
 }
 
-#btngo {
+#bench-button-go {
   border: 0px;
   outline: 0px;
   border-radius: 0px;
@@ -18,7 +18,7 @@ th {
   text-transform: uppercase;
 }
 
-.bench-body {
+.idle {
   -webkit-transition: background 1.0s ease-in-out;
   -ms-transition: background 1.0s ease-in-out;
   transition: background 1.0s;

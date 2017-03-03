@@ -31,7 +31,7 @@ var Row = Marionette.View.extend({
     if (val) {
       this.$el.removeClass(
           'bench-disable body-ready body-loading body-loaded')
-        .addClass('bench-body');
+        .addClass('idle');
     }
     else {
       this.$el.removeClass(

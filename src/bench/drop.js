@@ -5,9 +5,12 @@ require('./template/drop.css');
 //
 var Drop = Marionette.View.extend({
   template: dropTpl,
+  /*regions : {
+    'menu' : '#buttontasks'
+  },*/
   className: 'container-fluid',
   ui: {
-    button: '#buttondrop',
+    button: '#bench-button-drop',
   },
   events: {
     'click @ui.button': 'handleClicDropButton',

@@ -4,7 +4,7 @@ var Backbone = require('backbone');
 var Bench = Backbone.Model.extend({
   defaults: function () {
     return {
-      status: 'bench-body',
+      status: 'idle',
       enable: true,
       iterations: '-',
       average: '-',
@@ -19,7 +19,7 @@ var Bench = Backbone.Model.extend({
   },
   reset: function () {
     this.set({
-      status: 'bench-body',
+      status: 'idle',
       iterations: '-',
       average: '-',
       minimum: '-',

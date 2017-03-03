@@ -17,7 +17,7 @@
     "start": "npm run watch & npm run browser-sync"
   },
   "dependencies": {
-    "ajv": "^5.0.1-beta",
+    "ajv": "^4",
     "backbone": "^1",
     "backbone.marionette": "^3",
     "backbone.syphon": "^0",
@@ -32,6 +32,7 @@
     "ejs-loader": "^0",
     "extract-text-webpack-plugin": "^1",
     "style-loader": "^0",
+    "svg-url-loader": "^2.0.2",
     "webpack": "^1"
   }
 }

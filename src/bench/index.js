@@ -15,20 +15,31 @@ module.exports = function (app) {
           .show(new drop.Blank({
             collection: collection
           }));
+        app.trigger('bench:drop-hide');
       });
       collection.on('error:add', (error) => {
         app.trigger('error:add', error);
-        app.getView()
-          .getRegion('actions')
-          .show(new drop.Drop({
-            collection: collection
-          }));
+        app.trigger('bench:drop');
       });
       app.getView()
         .getRegion('main')
         .show(new View({
           collection: collection
         }));
+      collection.listenTo(app, 'bench:drop', function () {
+        app.getView()
+          .getRegion('actions')
+          .show(new drop.Drop({
+            collection: collection
+          }));
+      });
+      collection.listenTo(app, 'bench:drop-hide', function () {
+        app.getView()
+          .getRegion('actions')
+          .show(new drop.Blank({
+            collection: collection
+          }));
+      });
     }
   };
 };

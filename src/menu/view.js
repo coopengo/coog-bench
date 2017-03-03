@@ -6,18 +6,24 @@ require('./menu.css');
 var Menu = Marionette.View.extend({
   template: menuTpl,
   ui: {
-    button: '#buttonlgt',
+    buttonlgt: '#buttonlgt',
     buttonclean: '#buttonclean',
+    buttontasks: '#buttontasks',
   },
   events: {
-    'click @ui.button': 'handleClickLogoutButton',
+    'click @ui.buttonlgt': 'handleClickLogoutButton',
     'click @ui.buttonclean': 'handleClickCleanButton',
+    'click @ui.buttontasks': 'handleClickTasksButton',
   },
   handleClickLogoutButton: function () {
     this.model.logout();
   },
   handleClickCleanButton: function () {
     this.model.clean();
+    this.trigger('bench:drop');
+  },
+  handleClickTasksButton: function () {
+    this.trigger('bench:drop');
   },
 });
 //
