@@ -4,6 +4,7 @@ var Marionette = require('backbone.marionette');
 var session = require('./session');
 var bench = require('./bench');
 var error = require('./error');
+var menu = require('./menu');
 //
 // routing utils
 //
@@ -40,6 +41,7 @@ var AuthRouter = AppRouter.extend({
 module.exports = function (app) {
   error(app);
   session(app);
+  menu(app);
   app.on('start', () => {
     app.on('connect', (connected) => {
       if (connected) {
