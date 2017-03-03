@@ -61,14 +61,14 @@ var Bench = Backbone.Model.extend({
       prm = prm.then(newLatency);
     }
     return prm.then(() => {
-      var min = times.shift();
-      var max = times.pop();
-      var avg = times.reduce((a, b) => a + b) / times.length;
+      times.sort();
       this.set({
         status: 'done',
-        minimum: min.toFixed(5),
-        maximum: max.toFixed(5),
-        average: avg.toFixed(5),
+        minimum: _.first(times)
+          .toFixed(5),
+        maximum: _.last(times)
+          .toFixed(5),
+        average: _.mean(times),
         iterations: iterations,
       });
     });
