@@ -56,7 +56,7 @@ you’ll probably also be updating a database here.
 - The view picks up on that event, and acts accordingly, possibly re-rendering 
 itself.
 
-![alt tag](png/schema2.png "Functioning of a plugin")
+![alt tag](png/schema2.png "Behavior of a plugin")
 
 To allow plugins to communicate with each other, we use Backbone events. One 
 plugin triggers an event and the other plugin acts when it has listened to the 
