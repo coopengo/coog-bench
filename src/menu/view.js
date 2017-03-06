@@ -20,10 +20,9 @@ var Menu = Marionette.View.extend({
   },
   handleClickCleanButton: function () {
     this.model.clean();
-    this.trigger('bench:drop');
   },
-  handleClickTasksButton: function () {
-    this.trigger('bench:drop');
+  handleClickTasksButton: function (app) {
+    this.model.drop(app);
   },
 });
 //

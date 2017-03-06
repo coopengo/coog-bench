@@ -21,8 +21,8 @@
     "backbone": "^1",
     "backbone.marionette": "^3",
     "backbone.syphon": "^0",
-    "jquery": "^3",
-    "purecss": "^0",
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1",
     "tryton-session": "~4.2",
     "underscore": "^1"
   },

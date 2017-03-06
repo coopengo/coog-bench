@@ -9,6 +9,9 @@ var MenuModel = Backbone.Model.extend({
   clean: function () {
     location.reload();
   },
+  drop: function () {
+    this.trigger('bench:drop');
+  }
 });
 //
 module.exports = MenuModel;
