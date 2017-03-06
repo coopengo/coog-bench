@@ -74,14 +74,6 @@ It triggers functions linked to its buttons.
 It handles the session by checking the inputs. It stores the information in the local storage.
 
 
-UX
---
-
-- The Bench module uses Bootstrap. 
-- The pages are responsive.
-- The graphic chart of Coopengo is respected.
-
-
 License
 -------
 
