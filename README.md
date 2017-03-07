@@ -75,17 +75,17 @@ For more information please visit Backbone web site: [http://backbonejs.org/](ht
 The bench is based on app.js and route.js. They call 4 plugins which constitute 
 the actual bench : 
 
-+ Bench
++ Bench :
 It executes calls to the server and retrives the wanted results.
 It also takes care of droping the table when asked. 
 
-+ Error
++ Error :
 It deals with displaying error messages.
 
-+ Menu
++ Menu :
 It triggers functions linked to its buttons. 
 
-+ Session
++ Session :
 It handles the session by checking the inputs. It stores the information in 
 the local storage.
 
