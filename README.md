@@ -36,7 +36,7 @@ You can dismiss it by clicking the cross.
 ARCHITECTURE 
 ------------
 
-### Backbone
+### Backbone 
 
 Backbone.js is a lightweight JavaScript library that gives structure to web 
 applications by providing models with key-value binding and custom events, 
@@ -66,7 +66,7 @@ doesn't block the whole application.
 
 ![alt tag](png/schema3.png "How different plugins communicate with each other")
 
-For more information please visit Backbone web site: http://backbonejs.org/
+For more information please visit Backbone web site: [http://backbonejs.org/](http://backbonejs.org/)
 
 ### Our application
 
