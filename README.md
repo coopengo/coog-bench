@@ -56,7 +56,7 @@ you’ll probably also be updating a database here.
 - The view picks up on that event, and acts accordingly, possibly re-rendering 
 itself.
 
-![alt tag](png/schema2.png "Behavior of a plugin")
+![alt tag](Schema2.png "Behavior of a plugin")
 
 To allow plugins to communicate with each other, we use Backbone events. One 
 plugin triggers an event and the other plugin acts when it has listened to the 
@@ -64,13 +64,13 @@ matching event.
 By doing this, if one plugin is not responding (for any kind of reason), it 
 doesn't block the whole application. 
 
-![alt tag](png/schema3.png "How different plugins communicate with each other")
+![alt tag](Schema3.png "How different plugins communicate with each other")
 
 For more information please visit Backbone web site: [http://backbonejs.org/](http://backbonejs.org/)
 
 ### Our application
 
-![alt tag](png/schema1.png "Global Overview of the application")
+![alt tag](Schema1.png "Global Overview of the application")
 
 The bench is based on app.js and route.js. They call 4 plugins which constitute 
 the actual bench : 
