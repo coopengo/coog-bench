@@ -17,12 +17,12 @@
     "start": "npm run watch & npm run browser-sync"
   },
   "dependencies": {
-    "ajv": "^5.0.1-beta",
+    "ajv": "^4",
     "backbone": "^1",
     "backbone.marionette": "^3",
     "backbone.syphon": "^0",
-    "jquery": "^3",
-    "purecss": "^0",
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.1.1",
     "tryton-session": "~4.2",
     "underscore": "^1"
   },
@@ -32,6 +32,7 @@
     "ejs-loader": "^0",
     "extract-text-webpack-plugin": "^1",
     "style-loader": "^0",
+    "svg-url-loader": "^2.0.2",
     "webpack": "^1"
   }
 }

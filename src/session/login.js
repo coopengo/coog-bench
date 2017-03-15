@@ -3,16 +3,17 @@ var Ajv = require('ajv');
 var Session = require('tryton-session');
 var Marionette = require('backbone.marionette');
 var tpl = require('./login.tpl');
-var storage = require('./storage');
+var blankTpl = require('./blank.tpl');
+require('./login.css');
 //
 // models
 //
 var Model = Backbone.Model.extend({
   initialize: function () {
     this.set({
-      database: 'coog',
-      username: 'admin',
-      password: 'admin'
+      database: 'spb',
+      username: 'rseon',
+      password: 'romain'
     });
   },
   schema: {
@@ -50,16 +51,12 @@ var Model = Backbone.Model.extend({
         this.trigger('login', false, error);
       });
   },
-  logout: function () {
-    storage.closeSession();
-    location.reload();
-  },
 });
 //
 // views
 //
 var View = Marionette.View.extend({
-  className: 'pure-g',
+  className: 'container-fluid',
   template: tpl,
   ui: {
     submit: 'button'
@@ -80,7 +77,12 @@ var View = Marionette.View.extend({
   },
 });
 //
+var Blank = Marionette.View.extend({
+  template: blankTpl,
+});
+//
 // exports
 //
 exports.View = View;
 exports.Model = Model;
+exports.Blank = Blank;

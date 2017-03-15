@@ -1,22 +1,25 @@
 #mes {
   background: #F06560;
-  color: #000;
+  color: #FFF;
   display: block;
-  padding-left: 1vh;
-  padding-right: 3vh;
-  margin-top: 1vh;
-}
-
-ul {
-  list-style-type: none;
-}
-
-ul>li {
-  margin-right: 3vh;
+  margin-top: 2vh;
+  margin-right: 2vh;
+  padding-right: 2vh;
+  padding-left: 2vh;
 }
 
 #delete-btn {
-  font-size: 85%;
   background: #F06560;
   color: #FFF;
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  font-size: 200%;
+}
+
+.glyphicon-exclamation-sign {
+  font-size: 200%;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
 }

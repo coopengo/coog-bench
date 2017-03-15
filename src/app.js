@@ -3,7 +3,6 @@ require('backbone.syphon');
 var Marionette = require('backbone.marionette');
 var route = require('./route');
 var appTpl = require('./app.tpl');
-require('purecss');
 //
 var AppView = Marionette.View.extend({
   template: appTpl,

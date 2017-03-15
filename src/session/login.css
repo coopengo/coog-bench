@@ -1,0 +1,22 @@
+#myImglogin {
+  width: 196px;
+  height: 146px;
+}
+
+#mybtn {
+  background: none;
+  padding: 10px 10px;
+  border: 2px solid #0094d2;
+  color: #0094d2;
+  margin-bottom: 2vh;
+  text-transform: uppercase;
+  font-size: 85%;
+  border-radius: 0px;
+  font-weight: bold;
+  outline: 0px;
+}
+
+div {
+  font-family: 'centuryGothicRegular';
+  font-size: bold;
+}

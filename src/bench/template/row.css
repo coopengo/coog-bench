@@ -2,38 +2,38 @@
   text-align: center;
 }
 
+#bench-button-go {
+  border: 0px;
+  outline: 0px;
+  border-radius: 0px;
+}
 
-/* Bench Selector */
+th {
+  border-radius: 200px;
+}
 
 .benchmark-selector-btn {
   border-radius: 40px;
   font-size: 70%;
+  text-transform: uppercase;
 }
 
-
-/* bench-body */
-
-.bench-body {
-  background-color: #ff9933;
+.idle {
   -webkit-transition: background 1.0s ease-in-out;
   -ms-transition: background 1.0s ease-in-out;
   transition: background 1.0s;
 }
 
-.body-ready {
-  background-color: #ff9900;
-}
-
 .body-loading {
-  background-color: brown;
+  background-color: #F06560;
   cursor: wait;
 }
 
 .body-loaded {
-  background-color: limegreen;
+  background-color: #0094d2;
   cursor: auto;
 }
 
 .bench-disable {
-  background-color: grey;
+  background-color: #8c8c8c;
 }
