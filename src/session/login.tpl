@@ -18,8 +18,8 @@
         <label for="password">Password</label>
         <input type="password" id="password" class="form-control" name="password" placeholder="Password"/>
       </div>
-      <div class="pure-control-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-lg-offset-4 col-md-offset-4 ">
-        <button type="submit" id="mybtn" class="btn btn-info text-center">Submit</button>
+      <div class="pure-control-group col-lg-4 col-md-4 col-sm-12 col-xs-12 col-lg-offset-4 col-md-offset-4 text-center">
+        <button type="submit" id="mybtn" class="btn btn-info">Submit</button>
       </div>
     </form>
 </div>
