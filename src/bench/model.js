@@ -68,7 +68,8 @@ var Bench = Backbone.Model.extend({
           .toFixed(5),
         maximum: _.last(times)
           .toFixed(5),
-        average: (_.reduce(times, (memo, v) => memo+v) / times.length).toFixed(5),
+        average: (_.reduce(times, (memo, v) => memo + v) / times.length)
+          .toFixed(5),
         iterations: iterations,
       });
     });

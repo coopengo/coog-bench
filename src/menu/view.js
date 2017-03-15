@@ -5,6 +5,7 @@ require('./menu.css');
 //
 var Menu = Marionette.View.extend({
   template: menuTpl,
+  className : 'text-center',
   ui: {
     buttonlgt: '#buttonlgt',
     buttonclean: '#buttonclean',

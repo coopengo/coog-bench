@@ -11,9 +11,9 @@ require('./login.css');
 var Model = Backbone.Model.extend({
   initialize: function () {
     this.set({
-      database: 'spb',
-      username: 'rseon',
-      password: 'romain'
+      database: 'coog',
+      username: 'admin',
+      password: 'admin'
     });
   },
   schema: {
