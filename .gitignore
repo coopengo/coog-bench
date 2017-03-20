@@ -3,3 +3,4 @@ npm-debug.log
 /public
 !/public/index.html
 !/public/favicon.ico
+/docker/content
