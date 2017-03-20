@@ -1,5 +1,4 @@
 var Backbone = require('backbone');
-var Ajv = require('ajv');
 var Session = require('tryton-session');
 var Marionette = require('backbone.marionette');
 var tpl = require('./login.tpl');
@@ -32,11 +31,18 @@ var Model = Backbone.Model.extend({
     required: ['database', 'username', 'password']
   },
   validate: function (attrs) {
-    var ajv = new Ajv();
-    var validate = ajv.compile(this.schema);
-    var valid = validate(attrs);
-    if (!valid) {
-      return validate.errors;
+    var errors = [];
+    if (!attrs.database) {
+      errors.push('missing database');
+    }
+    if (!attrs.username) {
+      errors.push('missing username');
+    }
+    if (!attrs.password) {
+      errors.push('missing password');
+    }
+    if (errors.length > 0) {
+      return errors;
     }
   },
   login: function () {

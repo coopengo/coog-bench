@@ -9,20 +9,17 @@
     "url": "git://github.com/coopengo/coog-bench.git"
   },
   "scripts": {
-    "beautify": "js-beautify --config .jsbeautifyrc -r *.js $(find src -name '*.js') && css-beautify --config .jsbeautifyrc -r $(find src -name '*.css')",
+    "beautify": "js-beautify --config .jsbeautifyrc -r *.js $(find src -name '*.js'); html-beautify --config .jsbeautifyrc -r $(find src -name '*.tpl'); css-beautify --config .jsbeautifyrc -r $(find src -name '*.css')",
     "lint": "jshint -c .jshintrc *.js $(find src -name '*.js')",
     "build": "webpack",
-    "watch": "webpack --watch",
-    "browser-sync": "browser-sync start -c bs-config.js",
-    "start": "npm run watch & npm run browser-sync"
+    "start": "webpack --watch & browser-sync start -c bs-config.js"
   },
   "dependencies": {
-    "ajv": "^4",
     "backbone": "^1",
     "backbone.marionette": "^3",
     "backbone.syphon": "^0",
-    "bootstrap": "^3.3.7",
-    "jquery": "^3.1.1",
+    "bootstrap": "^3",
+    "jquery": "^3",
     "tryton-session": "~4.2",
     "underscore": "^1"
   },
@@ -30,9 +27,8 @@
     "browser-sync": "^2",
     "css-loader": "^0",
     "ejs-loader": "^0",
-    "extract-text-webpack-plugin": "^1",
-    "style-loader": "^0",
-    "svg-url-loader": "^2.0.2",
-    "webpack": "^1"
+    "extract-text-webpack-plugin": "^2",
+    "file-loader": "^0",
+    "webpack": "^2"
   }
 }

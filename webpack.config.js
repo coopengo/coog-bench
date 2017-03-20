@@ -1,14 +1,22 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   entry: './src/app.js',
   module: {
     loaders: [{
       test: /\.tpl$/,
-      loader: 'ejs-loader'
+      use: ['ejs-loader']
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
-    }, ]
+      use: ExtractTextPlugin.extract({
+        use: 'css-loader'
+      })
+    }, {
+      test: /\.(eot|svg|ttf|woff|woff2)$/,
+      use: ['file-loader']
+    }, {
+      test: /\.(jpg|png)$/,
+      use: ['file-loader']
+    }]
   },
   devtool: 'sourcemap',
   output: {
@@ -16,8 +24,6 @@ module.exports = {
     filename: 'coog-bench.js'
   },
   plugins: [
-    new ExtractTextPlugin('coog-bench.css', {
-      allChunks: true
-    })
+    new ExtractTextPlugin('coog-bench.css'),
   ]
 };

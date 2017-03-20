@@ -125,7 +125,7 @@ module.exports = Backbone.Collection.extend({
     return promise.then(() => {
       this.trigger('bench:ok');
     }, (err) => {
-      this.trigger('error:add', err.error);
+      this.trigger('error:add', err.message);
     });
   },
   drop: function () {

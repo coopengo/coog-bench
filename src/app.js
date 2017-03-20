@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 require('backbone.syphon');
 var Marionette = require('backbone.marionette');
 var route = require('./route');
+require('bootstrap/dist/css/bootstrap.css');
+require('./app.css');
 var appTpl = require('./app.tpl');
 //
 var AppView = Marionette.View.extend({
