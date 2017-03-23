@@ -9,7 +9,7 @@
     "url": "git://github.com/coopengo/coog-bench.git"
   },
   "scripts": {
-    "beautify": "js-beautify --config .jsbeautifyrc -r *.js $(find src -name '*.js'); html-beautify --config .jsbeautifyrc -r $(find src -name '*.tpl'); css-beautify --config .jsbeautifyrc -r $(find src -name '*.css')",
+    "beautify": "js-beautify --config .jsbeautifyrc -r *.js $(find src -name '*.js'); html-beautify --config .jsbeautifyrc -r public/index.html $(find src -name '*.tpl'); css-beautify --config .jsbeautifyrc -r $(find src -name '*.css')",
     "lint": "jshint -c .jshintrc *.js $(find src -name '*.js')",
     "build": "webpack",
     "start": "webpack --watch & browser-sync start -c bs-config.js"
