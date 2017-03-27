@@ -21,13 +21,18 @@
 </div>
 <div class="row">
   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 col-lg-offset-5 col-md-offset-5 col-sm-offset-5">
-  <button type="button" class="btn btn-info btn-block" id="start-btn"><i class="glyphicon glyphicon-chevron-right"></i></button>    </div>
+    <button type="button" class="btn btn-info btn-block" id="start-btn">
+      <i class="glyphicon glyphicon-chevron-right"></i>
+    </button>
+  </div>
 </div>
 <div class="row">
   <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
       <p class="navbar-text pull-left">© 2017 - Coopengo - All rights reserved </p>
-      <p class="navbar-text pull-right"><a href="url">http://www.coopengo.com</a></p>
+      <p class="navbar-text pull-right">
+        <a href="url">http://www.coopengo.com</a>
+      </p>
     </div>
   </div>
 </div>
