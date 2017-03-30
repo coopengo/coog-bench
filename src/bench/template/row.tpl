@@ -1,26 +1,22 @@
-<td class="bench-checkbox-container align-center">
-  <% if (enable == true) { %>
-    <button type="button" class="btn btn-sm bench-selector-btn bench-selector-ko">
-      <span>&nbsp;Enabled</span>
-    </button>
-    <% } else { %>
-      <button type="button" class="btn btn-sm bench-selector-btn bench-selector-ok">
-        <span>&nbsp;Disabled</span>
-      </button>
-      <% } %>
+<td class="bench-checkbox-container text-center">
+  <button type="button" class="btn btn-sm bench-selector-btn">
+    <span>&nbsp;
+      <%= selected ? 'Enabled' : 'Disabled' %>
+    </span>
+  </button>
 </td>
-<td class="align-center">
+<td class="text-center">
   <%- name %>
 </td>
-<td class="align-center">
+<td class="text-center">
   <%- iterations %>
 </td>
-<td class="align-center">
+<td class="text-center">
   <%- average %>
 </td>
-<td class="align-center">
+<td class="text-center">
   <%- minimum %>
 </td>
-<td class="align-center">
+<td class="text-center">
   <%- maximum %>
 </td>

@@ -1,25 +1,3 @@
-.body-loading {
-  background-color: #f0ad60;
-  cursor: wait;
-}
-
-.body-loaded {
-  background-color: #0094d2;
-  cursor: auto;
-}
-
-.body-disable {
-  background-color: #8c8c8c;
-}
-
-.bench-selector-btn {
-  border: 0px;
-  outline: 0px;
-  border-radius: 0px !important;
-  font-size: 70%;
-  text-transform: uppercase;
-}
-
 .bench-all-checkbox,
 .bench-checkbox {
   transform: scale(1.5);
@@ -33,13 +11,35 @@
   width: 100%;
 }
 
+.bench-selector-btn {
+  border: 0px;
+  outline: 0px;
+  border-radius: 0px !important;
+  font-size: 70%;
+  text-transform: uppercase;
+}
+
 .bench-disabled {
   cursor: wait;
   pointer-events: none;
 }
 
-.idle {
+.bench-row-status-working {
+  background-color: #f0ad60;
+  cursor: wait;
+}
+
+.bench-row-status-done {
+  background-color: #0094d2;
+  cursor: auto;
+}
+
+.bench-row-status-idle {
   -webkit-transition: background 1.0s ease-in-out;
   -ms-transition: background 1.0s ease-in-out;
   transition: background 1.0s;
+}
+
+.body-row-selected-no {
+  background-color: #8c8c8c;
 }

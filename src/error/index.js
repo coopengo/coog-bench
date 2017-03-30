@@ -2,10 +2,10 @@ var Collection = require('./model');
 var View = require('./view');
 //
 module.exports = function (app) {
-  app.on('before:start', () => {
+  app.on('before:start', function () {
     var collection = new Collection();
     collection.listenTo(app, 'error:add', function (error) {
-      this.set({
+      this.add({
         message: 'Error : ' + error,
       });
     });

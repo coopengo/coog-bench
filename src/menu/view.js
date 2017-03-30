@@ -8,26 +8,26 @@ var Menu = Marionette.View.extend({
   ui: {
     save: '#menu-btn-save',
     clean: '#menu-btn-clean',
-    tasks: '#menu-btn-tasks',
+    drop: '#menu-btn-drop',
     logout: '#menu-btn-logout',
   },
   triggers: {
     'click @ui.save': 'save',
     'click @ui.clean': 'clean',
-    'click @ui.tasks': 'tasks',
+    'click @ui.drop': 'drop',
     'click @ui.logout': 'logout',
   },
   onSave: function () {
-    this.model.save();
+    this.model.trigger('save');
   },
   onClean: function () {
-    this.model.clean();
+    this.model.trigger('clean');
   },
-  onTasks: function () {
-    this.model.drop();
+  onDrop: function () {
+    this.model.trigger('drop');
   },
   onLogout: function () {
-    this.model.logout();
+    this.model.trigger('logout');
   },
 });
 //

@@ -9,27 +9,30 @@ module.exports = function (app) {
         app.connect();
       }
     }));
+  app.on('session:logout', function () {
+    storage.clearSession();
+    this.disconnect();
+  });
   return {
     login: () => {
       var m = new login.Model();
-      m.on('login', (ok, info) => {
+      m.on('login', function (ok, info) {
         if (ok) {
           app.session = info;
           app.connect();
           storage.setSession(info);
           app.trigger('error:reset');
-          app.trigger('menu:display');
         }
         else {
           app.trigger('error:add', info.error);
         }
       });
+      app.trigger('menu:hide');
       app.getView()
         .getRegion('main')
         .show(new login.View({
           model: m
         }));
-      app.trigger('menu:nodisplay');
     },
   };
 };

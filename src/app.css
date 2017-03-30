@@ -14,17 +14,12 @@ th {
   border-radius: 200px;
 }
 
-#main {
-  padding-bottom: 60px;
-}
-
-#logo-coopengo {
+.app-logo {
   width: 196px;
   height: 146px;
 }
 
-#login-btn,
-#bench-start-btn {
+.app-main-btn {
   background: none;
   padding: 10px 10px;
   border: 2px solid #0094d2;
@@ -37,6 +32,10 @@ th {
   outline: 0px;
 }
 
-.align-center {
-  text-align: center;
+.app-main-btn:hover {
+  color: #0094d2;
+}
+
+#app-main {
+  padding-bottom: 60px;
 }

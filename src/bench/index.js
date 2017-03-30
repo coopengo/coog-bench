@@ -7,13 +7,13 @@ module.exports = function (app) {
       var collection = new Collection();
       collection.app = app;
       collection.init(app.session);
-      collection.on('error:reset', () => {
+      collection.on('error:reset', function () {
         app.trigger('error:reset');
       });
-      collection.on('error:add', (error) => {
+      collection.on('error:add', function (error) {
         app.trigger('error:add', error);
-        app.trigger('bench:drop');
       });
+      app.trigger('menu:display');
       app.getView()
         .getRegion('main')
         .show(new View({
@@ -23,7 +23,7 @@ module.exports = function (app) {
         collection.drop();
       });
       collection.listenTo(app, 'bench:save', function () {
-        collection.save(this);
+        collection.save();
       });
     }
   };

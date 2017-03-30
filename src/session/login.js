@@ -53,16 +53,16 @@ var View = Marionette.View.extend({
   triggers: {
     'click @ui.submit': 'submit'
   },
+  onSubmit: function () {
+    this.model.set(Backbone.Syphon.serialize(this), {
+      validate: true
+    });
+    if (this.model.isValid()) {
+      this.model.login();
+    }
+  },
   onRender: function () {
     Backbone.Syphon.deserialize(this, this.model.toJSON());
-    this.on('submit', () => {
-      this.model.set(Backbone.Syphon.serialize(this), {
-        validate: true
-      });
-      if (this.model.isValid()) {
-        this.model.login();
-      }
-    });
   },
 });
 //

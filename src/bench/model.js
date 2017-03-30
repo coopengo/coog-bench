@@ -4,8 +4,8 @@ var Backbone = require('backbone');
 var Bench = Backbone.Model.extend({
   defaults: function () {
     return {
+      selected: true,
       status: 'idle',
-      enable: true,
       iterations: '-',
       average: '-',
       minimum: '-',
@@ -14,7 +14,7 @@ var Bench = Backbone.Model.extend({
   },
   toggle: function () {
     this.set({
-      enable: !this.get('enable')
+      selected: !this.get('selected')
     });
   },
   reset: function () {
@@ -90,13 +90,13 @@ module.exports = Backbone.Collection.extend({
   execute: function () {
     this.trigger('error:reset');
     var promise = Promise.resolve();
-    var enabled = this.filter({
-      enable: true
+    var selected = this.filter({
+      selected: true
     });
     var disabled = this.filter({
-      enable: false
+      selected: false
     });
-    var setup = _.filter(enabled, (bench) => bench.get('setup'))
+    var setup = _.filter(selected, (bench) => bench.get('setup'))
       .length;
     if (setup) {
       promise = promise.then(() => {
@@ -106,7 +106,7 @@ module.exports = Backbone.Collection.extend({
     _.each(disabled, (bench) => {
       bench.reset();
     });
-    _.each(enabled, (bench) => {
+    _.each(selected, (bench) => {
       bench.reset();
       promise = promise.then(() => {
         if (bench.get('method') == 'test_latency') {
@@ -132,8 +132,8 @@ module.exports = Backbone.Collection.extend({
   drop: function () {
     this.session.rpc('model.bench.' + this.teardown);
   },
-  save: function (doc) {
-    var blob = new Blob([JSON.stringify(doc)], {
+  save: function () {
+    var blob = new Blob([JSON.stringify(this.toJSON())], {
       type: 'application/json'
     });
     var blob_url = window.URL.createObjectURL(blob);

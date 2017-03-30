@@ -6,49 +6,23 @@ require('./style.css');
 //
 var Row = Marionette.View.extend({
   tagName: 'tr',
-  className: 'bench-body',
+  className: function () {
+    return 'bench-row-status-' + this.get('status') +
+      ' bench-row-selected-' + this.get('selected') ? 'yes' : 'not';
+  },
   template: rowTpl,
   ui: {
     button: '.bench-selector-btn',
-    row: '',
   },
   modelEvents: {
-    'change:enable': 'actEnableChange',
-    'change:status': 'render'
+    'change': 'render',
   },
   triggers: {
     'click @ui.button': 'clicked',
-    'click @ui.row': 'clicked'
   },
   onClicked: function () {
     this.model.toggle();
-  },
-  actEnableChange: function (model, val) {
-    if (val) {
-      this.$el.removeClass(
-          'body-disable body-ready body-loading body-loaded')
-        .addClass('idle');
-    }
-    else {
-      this.$el.removeClass(
-          'body-disable body-ready body-loading body-loaded')
-        .addClass('body-disable');
-    }
-    this.render();
-  },
-  onRender: function () {
-    switch (this.model.get('status')) {
-    case 'working':
-      this.$el.removeClass('body-ready body-loading body-loaded')
-        .addClass('body-loading');
-      break;
-    case 'done':
-      this.$el.removeClass('body-ready body-loaded body-loading')
-        .addClass('body-loaded');
-      break;
-    }
-    return this;
-  },
+  }
 });
 //
 var TableBody = Marionette.CollectionView.extend({
@@ -84,7 +58,7 @@ var Table = Marionette.View.extend({
   },
   updateCheckbox: function () {
     var checked = !this.collection.filter({
-        enable: false
+        selected: false
       })
       .length;
     this.getUI('checkbox')[0].checked = checked;

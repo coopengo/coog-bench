@@ -3,10 +3,10 @@
 </div>
 <div class="row text-center">
   <div class="col-xs-12">
-    <img src="<%- require('../../static/coopengo.jpg') %>" id="logo-coopengo"> </div>
+    <img src="<%- require('../../static/coopengo.jpg') %>" class="app-logo"> </div>
 </div>
 <div class="row">
-  <form class="col-md-offset-4 col-md-4 col-sm-12 col-xs-12  ">
+  <form class="col-md-offset-4 col-md-4 col-sm-12 col-xs-12">
     <div class="form-group">
       <label for="database">Database</label>
       <input type="text" id="database" class="form-control" name="database"
@@ -20,7 +20,7 @@
       <input type="password" id="password" class="form-control"
         name="password" placeholder="Password" /> </div>
     <div class="control-group col-xs-12 text-center">
-      <button type="submit" class="btn btn-info" id="login-btn">Submit</button>
+      <button type="submit" class="btn app-main-btn">Submit</button>
     </div>
   </form>
 </div>

@@ -4,14 +4,14 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="bench-all-checkbox-container align-center">
+            <th class="bench-all-checkbox-container text-center">
               <input class="bench-all-checkbox" id="table-checkbox" type="checkbox"
-                name="enable"> </th>
-            <th class="align-center class-active">Category</th>
-            <th class="align-center">Iteration</th>
-            <th class="align-center">Average</th>
-            <th class="align-center">Minimum</th>
-            <th class="align-center">Maximum</th>
+                name="selected"> </th>
+            <th class="text-center class-active">Category</th>
+            <th class="text-center">Iteration</th>
+            <th class="text-center">Average</th>
+            <th class="text-center">Minimum</th>
+            <th class="text-center">Maximum</th>
           </tr>
         </thead>
         <tbody id="bench-container"></tbody>
@@ -21,7 +21,7 @@
 </div>
 <div class="row">
   <div class="col-sm-offset-5 col-sm-2 col-xs-12 ">
-    <button type="button" class="btn btn-info btn-block" id="bench-start-btn">
+    <button type="button" class="btn btn-block app-main-btn" id="bench-start-btn">
       <i class="glyphicon glyphicon-chevron-right"></i>
     </button>
   </div>
