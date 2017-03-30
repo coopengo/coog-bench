@@ -1,0 +1,45 @@
+.body-loading {
+  background-color: #f0ad60;
+  cursor: wait;
+}
+
+.body-loaded {
+  background-color: #0094d2;
+  cursor: auto;
+}
+
+.body-disable {
+  background-color: #8c8c8c;
+}
+
+.bench-selector-btn {
+  border: 0px;
+  outline: 0px;
+  border-radius: 0px !important;
+  font-size: 70%;
+  text-transform: uppercase;
+}
+
+.bench-all-checkbox,
+.bench-checkbox {
+  transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+}
+
+.bench-box {
+  padding-top: 2em;
+  padding-right: 2em;
+  padding-left: 2em;
+  width: 100%;
+}
+
+.bench-disabled {
+  cursor: wait;
+  pointer-events: none;
+}
+
+.idle {
+  -webkit-transition: background 1.0s ease-in-out;
+  -ms-transition: background 1.0s ease-in-out;
+  transition: background 1.0s;
+}

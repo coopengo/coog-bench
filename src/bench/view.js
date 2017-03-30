@@ -2,15 +2,14 @@ var Marionette = require('backbone.marionette');
 var rowTpl = require('./template/row.tpl');
 var tableTpl = require('./template/table.tpl');
 var mainTpl = require('./template/index.tpl');
-require('./template/row.css');
-require('./template/table.css');
+require('./style.css');
 //
 var Row = Marionette.View.extend({
   tagName: 'tr',
   className: 'bench-body',
   template: rowTpl,
   ui: {
-    button: '.benchmark-selector-btn',
+    button: '.bench-selector-btn',
     row: '',
   },
   modelEvents: {
@@ -27,13 +26,13 @@ var Row = Marionette.View.extend({
   actEnableChange: function (model, val) {
     if (val) {
       this.$el.removeClass(
-          'bench-disable body-ready body-loading body-loaded')
+          'body-disable body-ready body-loading body-loaded')
         .addClass('idle');
     }
     else {
       this.$el.removeClass(
-          'bench-disable body-ready body-loading body-loaded')
-        .addClass('bench-disable');
+          'body-disable body-ready body-loading body-loaded')
+        .addClass('body-disable');
     }
     this.render();
   },
@@ -64,7 +63,7 @@ var Table = Marionette.View.extend({
   template: tableTpl,
   ui: {
     checkbox: '.bench-all-checkbox',
-    button: '#start-btn',
+    button: '#bench-start-btn',
   },
   regions: {
     body: {
@@ -91,7 +90,7 @@ var Table = Marionette.View.extend({
     this.getUI('checkbox')[0].checked = checked;
   },
   changeStatus: function () {
-    this.$el.removeClass('disabled');
+    this.$el.removeClass('bench-disabled');
   },
   onRender: function () {
     this.showChildView('body', new TableBody({
@@ -106,7 +105,7 @@ var Table = Marionette.View.extend({
     });
   },
   onHandleButtonClick: function () {
-    this.$el.addClass('disabled');
+    this.$el.addClass('bench-disabled');
     this.collection.execute();
   },
 });

@@ -1,7 +1,7 @@
-#buttonlgt,
-#buttonclean,
-#buttonsave,
-#buttontasks {
+#menu-btn-save,
+#menu-btn-clean,
+#menu-btn-tasks,
+#menu-btn-logout {
   margin-top: 4vh;
   margin-right: 2vh;
   background: #46423d;
@@ -12,9 +12,4 @@
   font-size: 18px;
   line-height: 1.33;
   border-radius: 25px;
-}
-
-#myImg {
-  width: 196px;
-  height: 146px;
 }

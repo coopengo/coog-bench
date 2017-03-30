@@ -1,10 +1,10 @@
 <td class="bench-checkbox-container align-center">
   <% if (enable == true) { %>
-    <button type="button" id="bench-button-go" class="btn btn-sm benchmark-selector-btn bench-selector-ko">
+    <button type="button" class="btn btn-sm bench-selector-btn bench-selector-ko">
       <span>&nbsp;Enabled</span>
     </button>
     <% } else { %>
-      <button type="button" id="btngo" class="btn btn-sm benchmark-selector-btn bench-selector-ok">
+      <button type="button" class="btn btn-sm bench-selector-btn bench-selector-ok">
         <span>&nbsp;Disabled</span>
       </button>
       <% } %>

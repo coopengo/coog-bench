@@ -1,33 +1,33 @@
 var Marionette = require('backbone.marionette');
-var menuTpl = require('./menu.tpl');
-require('./menu.css');
+var menuTpl = require('./template/menu.tpl');
+require('./style.css');
 //
 var Menu = Marionette.View.extend({
   template: menuTpl,
   className: 'text-center',
   ui: {
-    buttonlgt: '#buttonlgt',
-    buttonclean: '#buttonclean',
-    buttontasks: '#buttontasks',
-    buttonsave: '#buttonsave',
+    save: '#menu-btn-save',
+    clean: '#menu-btn-clean',
+    tasks: '#menu-btn-tasks',
+    logout: '#menu-btn-logout',
   },
   triggers: {
-    'click @ui.buttontasks': 'tasks',
-    'click @ui.buttonsave': 'save',
-    'click @ui.buttonlgt': 'logout',
-    'click @ui.buttonclean': 'clean',
-  },
-  onLogout: function () {
-    this.model.logout();
-  },
-  onClean: function () {
-    this.model.clean();
+    'click @ui.save': 'save',
+    'click @ui.clean': 'clean',
+    'click @ui.tasks': 'tasks',
+    'click @ui.logout': 'logout',
   },
   onSave: function () {
     this.model.save();
   },
+  onClean: function () {
+    this.model.clean();
+  },
   onTasks: function () {
     this.model.drop();
+  },
+  onLogout: function () {
+    this.model.logout();
   },
 });
 //

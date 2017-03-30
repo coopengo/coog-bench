@@ -1,8 +1,7 @@
 var Backbone = require('backbone');
 var Session = require('tryton-session');
 var Marionette = require('backbone.marionette');
-var tpl = require('./login.tpl');
-require('./login.css');
+var tpl = require('./template/login.tpl');
 //
 // models
 //

@@ -4,3 +4,39 @@
   font-weight: normal;
   font-style: normal;
 }
+
+body {
+  font-family: 'centuryGothicRegular';
+  font-size: bold;
+}
+
+th {
+  border-radius: 200px;
+}
+
+#main {
+  padding-bottom: 60px;
+}
+
+#logo-coopengo {
+  width: 196px;
+  height: 146px;
+}
+
+#login-btn,
+#bench-start-btn {
+  background: none;
+  padding: 10px 10px;
+  border: 2px solid #0094d2;
+  color: #0094d2;
+  margin-bottom: 2vh;
+  text-transform: uppercase;
+  font-size: 85%;
+  border-radius: 0px;
+  font-weight: bold;
+  outline: 0px;
+}
+
+.align-center {
+  text-align: center;
+}

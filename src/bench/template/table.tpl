@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-xs-12">
-    <div class="l-box">
+    <div class="bench-box">
       <table class="table">
         <thead>
           <tr>
@@ -21,7 +21,7 @@
 </div>
 <div class="row">
   <div class="col-sm-offset-5 col-sm-2 col-xs-12 ">
-    <button type="button" class="btn btn-info btn-block" id="start-btn">
+    <button type="button" class="btn btn-info btn-block" id="bench-start-btn">
       <i class="glyphicon glyphicon-chevron-right"></i>
     </button>
   </div>
