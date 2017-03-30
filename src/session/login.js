@@ -2,7 +2,6 @@ var Backbone = require('backbone');
 var Session = require('tryton-session');
 var Marionette = require('backbone.marionette');
 var tpl = require('./login.tpl');
-var blankTpl = require('./blank.tpl');
 require('./login.css');
 //
 // models
@@ -83,12 +82,7 @@ var View = Marionette.View.extend({
   },
 });
 //
-var Blank = Marionette.View.extend({
-  template: blankTpl,
-});
-//
 // exports
 //
 exports.View = View;
 exports.Model = Model;
-exports.Blank = Blank;

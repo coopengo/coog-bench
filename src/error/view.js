@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
 var errorTpl = require('./error.tpl');
-var mainTpl = require('./index.tpl');
 require('./error.css');
 //
 var Row = Marionette.View.extend({
@@ -9,13 +8,10 @@ var Row = Marionette.View.extend({
   ui: {
     button: '#delete-btn',
   },
-  events: {
-    'click @ui.button': 'handleDeleteButtonClick',
-  },
   triggers: {
     'click @ui.button': 'clicked',
   },
-  handleDeleteButtonClick: function () {
+  onClicked: function () {
     this.model.destroy();
   },
 });
@@ -23,7 +19,6 @@ var Row = Marionette.View.extend({
 var Table = Marionette.CollectionView.extend({
   tagName: 'container-fluid',
   childView: Row,
-  template: mainTpl,
 });
 //
 module.exports = Table;

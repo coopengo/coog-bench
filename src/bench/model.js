@@ -124,11 +124,24 @@ module.exports = Backbone.Collection.extend({
     }
     return promise.then(() => {
       this.trigger('bench:ok');
+      this.trigger('bench:done');
     }, (err) => {
-      this.trigger('error:add', err.message);
+      this.trigger('error:add', err.error);
     });
   },
   drop: function () {
     this.session.rpc('model.bench.' + this.teardown);
+  },
+  save: function (doc) {
+    var blob = new Blob([JSON.stringify(doc)], {
+      type: 'application/json'
+    });
+    var blob_url = window.URL.createObjectURL(blob);
+    var data = encodeURI(blob_url);
+    var link = document.createElement('a');
+    link.setAttribute('href', data);
+    link.setAttribute('download', 'bench_data.txt');
+    document.body.appendChild(link);
+    link.click();
   },
 });

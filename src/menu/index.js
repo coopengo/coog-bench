@@ -19,9 +19,13 @@ module.exports = function (app) {
     model.listenTo(app, 'menu:nodisplay', function () {
       app.getView()
         .getRegion('menu')
-        .show(new View.Blank({
-          model: model
-        }));
+        .reset();
+    });
+    model.on('bench:save', function () {
+      app.trigger('bench:save');
+    });
+    model.on('bench:drop', function () {
+      app.trigger('bench:drop');
     });
   });
 };

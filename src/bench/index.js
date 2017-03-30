@@ -22,6 +22,9 @@ module.exports = function (app) {
       collection.listenTo(app, 'bench:drop', function () {
         collection.drop();
       });
+      collection.listenTo(app, 'bench:save', function () {
+        collection.save(this);
+      });
     }
   };
 };

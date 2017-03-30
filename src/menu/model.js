@@ -11,7 +11,10 @@ var MenuModel = Backbone.Model.extend({
   },
   drop: function () {
     this.trigger('bench:drop');
-  }
+  },
+  save: function () {
+    this.trigger('bench:save');
+  },
 });
 //
 module.exports = MenuModel;

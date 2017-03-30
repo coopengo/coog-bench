@@ -17,14 +17,11 @@ var Row = Marionette.View.extend({
     'change:enable': 'actEnableChange',
     'change:status': 'render'
   },
-  events: {
-    'click @ui.button': 'handleButtonClick',
-    'click @ui.row': 'handleButtonClick',
-  },
   triggers: {
     'click @ui.button': 'clicked',
+    'click @ui.row': 'clicked'
   },
-  handleButtonClick: function () {
+  onClicked: function () {
     this.model.toggle();
   },
   actEnableChange: function (model, val) {
@@ -75,9 +72,13 @@ var Table = Marionette.View.extend({
       replaceElement: true
     }
   },
-  events: {
+  triggers: {
     'click @ui.checkbox': 'handleCheckboxClick',
     'click @ui.button': 'handleButtonClick',
+  },
+  collectionEvents: {
+    'bench:done': 'changeStatus',
+    'error:add': 'changeStatus'
   },
   childViewEvents: {
     'bench:clicked': 'updateCheckbox'
@@ -89,19 +90,23 @@ var Table = Marionette.View.extend({
       .length;
     this.getUI('checkbox')[0].checked = checked;
   },
+  changeStatus: function () {
+    this.$el.removeClass('disabled');
+  },
   onRender: function () {
     this.showChildView('body', new TableBody({
       collection: this.collection
     }));
     this.updateCheckbox();
   },
-  handleCheckboxClick: function () {
+  onHandleCheckboxClick: function () {
     var state = this.getUI('checkbox')[0].checked;
     this.collection.each((bench) => {
       bench.toggle(state);
     });
   },
-  handleButtonClick: function () {
+  onHandleButtonClick: function () {
+    this.$el.addClass('disabled');
     this.collection.execute();
   },
 });

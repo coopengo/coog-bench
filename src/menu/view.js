@@ -1,6 +1,5 @@
 var Marionette = require('backbone.marionette');
 var menuTpl = require('./menu.tpl');
-var blankTpl = require('./blank.tpl');
 require('./menu.css');
 //
 var Menu = Marionette.View.extend({
@@ -10,26 +9,26 @@ var Menu = Marionette.View.extend({
     buttonlgt: '#buttonlgt',
     buttonclean: '#buttonclean',
     buttontasks: '#buttontasks',
+    buttonsave: '#buttonsave',
   },
-  events: {
-    'click @ui.buttonlgt': 'handleClickLogoutButton',
-    'click @ui.buttonclean': 'handleClickCleanButton',
-    'click @ui.buttontasks': 'handleClickTasksButton',
+  triggers: {
+    'click @ui.buttontasks': 'tasks',
+    'click @ui.buttonsave': 'save',
+    'click @ui.buttonlgt': 'logout',
+    'click @ui.buttonclean': 'clean',
   },
-  handleClickLogoutButton: function () {
+  onLogout: function () {
     this.model.logout();
   },
-  handleClickCleanButton: function () {
+  onClean: function () {
     this.model.clean();
   },
-  handleClickTasksButton: function (app) {
-    this.model.drop(app);
+  onSave: function () {
+    this.model.save();
   },
-});
-//
-var Blank = Marionette.View.extend({
-  template: blankTpl,
+  onTasks: function () {
+    this.model.drop();
+  },
 });
 //
 exports.Menu = Menu;
-exports.Blank = Blank;
