@@ -13,5 +13,7 @@
   "eval_code": false,
   "unescape_strings": false,
   "wrap_line_length": 80,
-  "end_with_newline": true
+  "end_with_newline": true,
+  "unformatted": [],
+  "wrap_attributes": "none"
 }

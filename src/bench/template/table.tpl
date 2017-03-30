@@ -26,6 +26,7 @@
         <p class="navbar-text pull-left">© 2017 - Coopengo - All rights reserved </p>
         <p class="navbar-text pull-right"><a href="url">http://www.coopengo.com</a></p>
       </div>
+
     </div>
   </div>
 </div>

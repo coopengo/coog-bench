@@ -1,3 +1,4 @@
+const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
   entry: './src/app.js',
@@ -20,7 +21,7 @@ module.exports = {
   },
   devtool: 'sourcemap',
   output: {
-    path: './public',
+    path: path.resolve('.', 'public'),
     filename: 'coog-bench.js'
   },
   plugins: [

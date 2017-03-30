@@ -9,11 +9,10 @@ var appTpl = require('./app.tpl');
 var AppView = Marionette.View.extend({
   template: appTpl,
   regions: {
-    'main': '#main',
-    'error': '#error',
-    'menu': '#menu',
-    'actions': '#actions',
-  },
+    'menu': '#app-menu',
+    'error': '#app-error',
+    'main': '#app-main'
+  }
 });
 //
 // app class

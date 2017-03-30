@@ -14,21 +14,6 @@ var Model = Backbone.Model.extend({
       password: 'admin'
     });
   },
-  schema: {
-    type: 'object',
-    properties: {
-      database: {
-        type: 'string'
-      },
-      username: {
-        type: 'string'
-      },
-      password: {
-        type: 'string'
-      }
-    },
-    required: ['database', 'username', 'password']
-  },
   validate: function (attrs) {
     var errors = [];
     if (!attrs.database) {

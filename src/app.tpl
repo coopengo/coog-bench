@@ -1,5 +1,3 @@
-<div id="menu"></div>
-<div id="error"></div>
-<div id="actions"></div>
-<div id="main"></div>
-<div id="footer"></div>
+<div id="app-menu"></div>
+<div id="app-error"></div>
+<div id="app-main"></div>
