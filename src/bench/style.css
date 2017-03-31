@@ -24,9 +24,14 @@
   pointer-events: none;
 }
 
+.bench-row-status-idle {
+  -webkit-transition: background 1.0s ease-in-out;
+  -ms-transition: background 1.0s ease-in-out;
+  transition: background 1.0s;
+}
+
 .bench-row-status-working {
   background-color: #f0ad60;
-  cursor: wait;
 }
 
 .bench-row-status-done {
@@ -34,12 +39,6 @@
   cursor: auto;
 }
 
-.bench-row-status-idle {
-  -webkit-transition: background 1.0s ease-in-out;
-  -ms-transition: background 1.0s ease-in-out;
-  transition: background 1.0s;
-}
-
-.body-row-selected-no {
+.bench-row-selected-no {
   background-color: #8c8c8c;
 }

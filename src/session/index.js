@@ -10,6 +10,7 @@ module.exports = function (app) {
       }
     }));
   app.on('session:logout', function () {
+    app.trigger('error:reset');
     storage.clearSession();
     this.disconnect();
   });
@@ -24,6 +25,7 @@ module.exports = function (app) {
           app.trigger('error:reset');
         }
         else {
+          app.trigger('error:reset');
           app.trigger('error:add', info.error);
         }
       });

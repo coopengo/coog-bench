@@ -11,6 +11,7 @@ module.exports = function (app) {
         app.trigger('error:reset');
       });
       collection.on('error:add', function (error) {
+        app.trigger('error:reset');
         app.trigger('error:add', error);
       });
       app.trigger('menu:display');

@@ -6,22 +6,26 @@ require('./style.css');
 //
 var Row = Marionette.View.extend({
   tagName: 'tr',
-  className: function () {
-    return 'bench-row-status-' + this.get('status') +
-      ' bench-row-selected-' + this.get('selected') ? 'yes' : 'not';
-  },
   template: rowTpl,
   ui: {
     button: '.bench-selector-btn',
+    row: 'td',
   },
   modelEvents: {
     'change': 'render',
   },
   triggers: {
     'click @ui.button': 'clicked',
+    'click @ui.row': 'clicked',
   },
   onClicked: function () {
     this.model.toggle();
+  },
+  onRender: function () {
+    this.$el.removeClass();
+    this.$el.addClass('bench-row-status-' + this.model.get('status') +
+      ' bench-row-selected-' + (this.model.get('selected') ? 'yes' :
+        'no'));
   }
 });
 //
