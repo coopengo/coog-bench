@@ -6,23 +6,22 @@ var Menu = Marionette.View.extend({
   template: menuTpl,
   className: 'text-center',
   ui: {
-    refresh: '#menu-btn-refresh',
+    reinit: '#menu-btn-reinit',
     drop: '#menu-btn-drop',
     save: '#menu-btn-save',
     logout: '#menu-btn-logout',
   },
   triggers: {
-    'click @ui.refresh': 'refresh',
+    'click @ui.reinit': 'reinit',
     'click @ui.drop': 'drop',
     'click @ui.save': 'save',
     'click @ui.logout': 'logout',
   },
   modelEvents: {
-    'bench:done': 'changeStatus',
-    'menu:change': 'changeEnable'
+    'change:active': 'toggleActive'
   },
-  onRefresh: function () {
-    this.model.trigger('refresh');
+  onReinit: function () {
+    this.model.trigger('reinit');
   },
   onDrop: function () {
     this.model.trigger('drop');
@@ -33,11 +32,13 @@ var Menu = Marionette.View.extend({
   onLogout: function () {
     this.model.trigger('logout');
   },
-  changeStatus: function () {
-    this.$el.removeClass();
-  },
-  changeEnable: function () {
-    this.$el.addClass('bench-disabled');
+  toggleActive: function (active) {
+    if (active) {
+      this.$el.removeClass();
+    }
+    else {
+      this.$el.addClass('bench-disabled');
+    }
   }
 });
 //

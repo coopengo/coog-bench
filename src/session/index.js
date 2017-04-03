@@ -10,26 +10,24 @@ module.exports = function (app) {
       }
     }));
   app.on('session:logout', function () {
-    app.trigger('error:reset');
     storage.clearSession();
     this.disconnect();
   });
   return {
     login: () => {
+      app.trigger('menu:hide');
       var m = new login.Model();
       m.on('login', function (ok, info) {
+        app.trigger('error:reset');
         if (ok) {
           app.session = info;
           app.connect();
           storage.setSession(info);
-          app.trigger('error:reset');
         }
         else {
-          app.trigger('error:reset');
           app.trigger('error:add', info);
         }
       });
-      app.trigger('menu:hide');
       app.getView()
         .getRegion('main')
         .show(new login.View({

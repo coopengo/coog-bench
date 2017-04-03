@@ -1,43 +1,36 @@
-var Collection = require('./model');
-var View = require('./view');
+var model = require('./model');
+var view = require('./view');
 //
 module.exports = function (app) {
   return {
     bench: () => {
-      var collection = new Collection();
-      collection.app = app;
-      collection.init(app.session);
-      collection.on('error:reset', function () {
+      var benchs = new model.Benchs();
+      benchs.app = app;
+      benchs.init(app.session);
+      benchs.on('start', function () {
+        app.trigger('bench:start');
         app.trigger('error:reset');
       });
-      collection.on('error:add', function (error) {
-        app.trigger('error:reset');
-        app.trigger('error:add', error);
-        app.trigger('errorAdd');
+      benchs.on('done', function (error) {
+        app.trigger('bench:done');
+        if (error) {
+          app.trigger('error:add', error);
+        }
       });
-      collection.listenTo(app, 'bench:refresh', function () {
-        collection.refresh(this);
+      benchs.listenTo(app, 'bench:reinit', function () {
+        this.reinit();
       });
-      collection.listenTo(app, 'bench:drop', function () {
-        collection.drop();
+      benchs.listenTo(app, 'bench:drop', function () {
+        this.drop();
       });
-      collection.listenTo(app, 'bench:save', function () {
-        collection.save();
-      });
-      collection.on('menu:disabled', function () {
-        app.trigger('menuDisabled');
-      });
-      collection.on('bench:done', function () {
-        app.trigger('benchDone');
-      });
-      collection.on('bench:drop', function () {
-        app.trigger('benchDrop');
+      benchs.listenTo(app, 'bench:save', function () {
+        this.save();
       });
       app.trigger('menu:display');
       app.getView()
         .getRegion('main')
-        .show(new View({
-          collection: collection
+        .show(new view.Benchs({
+          collection: benchs
         }));
     }
   };

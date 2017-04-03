@@ -4,7 +4,7 @@ var tableTpl = require('./template/table.tpl');
 var mainTpl = require('./template/index.tpl');
 require('./style.css');
 //
-var Row = Marionette.View.extend({
+var BenchRow = Marionette.View.extend({
   tagName: 'tr',
   template: rowTpl,
   ui: {
@@ -29,18 +29,17 @@ var Row = Marionette.View.extend({
   }
 });
 //
-var TableBody = Marionette.CollectionView.extend({
+var BenchTableBody = Marionette.CollectionView.extend({
   tagName: 'tbody',
-  childView: Row,
+  childView: BenchRow,
   childViewEventPrefix: 'bench',
 });
 //
-var Table = Marionette.View.extend({
-  tagName: 'div',
+var BenchTable = Marionette.View.extend({
   className: 'container-fluid',
   template: tableTpl,
   ui: {
-    checkbox: '.bench-all-checkbox',
+    checkbox: '#table-checkbox',
     button: '#bench-start-btn',
   },
   regions: {
@@ -50,12 +49,27 @@ var Table = Marionette.View.extend({
     }
   },
   triggers: {
-    'click @ui.checkbox': 'handleCheckboxClick',
-    'click @ui.button': 'handleButtonClick',
+    'click @ui.checkbox': 'multiselect',
+    'click @ui.button': 'start',
+  },
+  onMultiselect: function () {
+    var state = this.getUI('checkbox')[0].checked;
+    this.collection.each((bench) => {
+      bench.toggle(state);
+    });
+  },
+  onStart: function () {
+    this.collection.execute();
   },
   collectionEvents: {
-    'bench:done': 'changeStatus',
-    'error:add': 'changeStatus'
+    'bench:start': 'disable',
+    'bench:done': 'enable'
+  },
+  enable: function () {
+    this.$el.removeClass('bench-disabled');
+  },
+  disable: function () {
+    this.$el.addClass('bench-disabled');
   },
   childViewEvents: {
     'bench:clicked': 'updateCheckbox'
@@ -67,35 +81,21 @@ var Table = Marionette.View.extend({
       .length;
     this.getUI('checkbox')[0].checked = checked;
   },
-  changeStatus: function () {
-    this.$el.removeClass('bench-disabled');
-  },
   onRender: function () {
-    this.showChildView('body', new TableBody({
+    this.showChildView('body', new BenchTableBody({
       collection: this.collection
     }));
     this.updateCheckbox();
   },
-  onHandleCheckboxClick: function () {
-    var state = this.getUI('checkbox')[0].checked;
-    this.collection.each((bench) => {
-      bench.toggle(state);
-    });
-  },
-  onHandleButtonClick: function () {
-    this.$el.addClass('bench-disabled');
-    this.collection.menuDisable();
-    this.collection.execute();
-  },
 });
 //
-module.exports = Marionette.View.extend({
+var Benchs = Marionette.View.extend({
   template: mainTpl,
   regions: {
     'lst': '#benchList'
   },
   initialize: function () {
-    this.tableView = new Table({
+    this.tableView = new BenchTable({
       collection: this.collection
     });
   },
@@ -103,3 +103,5 @@ module.exports = Marionette.View.extend({
     this.showChildView('lst', this.tableView);
   },
 });
+//
+exports.Benchs = Benchs;

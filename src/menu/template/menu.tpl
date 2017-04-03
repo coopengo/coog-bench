@@ -7,8 +7,8 @@
 </div>
 <div class="row">
   <div class="col-md-offset-1 col-sm-offset-2 col-xs-offset-2 col-xs-1">
-    <button type="button" class="btn btn-default btn-circle" id="menu-btn-refresh"
-      data-toggle="tooltip" data-placement="bottom" title="Refresh the Page">
+    <button type="button" class="btn btn-default btn-circle" id="menu-btn-reinit" data-toggle="tooltip"
+      data-placement="bottom" title="Refresh the Page">
       <i class="glyphicon glyphicon-erase"></i>
     </button>
   </div>

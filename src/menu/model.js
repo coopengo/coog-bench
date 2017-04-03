@@ -1,12 +1,9 @@
 var Backbone = require('backbone');
 //
-var MenuModel = Backbone.Model.extend({
-  disableMenu: function () {
-    this.trigger('menu:change');
-  },
-  enableMenu: function () {
-    this.trigger('bench:done');
+var Menu = Backbone.Model.extend({
+  defaults: {
+    active: true
   }
 });
 //
-module.exports = MenuModel;
+exports.Menu = Menu;

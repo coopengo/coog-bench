@@ -76,7 +76,7 @@ var Bench = Backbone.Model.extend({
   },
 });
 //
-module.exports = Backbone.Collection.extend({
+var Benchs = Backbone.Collection.extend({
   model: Bench,
   init: function (session) {
     this.session = session;
@@ -88,7 +88,7 @@ module.exports = Backbone.Collection.extend({
       });
   },
   execute: function () {
-    this.trigger('error:reset');
+    this.trigger('start');
     var promise = Promise.resolve();
     var selected = this.filter({
       selected: true
@@ -123,52 +123,36 @@ module.exports = Backbone.Collection.extend({
       });
     }
     return promise.then(() => {
-      this.trigger('bench:ok');
-      this.trigger('bench:done');
+      this.trigger('done');
     }, (err) => {
-      this.trigger('error:add', err);
+      this.trigger('done', err);
     });
   },
-  refresh: function () {
-    this.trigger('error:reset');
-    var selected = this.filter({
-      selected: true
-    });
-    var disabled = this.filter({
-      selected: false
-    });
-    _.each(disabled, (bench) => {
-      bench.reset();
-    });
-    _.each(selected, (bench) => {
-      bench.reset();
+  reinit: function () {
+    this.each(function (b) {
+      b.reset();
     });
   },
   drop: function () {
     this.session.rpc('model.bench.' + this.teardown);
   },
   save: function () {
-    var selected = this.filter({
-      selected: true
-    });
-    var results = '';
-    _.each(selected, (bench) => {
-      var average = bench.attributes.name + ':' + bench.attributes.average +
-        '\n';
-      results += average;
-    });
-    var blob = new Blob([results], {
-      type: 'application/json'
+    var csv = [this.pluck('name')
+      .join(','), this.pluck('average')
+      .join(',')
+    ].join('\n');
+    var blob = new Blob([csv], {
+      type: 'application/csv'
     });
     var blob_url = window.URL.createObjectURL(blob);
     var data = encodeURI(blob_url);
     var link = document.createElement('a');
     link.setAttribute('href', data);
-    link.setAttribute('download', 'bench_data.csv');
+    link.setAttribute('download', 'result.csv');
     document.body.appendChild(link);
     link.click();
-  },
-  menuDisable: function () {
-    this.trigger('menu:disabled');
   }
 });
+//
+exports.Bench = Bench;
+exports.Benchs = Benchs;
