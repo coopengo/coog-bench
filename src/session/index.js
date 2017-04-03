@@ -26,7 +26,7 @@ module.exports = function (app) {
         }
         else {
           app.trigger('error:reset');
-          app.trigger('error:add', info.error);
+          app.trigger('error:add', info);
         }
       });
       app.trigger('menu:hide');

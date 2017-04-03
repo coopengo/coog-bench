@@ -126,22 +126,49 @@ module.exports = Backbone.Collection.extend({
       this.trigger('bench:ok');
       this.trigger('bench:done');
     }, (err) => {
-      this.trigger('error:add', err.error);
+      this.trigger('error:add', err);
+    });
+  },
+  refresh: function () {
+    this.trigger('error:reset');
+    var selected = this.filter({
+      selected: true
+    });
+    var disabled = this.filter({
+      selected: false
+    });
+    _.each(disabled, (bench) => {
+      bench.reset();
+    });
+    _.each(selected, (bench) => {
+      bench.reset();
     });
   },
   drop: function () {
     this.session.rpc('model.bench.' + this.teardown);
   },
   save: function () {
-    var blob = new Blob([JSON.stringify(this.toJSON())], {
+    var selected = this.filter({
+      selected: true
+    });
+    var results = '';
+    _.each(selected, (bench) => {
+      var average = bench.attributes.name + ':' + bench.attributes.average +
+        '\n';
+      results += average;
+    });
+    var blob = new Blob([results], {
       type: 'application/json'
     });
     var blob_url = window.URL.createObjectURL(blob);
     var data = encodeURI(blob_url);
     var link = document.createElement('a');
     link.setAttribute('href', data);
-    link.setAttribute('download', 'bench_data.txt');
+    link.setAttribute('download', 'bench_data.csv');
     document.body.appendChild(link);
     link.click();
   },
+  menuDisable: function () {
+    this.trigger('menu:disabled');
+  }
 });

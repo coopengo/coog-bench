@@ -13,6 +13,25 @@ module.exports = function (app) {
       collection.on('error:add', function (error) {
         app.trigger('error:reset');
         app.trigger('error:add', error);
+        app.trigger('errorAdd');
+      });
+      collection.listenTo(app, 'bench:refresh', function () {
+        collection.refresh(this);
+      });
+      collection.listenTo(app, 'bench:drop', function () {
+        collection.drop();
+      });
+      collection.listenTo(app, 'bench:save', function () {
+        collection.save();
+      });
+      collection.on('menu:disabled', function () {
+        app.trigger('menuDisabled');
+      });
+      collection.on('bench:done', function () {
+        app.trigger('benchDone');
+      });
+      collection.on('bench:drop', function () {
+        app.trigger('benchDrop');
       });
       app.trigger('menu:display');
       app.getView()
@@ -20,12 +39,6 @@ module.exports = function (app) {
         .show(new View({
           collection: collection
         }));
-      collection.listenTo(app, 'bench:drop', function () {
-        collection.drop();
-      });
-      collection.listenTo(app, 'bench:save', function () {
-        collection.save();
-      });
     }
   };
 };

@@ -16,11 +16,23 @@ module.exports = function (app) {
         .getRegion('menu')
         .reset();
     });
-    model.on('save', function () {
-      app.trigger('bench:save');
+    model.listenTo(app, 'menuDisabled', function () {
+      this.disableMenu();
+    });
+    model.listenTo(app, 'errorAdd', function () {
+      this.enableMenu();
+    });
+    model.listenTo(app, 'benchDone', function () {
+      this.enableMenu();
+    });
+    model.on('refresh', function () {
+      app.trigger('bench:refresh');
     });
     model.on('drop', function () {
       app.trigger('bench:drop');
+    });
+    model.on('save', function () {
+      app.trigger('bench:save');
     });
     model.on('logout', function () {
       app.trigger('session:logout');

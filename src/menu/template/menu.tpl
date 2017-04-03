@@ -7,23 +7,23 @@
 </div>
 <div class="row">
   <div class="col-md-offset-1 col-sm-offset-2 col-xs-offset-2 col-xs-1">
-    <button type="button" class="btn btn-default btn-circle" id="menu-btn-save" data_toggle="tooltip"
-      data-placement="bottom" title="Download results">
-      <i class="glyphicon glyphicon-save"></i>
+    <button type="button" class="btn btn-default btn-circle" id="menu-btn-refresh"
+      data-toggle="tooltip" data-placement="bottom" title="Refresh the Page">
+      <i class="glyphicon glyphicon-erase"></i>
     </button>
   </div>
   <div class="col-xs-offset-1 col-xs-1 ">
-    <button type="button" class="btn btn-default btn-circle" id="menu-btn-clean" data-toggle="tooltip"
-      data-placement="bottom" title="Refresh the Page">
-      <i class="glyphicon glyphicon-erase"></i>
+    <button type="button" class="btn btn-default btn-circle" id="menu-btn-drop" data-toggle="tooltip"
+      data-placement="bottom" title="Drop the Table">
+      <i class="glyphicon glyphicon-trash"></i>
     </button>
   </div>
   <div class="col-md-offset-1 col-md-2 hidden-sm hidden-xs">
     <img src="<%- require('../../static/coopengo.jpg') %>" class="app-logo"> </div>
   <div class="col-xs-offset-1 col-xs-1">
-    <button type="button" class="btn btn-default btn-circle" id="menu-btn-drop" data-toggle="tooltip"
-      data-placement="bottom" title="Drop the Table">
-      <i class="glyphicon glyphicon-trash"></i>
+    <button type="button" class="btn btn-default btn-circle" id="menu-btn-save" data_toggle="tooltip"
+      data-placement="bottom" title="Download results">
+      <i class="glyphicon glyphicon-save"></i>
     </button>
   </div>
   <div class="col-xs-offset-1 col-xs-1">

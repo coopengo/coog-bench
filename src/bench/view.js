@@ -84,6 +84,7 @@ var Table = Marionette.View.extend({
   },
   onHandleButtonClick: function () {
     this.$el.addClass('bench-disabled');
+    this.collection.menuDisable();
     this.collection.execute();
   },
 });
