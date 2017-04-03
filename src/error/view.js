@@ -18,4 +18,4 @@ var Errors = Marionette.CollectionView.extend({
   childView: Err,
 });
 //
-module.exports = Errors;
+exports.Errors = Errors;

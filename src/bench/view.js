@@ -1,6 +1,6 @@
 var Marionette = require('backbone.marionette');
 var rowTpl = require('./template/row.tpl');
-var tableTpl = require('./template/table.tpl');
+var benchTpl = require('./template/bench.tpl');
 var mainTpl = require('./template/index.tpl');
 require('./style.css');
 //
@@ -35,11 +35,11 @@ var BenchTableBody = Marionette.CollectionView.extend({
   childViewEventPrefix: 'bench',
 });
 //
-var BenchTable = Marionette.View.extend({
+var Bench = Marionette.View.extend({
   className: 'container-fluid',
-  template: tableTpl,
+  template: benchTpl,
   ui: {
-    checkbox: '#table-checkbox',
+    checkbox: 'input[type="checkbox"]',
     button: '#bench-start-btn',
   },
   regions: {
@@ -53,39 +53,28 @@ var BenchTable = Marionette.View.extend({
     'click @ui.button': 'start',
   },
   onMultiselect: function () {
-    var state = this.getUI('checkbox')[0].checked;
     this.collection.each((bench) => {
-      bench.toggle(state);
+      bench.set('selected', true);
     });
   },
   onStart: function () {
     this.collection.execute();
   },
   collectionEvents: {
-    'bench:start': 'disable',
-    'bench:done': 'enable'
+    'change:active': 'toggleActive'
   },
-  enable: function () {
-    this.$el.removeClass('bench-disabled');
-  },
-  disable: function () {
-    this.$el.addClass('bench-disabled');
-  },
-  childViewEvents: {
-    'bench:clicked': 'updateCheckbox'
-  },
-  updateCheckbox: function () {
-    var checked = !this.collection.filter({
-        selected: false
-      })
-      .length;
-    this.getUI('checkbox')[0].checked = checked;
+  toggleActive: function (active) {
+    if (active === true) {
+      this.$el.addClass('bench-disabled');
+    }
+    else {
+      this.$el.removeClass();
+    }
   },
   onRender: function () {
     this.showChildView('body', new BenchTableBody({
       collection: this.collection
     }));
-    this.updateCheckbox();
   },
 });
 //
@@ -95,7 +84,7 @@ var Benchs = Marionette.View.extend({
     'lst': '#benchList'
   },
   initialize: function () {
-    this.tableView = new BenchTable({
+    this.tableView = new Bench({
       collection: this.collection
     });
   },

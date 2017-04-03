@@ -6,4 +6,4 @@ var ErrorCollection = Backbone.Collection.extend({
   model: ErrorModel,
 });
 //
-module.exports = ErrorCollection;
+exports.ErrorCollection = ErrorCollection;

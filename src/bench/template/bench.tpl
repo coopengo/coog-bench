@@ -4,7 +4,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th class="bench-all-checkbox-container text-center">
+            <th class="text-center">
               <input class="bench-all-checkbox" id="table-checkbox" type="checkbox"
                 name="selected"> </th>
             <th class="text-center class-active">Category</th>

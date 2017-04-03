@@ -1,5 +1,6 @@
 var storage = require('./storage');
-var login = require('./login');
+var model = require('./model');
+var view = require('./view');
 //
 module.exports = function (app) {
   app.then(() => storage.getSession()
@@ -9,6 +10,7 @@ module.exports = function (app) {
         app.connect();
       }
     }));
+  //Outgoing
   app.on('session:logout', function () {
     storage.clearSession();
     this.disconnect();
@@ -16,7 +18,8 @@ module.exports = function (app) {
   return {
     login: () => {
       app.trigger('menu:hide');
-      var m = new login.Model();
+      var m = new model.Session();
+      // Outgoing
       m.on('login', function (ok, info) {
         app.trigger('error:reset');
         if (ok) {
@@ -30,7 +33,7 @@ module.exports = function (app) {
       });
       app.getView()
         .getRegion('main')
-        .show(new login.View({
+        .show(new view.Session({
           model: m
         }));
     },

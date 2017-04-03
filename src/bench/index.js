@@ -7,16 +7,13 @@ module.exports = function (app) {
       var benchs = new model.Benchs();
       benchs.app = app;
       benchs.init(app.session);
-      benchs.on('start', function () {
-        app.trigger('bench:start');
-        app.trigger('error:reset');
-      });
-      benchs.on('done', function (error) {
-        app.trigger('bench:done');
-        if (error) {
-          app.trigger('error:add', error);
-        }
-      });
+      app.trigger('menu:display');
+      app.getView()
+        .getRegion('main')
+        .show(new view.Benchs({
+          collection: benchs
+        }));
+      // Incoming
       benchs.listenTo(app, 'bench:reinit', function () {
         this.reinit();
       });
@@ -26,12 +23,19 @@ module.exports = function (app) {
       benchs.listenTo(app, 'bench:save', function () {
         this.save();
       });
-      app.trigger('menu:display');
-      app.getView()
-        .getRegion('main')
-        .show(new view.Benchs({
-          collection: benchs
-        }));
+      //Outgoing
+      benchs.on('start', function () {
+        app.trigger('bench:start');
+        this.trigger('change:active', true);
+        app.trigger('error:reset');
+      });
+      benchs.on('done', function (error) {
+        app.trigger('bench:done');
+        this.trigger('change:active', false);
+        if (error) {
+          app.trigger('error:add', error);
+        }
+      });
     }
   };
 };

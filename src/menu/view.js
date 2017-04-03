@@ -33,11 +33,11 @@ var Menu = Marionette.View.extend({
     this.model.trigger('logout');
   },
   toggleActive: function (active) {
-    if (active) {
-      this.$el.removeClass();
+    if (active === true) {
+      this.$el.addClass('bench-disabled');
     }
     else {
-      this.$el.addClass('bench-disabled');
+      this.$el.removeClass();
     }
   }
 });

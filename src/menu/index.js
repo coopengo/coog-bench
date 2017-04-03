@@ -18,10 +18,10 @@ module.exports = function (app) {
         .reset();
     });
     menu.listenTo(this, 'bench:start', function () {
-      this.set('active', false);
+      this.trigger('change:active', true);
     });
     menu.listenTo(this, 'bench:done', function () {
-      this.set('active', true);
+      this.trigger('change:active', false);
     });
     // Outgoing
     menu.on('reinit drop save logout', function () {
