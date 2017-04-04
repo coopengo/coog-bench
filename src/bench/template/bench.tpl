@@ -5,8 +5,10 @@
         <thead>
           <tr>
             <th class="text-center">
-              <input class="bench-all-checkbox" id="table-checkbox" type="checkbox"
-                name="selected"> </th>
+              <button type="button" id="selection-btn">
+                <i class="glyphicon glyphicon-retweet"></i>
+              </button>
+            </th>
             <th class="text-center class-active">Test</th>
             <th class="text-center">Iterations</th>
             <th class="text-center">Average</th>

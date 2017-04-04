@@ -1,9 +1,9 @@
 <td class="bench-checkbox-container text-center">
-  <button type="button" class="btn btn-sm bench-selector-btn">
-    <span>&nbsp;
-      <%= selected ? 'Enabled' : 'Disabled' %>
-    </span>
-  </button>
+  <% if (selected == false) { %>
+    <input type="checkbox">
+    <% } else { %>
+      <input type="checkbox" checked="checked">
+      <% } %>
 </td>
 <td class="text-center">
   <%- name %>

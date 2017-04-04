@@ -11,14 +11,6 @@
   width: 100%;
 }
 
-.bench-selector-btn {
-  border: 0px;
-  outline: 0px;
-  border-radius: 0px !important;
-  font-size: 70%;
-  text-transform: uppercase;
-}
-
 .bench-disabled {
   cursor: wait;
   pointer-events: none;

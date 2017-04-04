@@ -7,7 +7,6 @@
 
 body {
   font-family: 'centuryGothicRegular';
-  font-size: bold;
 }
 
 th {
@@ -38,4 +37,8 @@ th {
 
 #app-main {
   padding-bottom: 60px;
+}
+
+.row {
+  margin: 0!important;
 }

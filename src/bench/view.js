@@ -8,14 +8,12 @@ var BenchRow = Marionette.View.extend({
   tagName: 'tr',
   template: rowTpl,
   ui: {
-    button: '.bench-selector-btn',
     row: 'td',
   },
   modelEvents: {
     'change': 'render',
   },
   triggers: {
-    'click @ui.button': 'clicked',
     'click @ui.row': 'clicked',
   },
   onClicked: function () {
@@ -39,7 +37,7 @@ var Bench = Marionette.View.extend({
   className: 'container-fluid',
   template: benchTpl,
   ui: {
-    checkbox: 'input[type="checkbox"]',
+    selection: '#selection-btn',
     button: '#bench-start-btn',
   },
   regions: {
@@ -49,13 +47,28 @@ var Bench = Marionette.View.extend({
     }
   },
   triggers: {
-    'click @ui.checkbox': 'multiselect',
+    'click @ui.selection': 'multiselect',
     'click @ui.button': 'start',
   },
   onMultiselect: function () {
+    var count = 0;
+    var state = false;
     this.collection.each((bench) => {
-      bench.set('selected', true);
+      if (bench.get('selected')) {
+        count++;
+      }
     });
+    if (this.collection.length === count || this.collection.length === 0) {
+      this.collection.each((bench) => {
+        bench.toggle(state);
+        bench.set('selected', state);
+      });
+    }
+    else {
+      this.collection.each((bench) => {
+        bench.set('selected', true);
+      });
+    }
   },
   onStart: function () {
     this.collection.execute();
