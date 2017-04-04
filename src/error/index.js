@@ -3,13 +3,12 @@ var view = require('./view');
 //
 module.exports = function (app) {
   app.on('before:start', function () {
-    var errors = new model.ErrorCollection();
+    var errors = new model.Errs();
     app.getView()
       .getRegion('error')
-      .show(new view.Errors({
+      .show(new view.Errs({
         collection: errors
       }));
-    // Incoming
     errors.listenTo(app, 'error:add', function (error) {
       this.add({
         message: 'Error : ' + error,

@@ -4,7 +4,6 @@ var view = require('./view');
 module.exports = function (app) {
   app.on('before:start', function () {
     var menu = new model.Menu();
-    // Incoming
     menu.listenTo(this, 'menu:display', function () {
       app.getView()
         .getRegion('menu')
@@ -23,7 +22,6 @@ module.exports = function (app) {
     menu.listenTo(this, 'bench:done', function () {
       this.trigger('change:active', false);
     });
-    // Outgoing
     menu.on('reinit drop save logout', function () {
       app.trigger('error:reset');
     });

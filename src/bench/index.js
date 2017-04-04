@@ -13,7 +13,6 @@ module.exports = function (app) {
         .show(new view.Benchs({
           collection: benchs
         }));
-      // Incoming
       benchs.listenTo(app, 'bench:reinit', function () {
         this.reinit();
       });
@@ -23,7 +22,6 @@ module.exports = function (app) {
       benchs.listenTo(app, 'bench:save', function () {
         this.save();
       });
-      //Outgoing
       benchs.on('start', function () {
         app.trigger('bench:start');
         this.trigger('change:active', true);

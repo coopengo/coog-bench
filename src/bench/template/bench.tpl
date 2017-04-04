@@ -7,8 +7,8 @@
             <th class="text-center">
               <input class="bench-all-checkbox" id="table-checkbox" type="checkbox"
                 name="selected"> </th>
-            <th class="text-center class-active">Category</th>
-            <th class="text-center">Iteration</th>
+            <th class="text-center class-active">Test</th>
+            <th class="text-center">Iterations</th>
             <th class="text-center">Average</th>
             <th class="text-center">Minimum</th>
             <th class="text-center">Maximum</th>

@@ -1,7 +1,7 @@
 var Backbone = require('backbone');
-var SessionHandler = require('tryton-session');
+var Session = require('tryton-session');
 //
-var Session = Backbone.Model.extend({
+var Login = Backbone.Model.extend({
   initialize: function () {
     this.set({
       database: 'coog',
@@ -25,8 +25,8 @@ var Session = Backbone.Model.extend({
     }
   },
   login: function () {
-    var session = new SessionHandler(window.location.protocol + '//' +
-      window.location.host, this.get('database'));
+    var session = new Session(window.location.protocol + '//' + window.location
+      .host, this.get('database'));
     session.start(this.get('username'), {
         password: this.get('password')
       })
@@ -38,4 +38,4 @@ var Session = Backbone.Model.extend({
   },
 });
 //
-exports.Session = Session;
+exports.Login = Login;

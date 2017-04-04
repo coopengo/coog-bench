@@ -2,7 +2,7 @@ var Backbone = require('backbone');
 var Marionette = require('backbone.marionette');
 var tpl = require('./template/login.tpl');
 //
-var Session = Marionette.View.extend({
+var Login = Marionette.View.extend({
   className: 'container-fluid',
   template: tpl,
   ui: {
@@ -24,4 +24,4 @@ var Session = Marionette.View.extend({
   },
 });
 //
-exports.Session = Session;
+exports.Login = Login;

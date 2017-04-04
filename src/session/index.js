@@ -10,7 +10,6 @@ module.exports = function (app) {
         app.connect();
       }
     }));
-  //Outgoing
   app.on('session:logout', function () {
     storage.clearSession();
     this.disconnect();
@@ -18,9 +17,8 @@ module.exports = function (app) {
   return {
     login: () => {
       app.trigger('menu:hide');
-      var m = new model.Session();
-      // Outgoing
-      m.on('login', function (ok, info) {
+      var login = new model.Login();
+      login.on('login', function (ok, info) {
         app.trigger('error:reset');
         if (ok) {
           app.session = info;
@@ -33,8 +31,8 @@ module.exports = function (app) {
       });
       app.getView()
         .getRegion('main')
-        .show(new view.Session({
-          model: m
+        .show(new view.Login({
+          model: login
         }));
     },
   };

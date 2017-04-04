@@ -14,8 +14,8 @@ var Err = Marionette.View.extend({
     this.model.destroy();
   },
 });
-var Errors = Marionette.CollectionView.extend({
+var Errs = Marionette.CollectionView.extend({
   childView: Err,
 });
 //
-exports.Errors = Errors;
+exports.Errs = Errs;
