@@ -51,24 +51,16 @@ var Bench = Marionette.View.extend({
     'click @ui.button': 'start',
   },
   onMultiselect: function () {
-    var count = 0;
-    var state = false;
-    this.collection.each((bench) => {
-      if (bench.get('selected')) {
-        count++;
-      }
+    var total = this.collection.size();
+    var selected = this.collection.filter((b) => b.get('selected'))
+      .length;
+    var state = true;
+    if (selected === total) {
+      state = false;
+    }
+    this.collection.each((b) => {
+      b.set('selected', state);
     });
-    if (this.collection.length === count || this.collection.length === 0) {
-      this.collection.each((bench) => {
-        bench.toggle(state);
-        bench.set('selected', state);
-      });
-    }
-    else {
-      this.collection.each((bench) => {
-        bench.set('selected', true);
-      });
-    }
   },
   onStart: function () {
     this.collection.execute();
