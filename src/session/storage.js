@@ -6,7 +6,6 @@ exports.setSession = function (session) {
       localStorage.setItem('session', data);
     });
 };
-//
 exports.getSession = function () {
   var data = localStorage.getItem('session');
   if (data) {
@@ -17,4 +16,7 @@ exports.getSession = function () {
   else {
     return Promise.resolve(null);
   }
+};
+exports.clearSession = function () {
+  localStorage.removeItem('session');
 };

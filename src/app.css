@@ -4,3 +4,41 @@
   font-weight: normal;
   font-style: normal;
 }
+
+body {
+  font-family: 'centuryGothicRegular';
+}
+
+th {
+  border-radius: 200px;
+}
+
+.app-logo {
+  width: 196px;
+  height: 146px;
+}
+
+.app-main-btn {
+  background: none;
+  padding: 10px 10px;
+  border: 2px solid #0094d2;
+  color: #0094d2;
+  margin-bottom: 2vh;
+  text-transform: uppercase;
+  font-size: 85%;
+  border-radius: 0px;
+  font-weight: bold;
+  outline: 0px;
+}
+
+.app-main-btn:hover {
+  color: #0094d2;
+}
+
+#app-main {
+  padding-bottom: 60px;
+}
+
+.row {
+  margin: 0!important;
+}

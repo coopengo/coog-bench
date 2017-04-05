@@ -1,0 +1,36 @@
+.bench-all-checkbox,
+.bench-checkbox {
+  transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+}
+
+.bench-box {
+  padding-top: 2em;
+  padding-right: 2em;
+  padding-left: 2em;
+  width: 100%;
+}
+
+.bench-disabled {
+  cursor: wait;
+  pointer-events: none;
+}
+
+.bench-row-status-idle {
+  -webkit-transition: background 1.0s ease-in-out;
+  -ms-transition: background 1.0s ease-in-out;
+  transition: background 1.0s;
+}
+
+.bench-row-status-working {
+  background-color: #f0ad60;
+}
+
+.bench-row-status-done {
+  background-color: #0094d2;
+  cursor: auto;
+}
+
+.bench-row-selected-no {
+  background-color: #8c8c8c;
+}

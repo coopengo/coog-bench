@@ -40,10 +40,10 @@ var AuthRouter = AppRouter.extend({
 //
 module.exports = function (app) {
   error(app);
-  session(app);
+  var sessionCtrl = session(app);
   menu(app);
-  app.on('start', () => {
-    app.on('connect', (connected) => {
+  app.on('start', function () {
+    app.on('connect', function (connected) {
       if (connected) {
         if (this.origin) {
           goto(this.origin);
@@ -69,7 +69,7 @@ module.exports = function (app) {
   });
   new AppRouter({
     app: app,
-    controller: session(app),
+    controller: sessionCtrl,
     appRoutes: {
       'login': 'login',
     }

@@ -25,7 +25,7 @@ var App = Marionette.Application.extend({
     this.on('before:start', function () {
       this.showView(new AppView());
     });
-    this.on('start', () => {
+    this.on('start', function () {
       Backbone.history.start();
     });
     route(this);

@@ -1,13 +1,7 @@
 var Backbone = require('backbone');
 var Session = require('tryton-session');
-var Marionette = require('backbone.marionette');
-var tpl = require('./login.tpl');
-var blankTpl = require('./blank.tpl');
-require('./login.css');
 //
-// models
-//
-var Model = Backbone.Model.extend({
+var Login = Backbone.Model.extend({
   initialize: function () {
     this.set({
       database: 'coog',
@@ -44,36 +38,4 @@ var Model = Backbone.Model.extend({
   },
 });
 //
-// views
-//
-var View = Marionette.View.extend({
-  className: 'container-fluid',
-  template: tpl,
-  ui: {
-    submit: 'button'
-  },
-  triggers: {
-    'click @ui.submit': 'submit'
-  },
-  onRender: function () {
-    Backbone.Syphon.deserialize(this, this.model.toJSON());
-    this.on('submit', () => {
-      this.model.set(Backbone.Syphon.serialize(this), {
-        validate: true
-      });
-      if (this.model.isValid()) {
-        this.model.login();
-      }
-    });
-  },
-});
-//
-var Blank = Marionette.View.extend({
-  template: blankTpl,
-});
-//
-// exports
-//
-exports.View = View;
-exports.Model = Model;
-exports.Blank = Blank;
+exports.Login = Login;

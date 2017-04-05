@@ -1,27 +1,41 @@
-var Model = require('./model');
-var View = require('./view');
+var model = require('./model');
+var view = require('./view');
 //
 module.exports = function (app) {
-  app.on('before:start', () => {
-    var model = new Model();
-    app.getView()
-      .getRegion('menu')
-      .show(new View.Menu({
-        model: model
-      }));
-    model.listenTo(app, 'menu:display', function () {
+  app.on('before:start', function () {
+    var menu = new model.Menu();
+    menu.listenTo(this, 'menu:display', function () {
       app.getView()
         .getRegion('menu')
-        .show(new View.Menu({
-          model: model
+        .show(new view.Menu({
+          model: menu
         }));
     });
-    model.listenTo(app, 'menu:nodisplay', function () {
+    menu.listenTo(this, 'menu:hide', function () {
       app.getView()
         .getRegion('menu')
-        .show(new View.Blank({
-          model: model
-        }));
+        .reset();
+    });
+    menu.listenTo(this, 'bench:start', function () {
+      this.trigger('change:active', true);
+    });
+    menu.listenTo(this, 'bench:done', function () {
+      this.trigger('change:active', false);
+    });
+    menu.on('reinit drop save logout', function () {
+      app.trigger('error:reset');
+    });
+    menu.on('reinit', function () {
+      app.trigger('bench:reinit');
+    });
+    menu.on('drop', function () {
+      app.trigger('bench:drop');
+    });
+    menu.on('save', function () {
+      app.trigger('bench:save');
+    });
+    menu.on('logout', function () {
+      app.trigger('session:logout');
     });
   });
 };

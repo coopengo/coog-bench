@@ -1,73 +1,44 @@
 var Marionette = require('backbone.marionette');
 var rowTpl = require('./template/row.tpl');
-var tableTpl = require('./template/table.tpl');
+var benchTpl = require('./template/bench.tpl');
 var mainTpl = require('./template/index.tpl');
-require('./template/row.css');
-require('./template/table.css');
+require('./style.css');
 //
-var Row = Marionette.View.extend({
+var BenchRow = Marionette.View.extend({
   tagName: 'tr',
-  className: 'bench-body',
   template: rowTpl,
   ui: {
-    button: '.benchmark-selector-btn',
-    row: '',
+    row: 'td',
   },
   modelEvents: {
-    'change:enable': 'actEnableChange',
-    'change:status': 'render'
-  },
-  events: {
-    'click @ui.button': 'handleButtonClick',
-    'click @ui.row': 'handleButtonClick',
+    'change': 'render',
   },
   triggers: {
-    'click @ui.button': 'clicked',
+    'click @ui.row': 'clicked',
   },
-  handleButtonClick: function () {
+  onClicked: function () {
     this.model.toggle();
   },
-  actEnableChange: function (model, val) {
-    if (val) {
-      this.$el.removeClass(
-          'bench-disable body-ready body-loading body-loaded')
-        .addClass('idle');
-    }
-    else {
-      this.$el.removeClass(
-          'bench-disable body-ready body-loading body-loaded')
-        .addClass('bench-disable');
-    }
-    this.render();
-  },
   onRender: function () {
-    switch (this.model.get('status')) {
-    case 'working':
-      this.$el.removeClass('body-ready body-loading body-loaded')
-        .addClass('body-loading');
-      break;
-    case 'done':
-      this.$el.removeClass('body-ready body-loaded body-loading')
-        .addClass('body-loaded');
-      break;
-    }
-    return this;
-  },
+    this.$el.removeClass();
+    this.$el.addClass('bench-row-status-' + this.model.get('status') +
+      ' bench-row-selected-' + (this.model.get('selected') ? 'yes' :
+        'no'));
+  }
 });
 //
-var TableBody = Marionette.CollectionView.extend({
+var BenchTableBody = Marionette.CollectionView.extend({
   tagName: 'tbody',
-  childView: Row,
+  childView: BenchRow,
   childViewEventPrefix: 'bench',
 });
 //
-var Table = Marionette.View.extend({
-  tagName: 'div',
+var Bench = Marionette.View.extend({
   className: 'container-fluid',
-  template: tableTpl,
+  template: benchTpl,
   ui: {
-    checkbox: '.bench-all-checkbox',
-    button: '#start-btn',
+    selection: '#selection-btn',
+    button: '#bench-start-btn',
   },
   regions: {
     body: {
@@ -75,44 +46,50 @@ var Table = Marionette.View.extend({
       replaceElement: true
     }
   },
-  events: {
-    'click @ui.checkbox': 'handleCheckboxClick',
-    'click @ui.button': 'handleButtonClick',
+  triggers: {
+    'click @ui.selection': 'multiselect',
+    'click @ui.button': 'start',
   },
-  childViewEvents: {
-    'bench:clicked': 'updateCheckbox'
-  },
-  updateCheckbox: function () {
-    var checked = !this.collection.filter({
-        enable: false
-      })
+  onMultiselect: function () {
+    var total = this.collection.size();
+    var selected = this.collection.filter((b) => b.get('selected'))
       .length;
-    this.getUI('checkbox')[0].checked = checked;
-  },
-  onRender: function () {
-    this.showChildView('body', new TableBody({
-      collection: this.collection
-    }));
-    this.updateCheckbox();
-  },
-  handleCheckboxClick: function () {
-    var state = this.getUI('checkbox')[0].checked;
-    this.collection.each((bench) => {
-      bench.toggle(state);
+    var state = true;
+    if (selected === total) {
+      state = false;
+    }
+    this.collection.each((b) => {
+      b.set('selected', state);
     });
   },
-  handleButtonClick: function () {
+  onStart: function () {
     this.collection.execute();
+  },
+  collectionEvents: {
+    'change:active': 'toggleActive'
+  },
+  toggleActive: function (active) {
+    if (active === true) {
+      this.$el.addClass('bench-disabled');
+    }
+    else {
+      this.$el.removeClass();
+    }
+  },
+  onRender: function () {
+    this.showChildView('body', new BenchTableBody({
+      collection: this.collection
+    }));
   },
 });
 //
-module.exports = Marionette.View.extend({
+var Benchs = Marionette.View.extend({
   template: mainTpl,
   regions: {
     'lst': '#benchList'
   },
   initialize: function () {
-    this.tableView = new Table({
+    this.tableView = new Bench({
       collection: this.collection
     });
   },
@@ -120,3 +97,5 @@ module.exports = Marionette.View.extend({
     this.showChildView('lst', this.tableView);
   },
 });
+//
+exports.Benchs = Benchs;

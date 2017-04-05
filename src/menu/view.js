@@ -1,35 +1,45 @@
 var Marionette = require('backbone.marionette');
-var menuTpl = require('./menu.tpl');
-var blankTpl = require('./blank.tpl');
-require('./menu.css');
+var menuTpl = require('./template/menu.tpl');
+require('./style.css');
 //
 var Menu = Marionette.View.extend({
   template: menuTpl,
   className: 'text-center',
   ui: {
-    buttonlgt: '#buttonlgt',
-    buttonclean: '#buttonclean',
-    buttontasks: '#buttontasks',
+    reinit: '#menu-btn-reinit',
+    drop: '#menu-btn-drop',
+    save: '#menu-btn-save',
+    logout: '#menu-btn-logout',
   },
-  events: {
-    'click @ui.buttonlgt': 'handleClickLogoutButton',
-    'click @ui.buttonclean': 'handleClickCleanButton',
-    'click @ui.buttontasks': 'handleClickTasksButton',
+  triggers: {
+    'click @ui.reinit': 'reinit',
+    'click @ui.drop': 'drop',
+    'click @ui.save': 'save',
+    'click @ui.logout': 'logout',
   },
-  handleClickLogoutButton: function () {
-    this.model.logout();
+  modelEvents: {
+    'change:active': 'toggleActive'
   },
-  handleClickCleanButton: function () {
-    this.model.clean();
+  onReinit: function () {
+    this.model.trigger('reinit');
   },
-  handleClickTasksButton: function (app) {
-    this.model.drop(app);
+  onDrop: function () {
+    this.model.trigger('drop');
   },
-});
-//
-var Blank = Marionette.View.extend({
-  template: blankTpl,
+  onSave: function () {
+    this.model.trigger('save');
+  },
+  onLogout: function () {
+    this.model.trigger('logout');
+  },
+  toggleActive: function (active) {
+    if (active === true) {
+      this.$el.addClass('bench-disabled');
+    }
+    else {
+      this.$el.removeClass();
+    }
+  }
 });
 //
 exports.Menu = Menu;
-exports.Blank = Blank;

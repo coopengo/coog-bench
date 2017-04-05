@@ -1,17 +1,9 @@
 var Backbone = require('backbone');
-var Storage = require('./storage');
 //
-var MenuModel = Backbone.Model.extend({
-  logout: function () {
-    Storage.closeSession();
-    location.reload();
-  },
-  clean: function () {
-    location.reload();
-  },
-  drop: function () {
-    this.trigger('bench:drop');
+var Menu = Backbone.Model.extend({
+  defaults: {
+    active: true
   }
 });
 //
-module.exports = MenuModel;
+exports.Menu = Menu;

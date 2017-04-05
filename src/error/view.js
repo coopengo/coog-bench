@@ -1,29 +1,21 @@
 var Marionette = require('backbone.marionette');
-var errorTpl = require('./error.tpl');
-var mainTpl = require('./index.tpl');
-require('./error.css');
+var errorTpl = require('./template/error.tpl');
+require('./style.css');
 //
-var Row = Marionette.View.extend({
-  tagName: 'container-fluid',
+var Err = Marionette.View.extend({
   template: errorTpl,
   ui: {
-    button: '#delete-btn',
-  },
-  events: {
-    'click @ui.button': 'handleDeleteButtonClick',
+    close: '#error-close-btn',
   },
   triggers: {
-    'click @ui.button': 'clicked',
+    'click @ui.close': 'close',
   },
-  handleDeleteButtonClick: function () {
+  onClose: function () {
     this.model.destroy();
   },
 });
-//
-var Table = Marionette.CollectionView.extend({
-  tagName: 'container-fluid',
-  childView: Row,
-  template: mainTpl,
+var Errs = Marionette.CollectionView.extend({
+  childView: Err,
 });
 //
-module.exports = Table;
+exports.Errs = Errs;

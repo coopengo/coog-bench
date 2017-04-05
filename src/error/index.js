@@ -1,21 +1,21 @@
-var Collection = require('./model');
-var View = require('./view');
+var model = require('./model');
+var view = require('./view');
 //
 module.exports = function (app) {
-  app.on('before:start', () => {
-    var collection = new Collection();
-    collection.listenTo(app, 'error:add', function (error) {
-      this.set({
+  app.on('before:start', function () {
+    var errors = new model.Errs();
+    app.getView()
+      .getRegion('error')
+      .show(new view.Errs({
+        collection: errors
+      }));
+    errors.listenTo(app, 'error:add', function (error) {
+      this.add({
         message: 'Error : ' + error,
       });
     });
-    collection.listenTo(app, 'error:reset', function () {
+    errors.listenTo(app, 'error:reset', function () {
       this.reset();
     });
-    app.getView()
-      .getRegion('error')
-      .show(new View({
-        collection: collection
-      }));
   });
 };

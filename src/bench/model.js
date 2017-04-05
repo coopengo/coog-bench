@@ -4,8 +4,8 @@ var Backbone = require('backbone');
 var Bench = Backbone.Model.extend({
   defaults: function () {
     return {
+      selected: true,
       status: 'idle',
-      enable: true,
       iterations: '-',
       average: '-',
       minimum: '-',
@@ -14,7 +14,7 @@ var Bench = Backbone.Model.extend({
   },
   toggle: function () {
     this.set({
-      enable: !this.get('enable')
+      selected: !this.get('selected')
     });
   },
   reset: function () {
@@ -76,7 +76,7 @@ var Bench = Backbone.Model.extend({
   },
 });
 //
-module.exports = Backbone.Collection.extend({
+var Benchs = Backbone.Collection.extend({
   model: Bench,
   init: function (session) {
     this.session = session;
@@ -88,15 +88,15 @@ module.exports = Backbone.Collection.extend({
       });
   },
   execute: function () {
-    this.trigger('error:reset');
+    this.trigger('start');
     var promise = Promise.resolve();
-    var enabled = this.filter({
-      enable: true
+    var selected = this.filter({
+      selected: true
     });
     var disabled = this.filter({
-      enable: false
+      selected: false
     });
-    var setup = _.filter(enabled, (bench) => bench.get('setup'))
+    var setup = _.filter(selected, (bench) => bench.get('setup'))
       .length;
     if (setup) {
       promise = promise.then(() => {
@@ -106,7 +106,7 @@ module.exports = Backbone.Collection.extend({
     _.each(disabled, (bench) => {
       bench.reset();
     });
-    _.each(enabled, (bench) => {
+    _.each(selected, (bench) => {
       bench.reset();
       promise = promise.then(() => {
         if (bench.get('method') == 'test_latency') {
@@ -123,12 +123,36 @@ module.exports = Backbone.Collection.extend({
       });
     }
     return promise.then(() => {
-      this.trigger('bench:ok');
+      this.trigger('done');
     }, (err) => {
-      this.trigger('error:add', err.message);
+      this.trigger('done', err);
+    });
+  },
+  reinit: function () {
+    this.each(function (b) {
+      b.reset();
     });
   },
   drop: function () {
     this.session.rpc('model.bench.' + this.teardown);
   },
+  save: function () {
+    var csv = [this.pluck('name')
+      .join(','), this.pluck('average')
+      .join(',')
+    ].join('\n');
+    var blob = new Blob([csv], {
+      type: 'application/csv'
+    });
+    var blob_url = window.URL.createObjectURL(blob);
+    var data = encodeURI(blob_url);
+    var link = document.createElement('a');
+    link.setAttribute('href', data);
+    link.setAttribute('download', 'result.csv');
+    document.body.appendChild(link);
+    link.click();
+  }
 });
+//
+exports.Bench = Bench;
+exports.Benchs = Benchs;

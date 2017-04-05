@@ -1,9 +1,9 @@
 var Backbone = require('backbone');
 //
-var ErrorModel = Backbone.Model.extend({});
+var Err = Backbone.Model.extend({});
 //
-var ErrorCollection = Backbone.Collection.extend({
-  model: ErrorModel,
+var Errs = Backbone.Collection.extend({
+  model: Err,
 });
 //
-module.exports = ErrorCollection;
+exports.Errs = Errs;
