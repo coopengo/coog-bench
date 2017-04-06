@@ -6,7 +6,7 @@
           <tr>
             <th class="text-center">
               <button type="button" id="selection-btn">
-                <i class="glyphicon glyphicon-retweet"></i>
+                <i class="glyphicon glyphicon-list"></i>
               </button>
             </th>
             <th class="text-center class-active">Test</th>
@@ -24,8 +24,7 @@
 <div class="row">
   <div class="col-sm-offset-5 col-sm-2 col-xs-12 ">
     <button type="button" class="btn btn-block app-main-btn" id="bench-start-btn">
-      <i class="glyphicon glyphicon-chevron-right"></i>
-    </button>
+    LAUNCH </button>
   </div>
   <div class="row">
     <div id="footer" class="navbar navbar-default navbar-fixed-bottom">

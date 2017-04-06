@@ -23,14 +23,34 @@
 }
 
 .bench-row-status-working {
-  background-color: #f0ad60;
+  background-color: rgba(162, 218, 244, 1);
+  animation: bench-blinker 2s linear infinite;
+}
+
+@keyframes bench-blinker {
+  50% {
+    background-color: rgba(162, 218, 244, 0)
+  }
+}
+
+@-webkit-keyframes bench-blinker {
+  50% {
+    background-color: rgba(162, 218, 244, 0)
+  }
+}
+
+@-moz-keyframes bench-blinker {
+  50% {
+    background-color: rgba(162, 218, 244, 0)
+  }
 }
 
 .bench-row-status-done {
-  background-color: #0094d2;
+  background-color: #00aee5;
   cursor: auto;
 }
 
 .bench-row-selected-no {
   background-color: #8c8c8c;
+  color: #FFF;
 }
