@@ -18,11 +18,11 @@ If you don't wan to install nodejs and dependancies localy, there is a scrpit : 
 
 ### Bench
 
-![alt text](./bench/Bench.png)
+![alt text](./Bench.png)
 
 The bench contains 6 possibilities of tests :
   
-![alt text](/bench/Architecture.png)
+![alt text](./Architecture.png)
 
 
 The bench features an option to export the bench results. It will download a csv file of the lastest average results. 
@@ -34,13 +34,13 @@ Launching the bench is done by clicking which category you want to enable or dis
 
 [See LICENSE][1]
 
-[1]:(./bench/COPYRIGHT)
+[1]:(./COPYRIGHT)
 
 ### Copyright
 
 [See COPYRIGHT][2]
 
-[2]:(./bench/LICENSE)
+[2]:(./LICENSE)
 
 
 For more information please visit the Coopengo web site :
