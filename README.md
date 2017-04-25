@@ -1,5 +1,7 @@
 ## coog-bench
 
+![Bench Web](./Bench.png)
+
 ### Description
 
 coog-bench is a tools to check coog (or trytond) deployment. It verifies:
@@ -23,19 +25,13 @@ coog-bench is a tools to check coog (or trytond) deployment. It verifies:
 - build without installing node: `cd docker && ./build` (generated files are on content folder)
 - serve generated files via nginx or other standard web server
 
-### Bench
-
-![Bench Web](./Bench.png)
-
-The bench features an option to export the bench results. It will download a csv file of the lastest average results.
-
 ### License
 
-[See LICENSE](./LICENSE)
+See [LICENSE](./LICENSE)
 
 ### Copyright
 
-[See COPYRIGHT](./COPYRIGHT)
+See [COPYRIGHT](./COPYRIGHT)
 
 For more information please visit the Coopengo web site :
 
