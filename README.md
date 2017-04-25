@@ -34,13 +34,13 @@ Launching the bench is done by clicking which category you want to enable or dis
 
 [See LICENSE][1]
 
-[1]:(./COPYRIGHT)
+[1]:(./LICENSE)
 
 ### Copyright
 
 [See COPYRIGHT][2]
 
-[2]:(./LICENSE)
+[2]:(./COPYRIGHT)
 
 
 For more information please visit the Coopengo web site :
