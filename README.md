@@ -2,33 +2,32 @@
 
 ### Description
 
-The bench module offers possibilities to obtain data about the deployment between the database, application and server.
+coog-bench is a tools to check coog (or trytond) deployment. It verifies:
+- connectivity between client / application server (trytond) / db server
+- cpu / memory capabilities of application server
+- db capabilities for read / write operations
+
+![Tests](./Architecture.png)
 
 ### Installation
 
-- Be up-to-date on trytond-modules/bench
-- Clone coog-bench
-- cd coog-bench
-- ./build 
-- Go to http://localhost:8000/bench/
+- [bench module](https://github.com/coopengo/trytond-bench) should be installed on trytond
 
-If you don't wan to install nodejs and dependancies localy, there is a scrpit : https://github.com/coopengo/coog-bench/blob/master/build. Then :  
-- npm install
-- npm run build
+#### Dev mode
+
+- local run: `npm i && npm run start` (you could need to change `browser-sync` proxy configuration)
+
+#### Real deployment
+
+- local build: `npm i && npm run build` (generated files on public folder)
+- build without installing node: `cd docker && ./build` (generated files are on content folder)
+- serve generated files via nginx or other standard web server
 
 ### Bench
 
-![alt text](./Bench.png)
+![Bench Web](./Bench.png)
 
-The bench contains 6 possibilities of tests :
-  
-![alt text](./Architecture.png)
-
-
-The bench features an option to export the bench results. It will download a csv file of the lastest average results. 
-
-Launching the bench is done by clicking which category you want to enable or disable and then clicking on the button underneath.
-
+The bench features an option to export the bench results. It will download a csv file of the lastest average results.
 
 ### License
 
@@ -37,7 +36,6 @@ Launching the bench is done by clicking which category you want to enable or dis
 ### Copyright
 
 [See COPYRIGHT](./COPYRIGHT)
-
 
 For more information please visit the Coopengo web site :
 
