@@ -22,7 +22,7 @@ coog-bench is a tools to check coog (or trytond) deployment. It verifies:
 #### Real deployment
 
 - local build: `npm i && npm run build` (generated files on public folder)
-- build without installing node: `cd docker && ./build` (generated files are on content folder)
+- build without installing node: `cd docker && ./build` (generated files are in dist folder)
 - serve generated files via nginx or other standard web server
 
 ### License
