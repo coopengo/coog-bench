@@ -21,4 +21,4 @@ ROOT_DIR=$(readlink -f "$DOCKER_DIR/..")
     rm -rf coog-bench*)
 
 docker run -it --rm -v /tmp:/tmp "$DOCKER_IMAGE" &&
-    mv /tmp/coog-bench "$DOCKER_DIR/dist"
+    cp -r /tmp/coog-bench "$DOCKER_DIR/dist"
