@@ -1,7 +1,9 @@
 #!/bin/sh
 
-[ -z "$1" ] && echo missing tag && exit 1
-DOCKER_IMAGE="build/coog-bench:$1"
+[ -z "$1" ] && echo missing branch or tag >&2 && exit 1
+VERSION="$1"
+
+DOCKER_IMAGE="build/coog-bench"
 
 get_dir() {
     local script_path; script_path=$(readlink -f "$0")
@@ -9,17 +11,39 @@ get_dir() {
     echo "$script_dir"
 }
 
-DOCKER_DIR=$(get_dir)
-ROOT_DIR=$(readlink -f "$DOCKER_DIR/..")
+BUILD_DIR=$(get_dir)
+ROOT_DIR=$(readlink -f "$BUILD_DIR/..")
 
-(cd "$ROOT_DIR" && \
-    git archive -o build/coog-bench.tar.gz "$1")
+archive() {
+    echo "archive"
+    (cd "$ROOT_DIR" && \
+        git archive -o "$BUILD_DIR/coog-bench.tar.gz" "$VERSION") || return 1
+}
 
-(cd "$DOCKER_DIR" &&
-    mkdir coog-bench && \
-    tar -xf coog-bench.tar.gz -C coog-bench && \
-    docker build -t "$DOCKER_IMAGE" . && \
-    rm -rf coog-bench*)
+extract() {
+    echo "extract"
+    (cd "$BUILD_DIR" && \
+        mkdir coog-bench && \
+        tar -xf coog-bench.tar.gz -C coog-bench) || return 1
+}
 
-docker run -it --rm -v /tmp:/tmp "$DOCKER_IMAGE" &&
-    cp -rf /tmp/coog-bench "$ROOT_DIR/dist"
+image() {
+    echo "image"
+    (cd "$BUILD_DIR" && \
+        docker build -t "$DOCKER_IMAGE" . > /dev/null && \
+        rm -rf coog-bench*) || return 1
+}
+
+build() {
+    echo "build"
+    (cd "$BUILD_DIR" && \
+        docker run -t --rm -v /tmp:/tmp "$DOCKER_IMAGE" > /dev/null &&
+        cp -nr /tmp/coog-bench/* "$ROOT_DIR/dist/") || return 1
+}
+
+clean() {
+    echo "clean"
+    docker rmi "$DOCKER_IMAGE" > /dev/null || return 1
+}
+
+archive && extract && image && build && clean

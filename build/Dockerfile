@@ -1,4 +1,4 @@
-from node:6-alpine
+from node:8-alpine
 
 COPY coog-bench /coog-bench
 WORKDIR /coog-bench

@@ -1,5 +1,6 @@
 #!/bin/sh
 
-npm install && npm run build && \
-    mkdir -p /tmp/coog-bench && \
-    cp -rf dist "/tmp/coog-bench"
+npm install && \
+    npm run build && \
+    rm -rf /tmp/coog-bench && \
+    mv dist /tmp/coog-bench
