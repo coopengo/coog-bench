@@ -2,4 +2,4 @@
 
 npm install && npm run build && \
     mkdir -p /tmp/coog-bench && \
-    cp -rf public "/tmp/coog-bench"
+    cp -rf dist "/tmp/coog-bench"

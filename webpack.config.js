@@ -21,7 +21,7 @@ module.exports = {
   },
   devtool: 'sourcemap',
   output: {
-    path: path.resolve('.', 'public'),
+    path: path.resolve('.', 'dist'),
     filename: 'coog-bench.js'
   },
   plugins: [

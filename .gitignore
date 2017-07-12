@@ -1,6 +1,5 @@
 npm-debug.log
 /node_modules
-/public
-!/public/index.html
-!/public/favicon.ico
-/docker/content
+/dist
+!/dist/index.html
+!/dist/favicon.ico

@@ -8,11 +8,12 @@ get_dir() {
     local script_dir; script_dir=$(dirname "$script_path")
     echo "$script_dir"
 }
+
 DOCKER_DIR=$(get_dir)
 ROOT_DIR=$(readlink -f "$DOCKER_DIR/..")
 
 (cd "$ROOT_DIR" && \
-    git archive -o docker/coog-bench.tar.gz "$1")
+    git archive -o build/coog-bench.tar.gz "$1")
 
 (cd "$DOCKER_DIR" &&
     mkdir coog-bench && \
@@ -21,4 +22,4 @@ ROOT_DIR=$(readlink -f "$DOCKER_DIR/..")
     rm -rf coog-bench*)
 
 docker run -it --rm -v /tmp:/tmp "$DOCKER_IMAGE" &&
-    cp -r /tmp/coog-bench "$DOCKER_DIR/dist"
+    cp -rf /tmp/coog-bench "$ROOT_DIR/dist"
