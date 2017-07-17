@@ -38,7 +38,7 @@ build() {
     echo "build"
     (cd "$BUILD_DIR" && \
         docker run -t --rm -v /tmp:/tmp "$DOCKER_IMAGE" > /dev/null &&
-        cp -nr /tmp/coog-bench/* "$ROOT_DIR/dist/") || return 1
+        cp -fr /tmp/coog-bench/* "$ROOT_DIR/dist/") || return 1
 }
 
 clean() {
