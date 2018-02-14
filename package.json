@@ -1,7 +1,7 @@
 {
   "name": "coog-bench",
   "description": "Coog bench web app",
-  "version": "1.11.0",
+  "version": "1.14.0",
   "license": "GPL-3.0+",
   "author": "Coopengo <dev@coopengo.com>",
   "repository": {
@@ -20,7 +20,7 @@
     "backbone.syphon": "^0",
     "bootstrap": "^3",
     "jquery": "^3",
-    "tryton-session": "~4.2",
+    "tryton-session": "~4.6",
     "underscore": "^1"
   },
   "devDependencies": {
