@@ -37,7 +37,6 @@ image() {
 build() {
     echo "build"
     (cd "$BUILD_DIR" && \
-        rm -rf /tmp/coog-bench && \
         docker run -t --rm -v /tmp:/tmp "$DOCKER_IMAGE" > /dev/null &&
         cp -fr /tmp/coog-bench/* "$ROOT_DIR/dist/") || return 1
 }
