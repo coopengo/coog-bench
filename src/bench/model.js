@@ -34,9 +34,9 @@ var Bench = Backbone.Model.extend({
           this.set({
             status: 'done',
             iterations: res.iterations,
-            average: res.average.toFixed(5),
-            minimum: res.minimum.toFixed(5),
-            maximum: res.maximum.toFixed(5),
+            average: res.average.toFixed(5) + ' seconds',
+            minimum: res.minimum.toFixed(5) + ' seconds',
+            maximum: res.maximum.toFixed(5) + ' seconds',
           });
         });
   },
@@ -65,11 +65,11 @@ var Bench = Backbone.Model.extend({
       this.set({
         status: 'done',
         minimum: _.first(times)
-          .toFixed(5),
+          .toFixed(5) + ' seconds',
         maximum: _.last(times)
-          .toFixed(5),
+          .toFixed(5) + ' seconds',
         average: (_.reduce(times, (memo, v) => memo + v) / times.length)
-          .toFixed(5),
+          .toFixed(5) + ' seconds',
         iterations: iterations,
       });
     });
