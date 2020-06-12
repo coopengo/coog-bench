@@ -26,7 +26,7 @@
   "devDependencies": {
     "browser-sync": "^2",
     "css-loader": "^0",
-    "ejs-loader": "^0",
+    "ejs-loader": "^0.4.1",
     "extract-text-webpack-plugin": "^2",
     "file-loader": "^0",
     "webpack": "^2"
