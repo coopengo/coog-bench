@@ -20,3 +20,6 @@
 <td class="text-center">
   <%- maximum %>
 </td>
+<td class="text-center">
+  <%- slowest %>
+</td>
