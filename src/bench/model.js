@@ -10,6 +10,7 @@ var Bench = Backbone.Model.extend({
       average: '-',
       minimum: '-',
       maximum: '-',
+      slowest: '-',
     };
   },
   toggle: function () {
@@ -24,11 +25,12 @@ var Bench = Backbone.Model.extend({
       average: '-',
       minimum: '-',
       maximum: '-',
+      slowest: '-',
     });
   },
-  execute: function () {
+  execute: function (parameters) {
     this.set('status', 'working');
-    return this.collection.session.rpc('model.bench.' + this.get('method'))
+    return this.collection.session.rpc('model.bench.' + parameters.method)
       .then(
         (res) => {
           this.set({
@@ -37,6 +39,7 @@ var Bench = Backbone.Model.extend({
             average: res.average.toFixed(5) + ' seconds',
             minimum: res.minimum.toFixed(5) + ' seconds',
             maximum: res.maximum.toFixed(5) + ' seconds',
+            slowest: res.slowest.toFixed(5) + ' seconds',
           });
         });
   },
@@ -49,8 +52,7 @@ var Bench = Backbone.Model.extend({
     var newLatency = () => {
       start = (new Date())
         .getTime();
-      return this.collection.session.rpc('model.bench.' + this.get(
-          'method'))
+      return this.collection.session.rpc('model.bench.test_latency')
         .then(() => {
           end = (new Date())
             .getTime();
@@ -68,6 +70,8 @@ var Bench = Backbone.Model.extend({
           .toFixed(5) + ' seconds',
         maximum: _.last(times)
           .toFixed(5) + ' seconds',
+        slowest: _.last(times)
+          .toFixed(5) + ' seconds',
         average: (_.reduce(times, (memo, v) => memo + v) / times.length)
           .toFixed(5) + ' seconds',
         iterations: iterations,
@@ -84,7 +88,7 @@ var Benchs = Backbone.Collection.extend({
       .then((data) => {
         this.setup = data.setup;
         this.teardown = data.teardown;
-        this.reset(data.methods);
+        this.reset(_.filter(data.methods, function(x) { return x.type != 'act_window' }));
       });
   },
   execute: function () {
@@ -109,11 +113,11 @@ var Benchs = Backbone.Collection.extend({
     _.each(selected, (bench) => {
       bench.reset();
       promise = promise.then(() => {
-        if (bench.get('method') == 'test_latency') {
+        if (bench.get('type') == 'latency') {
           return bench.executeLatency();
         }
         else {
-          return bench.execute();
+          return bench.execute(bench.get('parameters'));
         }
       });
     });

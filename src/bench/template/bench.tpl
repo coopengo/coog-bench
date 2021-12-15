@@ -14,6 +14,7 @@
             <th class="text-center">Average</th>
             <th class="text-center">Minimum</th>
             <th class="text-center">Maximum</th>
+            <th class="text-center">Slowest (including warmup)</th>
           </tr>
         </thead>
         <tbody id="bench-container"></tbody>
@@ -29,7 +30,7 @@
   <div class="row">
     <div id="footer" class="navbar navbar-default navbar-fixed-bottom">
       <div class="container">
-        <p class="navbar-text pull-left">© 2017 - Coopengo - All rights reserved </p>
+        <p class="navbar-text pull-left">© 2022 - Coopengo - All rights reserved </p>
         <p class="navbar-text pull-right">
           <a href="url">http://www.coopengo.com</a>
         </p>
