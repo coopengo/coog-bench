@@ -20,7 +20,7 @@
     "backbone.syphon": "^0",
     "bootstrap": "^3",
     "jquery": "^3",
-    "tryton-session": "~4.6",
+    "tryton-session": "~4.8.2",
     "underscore": "^1"
   },
   "devDependencies": {
